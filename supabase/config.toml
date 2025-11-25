@@ -1,0 +1,37 @@
+project_id = "ghbksqyioendvispcseu"
+
+[functions.suggest-gift]
+verify_jwt = false
+
+[functions.search-products]
+verify_jwt = false
+
+[functions.send-password-reset]
+verify_jwt = false
+
+[functions.notify-anonymous-message]
+verify_jwt = false
+
+[functions.search-amazon-products]
+verify_jwt = true
+
+[functions.extract-product-from-image]
+verify_jwt = true
+
+[functions.ai-shopping-assistant]
+verify_jwt = false
+
+[functions.generate-external-affiliate-link]
+verify_jwt = false
+
+[functions.github-audit-webhook]
+verify_jwt = false
+
+[functions.track-affiliate-click]
+verify_jwt = false
+
+[functions.get-approved-corrections]
+verify_jwt = false
+
+[functions.mark-corrections-applied]
+verify_jwt = false

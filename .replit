@@ -1,0 +1,54 @@
+modules = ["nodejs-20", "postgresql-16"]
+[agent]
+expertMode = true
+
+[userenv]
+
+[userenv.shared]
+VITE_SUPABASE_URL = "https://rgbddzfyznhogebfuhez.supabase.co"
+VITE_SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJnYmRkemZ5em5ob2dlYmZ1aGV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3Mzg1MDksImV4cCI6MjA3OTMxNDUwOX0.WojZ_ARcoq_wrzQbUS9_xOC5X7xMz-qxjdD3A6Cr4WA"
+GIT_URL = "https://WIncovaCorporation:$GITHUB_TOKEN@github.com/WIncovaCorporation/wishful-secret-gift.git"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Dev Server"
+
+[[workflows.workflow]]
+name = "Dev Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[ports]]
+localPort = 3001
+externalPort = 3001
+
+[[ports]]
+localPort = 3002
+externalPort = 3002
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 5001
+externalPort = 3000
+
+[nix]
+channel = "stable-25_05"
+packages = ["postgresql"]
