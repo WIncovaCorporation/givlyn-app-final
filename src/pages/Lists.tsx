@@ -475,18 +475,19 @@ const Lists = () => {
 
     setProductSearchLoading(true);
     try {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || window.location.origin;
       const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/search-products`,
+        `${backendUrl}/api/search-products`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
           },
           body: JSON.stringify({
             query: aiContext,
             store: selectedStore || undefined,
-            budget: budget ? parseFloat(budget) : undefined
+            budget: budget ? parseFloat(budget) : undefined,
+            language: 'es'
           })
         }
       );
