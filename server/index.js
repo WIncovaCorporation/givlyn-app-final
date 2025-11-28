@@ -465,6 +465,149 @@ app.get('/api/monetization/referral/earnings', async (req, res) => {
   }
 });
 
+// ==============================================
+// SEARCH PRODUCTS API (for Lists page)
+// ==============================================
+
+app.post('/api/search-products', async (req, res) => {
+  try {
+    const { query, store, budget, language = 'es' } = req.body;
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+
+    if (!geminiApiKey) {
+      return res.status(500).json({ error: 'GEMINI_API_KEY not configured' });
+    }
+
+    if (!query || query.trim() === '') {
+      return res.status(400).json({ error: 'Query is required' });
+    }
+
+    console.log('🔍 Product search:', { query, store, budget });
+
+    // Build prompt for product search
+    const storeFilter = store && store !== 'all' ? `en ${store}` : 'en Amazon, Walmart, Target, Etsy y eBay';
+    const budgetFilter = budget ? `con un presupuesto máximo de $${budget}` : '';
+    
+    const searchPrompt = language === 'es' 
+      ? `Busca productos: "${query}" ${storeFilter} ${budgetFilter}.
+
+REGLAS IMPORTANTES:
+1. Devuelve EXACTAMENTE 5 productos reales con precios actuales
+2. Usa el formato EXACTO para cada producto:
+
+[PRODUCT]
+name: Nombre exacto del producto
+price: $XX.XX
+store: Nombre de la tienda
+link: https://url-real-del-producto
+rating: 4.5
+reviews: 1234
+reason: Por qué es buena opción
+image: https://url-imagen-producto
+[/PRODUCT]
+
+3. Los precios deben ser realistas y actuales
+4. Los links deben ser URLs reales de las tiendas
+5. NO incluyas explicaciones adicionales, SOLO los productos en el formato indicado`
+      : `Search products: "${query}" ${storeFilter} ${budgetFilter}.
+
+IMPORTANT RULES:
+1. Return EXACTLY 5 real products with current prices
+2. Use EXACT format for each product:
+
+[PRODUCT]
+name: Exact product name
+price: $XX.XX
+store: Store name
+link: https://real-product-url
+rating: 4.5
+reviews: 1234
+reason: Why it's a good option
+image: https://product-image-url
+[/PRODUCT]
+
+3. Prices must be realistic and current
+4. Links must be real store URLs
+5. NO additional explanations, ONLY products in the indicated format`;
+
+    // Call Gemini API
+    const response = await fetchWithRetry(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: searchPrompt }], role: 'user' }],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 3000,
+          },
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ Gemini API error:', response.status, errorText);
+      
+      if (response.status === 429) {
+        return res.status(429).json({ error: 'Rate limit reached. Please wait and try again.' });
+      }
+      
+      throw new Error(`Gemini API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const textParts = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+
+    // Debug: Log Gemini response
+    console.log('📄 Gemini raw response (first 500 chars):', textParts.substring(0, 500));
+
+    // Parse products from response
+    const products = [];
+    const productRegex = /\[PRODUCT\]([\s\S]*?)\[\/PRODUCT\]/g;
+    let match;
+
+    while ((match = productRegex.exec(textParts)) !== null) {
+      const productText = match[1];
+      const nameMatch = productText.match(/name:\s*(.+)/i);
+      const priceMatch = productText.match(/price:\s*(.+)/i);
+      const storeMatch = productText.match(/store:\s*(.+)/i);
+      const linkMatch = productText.match(/link:\s*(.+)/i);
+      const reasonMatch = productText.match(/reason:\s*(.+)/i);
+      const imageMatch = productText.match(/image:\s*(.+)/i);
+      const ratingMatch = productText.match(/rating:\s*(.+)/i);
+      const reviewsMatch = productText.match(/reviews?:\s*(\d+)/i);
+
+      if (nameMatch && priceMatch && storeMatch && linkMatch) {
+        products.push({
+          name: nameMatch[1].trim(),
+          price: priceMatch[1].trim(),
+          store: storeMatch[1].trim(),
+          link: linkMatch[1].trim(),
+          reason: reasonMatch ? reasonMatch[1].trim() : '',
+          image: imageMatch ? imageMatch[1].trim() : undefined,
+          rating: ratingMatch ? parseFloat(ratingMatch[1]) : undefined,
+          reviewCount: reviewsMatch ? parseInt(reviewsMatch[1]) : undefined,
+        });
+      }
+    }
+
+    console.log(`✅ Found ${products.length} products`);
+
+    res.json({ 
+      products,
+      query,
+      store: store || 'all',
+      budget: budget || null
+    });
+
+  } catch (error) {
+    console.error('Search products error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Givlyn Backend API running on port ${PORT}`);
