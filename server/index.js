@@ -54,7 +54,22 @@ async function fetchWithRetry(url, options, maxRetries = 2) {
 
 app.post('/api/ai-shopping-assistant', async (req, res) => {
   try {
-    const { messages, language = 'es' } = req.body;
+    // Support both 'messages' and 'conversationHistory' for compatibility
+    const { messages: rawMessages, conversationHistory, message, language = 'es' } = req.body;
+    
+    // Build messages array from different possible inputs
+    let messages = rawMessages || conversationHistory || [];
+    
+    // If single message provided, add it to the array
+    if (message && typeof message === 'string') {
+      messages = [...messages, { role: 'user', content: message }];
+    }
+    
+    // Ensure messages is always an array
+    if (!Array.isArray(messages)) {
+      messages = [];
+    }
+    
     const geminiApiKey = process.env.GEMINI_API_KEY;
 
     if (!geminiApiKey) {
@@ -71,41 +86,52 @@ app.post('/api/ai-shopping-assistant', async (req, res) => {
       const { data: { user } } = await supabase.auth.getUser(token);
       userId = user?.id || null;
 
-      // Check if admin
+      // Check if admin (with fallback if function doesn't exist)
       if (userId) {
-        const { data: userRoles } = await supabase.rpc('get_user_roles', {
-          _user_id: userId
-        });
-        isAdmin = userRoles?.some(r => r.role === 'admin') || false;
+        try {
+          const { data: userRoles, error: rolesError } = await supabase.rpc('get_user_roles', {
+            _user_id: userId
+          });
+          if (!rolesError) {
+            isAdmin = userRoles?.some(r => r.role === 'admin') || false;
+          }
+        } catch (e) {
+          // Function doesn't exist, continue without admin check
+        }
         console.log('👤 User ID:', userId, '| Is Admin:', isAdmin);
       }
     }
 
-    // Check rate limit (only for non-admin users)
+    // Check rate limit (only for non-admin users, with fallback)
     if (userId && !isAdmin) {
-      const { data: limitData, error: limitError } = await supabase.rpc(
-        'check_and_increment_ai_usage',
-        {
-          p_user_id: userId,
-          p_feature_type: 'shopping_assistant',
-          p_daily_limit: 10,
+      try {
+        const { data: limitData, error: limitError } = await supabase.rpc(
+          'check_and_increment_ai_usage',
+          {
+            p_user_id: userId,
+            p_feature_type: 'shopping_assistant',
+            p_daily_limit: 10,
+          }
+        );
+
+        if (limitError && limitError.code !== 'PGRST202') {
+          console.error('AI usage limit check error:', limitError);
+        } else if (limitData && limitData.allowed === false) {
+          const resetDate = limitData.reset_date
+            ? new Date(limitData.reset_date).toLocaleDateString('es-ES')
+            : 'mañana';
+          return res.status(429).json({
+            error: `🚫 Has alcanzado el límite diario de 10 búsquedas de IA. Intenta nuevamente ${resetDate}.`,
+            remaining: limitData.remaining ?? 0,
+            reset_at: resetDate,
+          });
         }
-      );
 
-      if (limitError) {
-        console.error('AI usage limit check error:', limitError);
-      } else if (limitData && limitData.allowed === false) {
-        const resetDate = limitData.reset_date
-          ? new Date(limitData.reset_date).toLocaleDateString('es-ES')
-          : 'mañana';
-        return res.status(429).json({
-          error: `🚫 Has alcanzado el límite diario de 10 búsquedas de IA. Intenta nuevamente ${resetDate}.`,
-          remaining: limitData.remaining ?? 0,
-          reset_at: resetDate,
-        });
+        if (limitData) console.log('📊 AI usage:', limitData);
+      } catch (e) {
+        // Function doesn't exist, continue without rate limiting
+        console.log('ℹ️ Rate limiting disabled (function not found)');
       }
-
-      console.log('📊 AI usage:', limitData);
     } else if (isAdmin) {
       console.log('✨ ADMIN MODE: Unlimited AI usage enabled');
     }
