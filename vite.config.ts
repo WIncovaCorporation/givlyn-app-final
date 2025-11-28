@@ -22,12 +22,12 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt'],
+      includeAssets: ['favicon.ico', 'robots.txt', 'icon.svg'],
       manifest: {
         name: 'Givlyn - Smart Shopping Assistant',
         short_name: 'Givlyn',
         description: 'AI-powered shopping assistant that compares prices across 5+ stores instantly. Find the best deals for any occasion.',
-        theme_color: '#ffffff',
+        theme_color: '#2b7a78',
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait',
@@ -35,28 +35,15 @@ export default defineConfig(({ mode }) => ({
         start_url: '/',
         icons: [
           {
-            src: '/pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'any'
+            src: '/icon.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
+            purpose: 'any maskable'
           },
           {
-            src: '/pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any'
-          },
-          {
-            src: '/pwa-maskable-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'maskable'
-          },
-          {
-            src: '/pwa-maskable-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable'
+            src: '/favicon.ico',
+            sizes: '48x48',
+            type: 'image/x-icon'
           }
         ]
       },
