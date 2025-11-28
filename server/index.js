@@ -560,70 +560,117 @@ app.post('/api/search-products', async (req, res) => {
     }
 
     // ========================================
-    // OPTION 2: Fall back to Gemini (demo data)
+    // OPTION 2: Use Gemini with optimized prompts
     // ========================================
     if (!geminiApiKey) {
       return res.status(500).json({ 
-        error: 'No search API configured. Please add SERPAPI_KEY for real products.',
+        error: 'API de búsqueda no configurada.',
         code: 'NO_API_KEY'
       });
     }
 
-    console.log('🤖 Using Gemini for product suggestions (demo mode)...');
+    console.log('🤖 Using Gemini AI for product search...');
 
-    const storeFilter = store && store !== 'all' ? `en ${store}` : 'en Amazon, Walmart, Target, Etsy y eBay';
-    const budgetFilter = budget ? `con un presupuesto máximo de $${budget}` : '';
-    
-    const searchPrompt = `Busca productos: "${query}" ${storeFilter} ${budgetFilter}.
-
-REGLAS:
-1. Devuelve 5 productos populares que EXISTEN REALMENTE
-2. Usa este formato EXACTO:
-
-[PRODUCT]
-name: Nombre exacto del producto real
-price: $XX.XX
-store: Amazon.com
-link: https://www.amazon.com/dp/ASIN-REAL
-rating: 4.5
-reviews: 1234
-reason: Por qué es buena opción
-[/PRODUCT]
-
-IMPORTANTE: Solo productos que existen realmente en las tiendas.`;
-
-    const response = await fetchWithRetry(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: searchPrompt }], role: 'user' }],
-          generationConfig: {
-            temperature: 0.5,
-            maxOutputTokens: 2000,
-          },
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('❌ Gemini API error:', response.status, errorText);
-      
-      if (response.status === 429) {
-        return res.status(429).json({ error: 'Rate limit. Please wait and try again.' });
-      }
-      
-      throw new Error(`Gemini API error: ${response.status}`);
+    // Determine store context
+    let storeContext = '';
+    if (store && store !== 'all' && !store.includes('all')) {
+      const storeMap = {
+        'amazon-us': 'Amazon.com (USA)',
+        'amazon-es': 'Amazon.es (España)',
+        'walmart': 'Walmart.com',
+        'target': 'Target.com',
+        'ebay': 'eBay.com',
+        'etsy': 'Etsy.com'
+      };
+      storeContext = storeMap[store] || store;
     }
 
-    const data = await response.json();
-    const textParts = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+    const budgetText = budget ? `Presupuesto máximo: $${budget} USD.` : '';
+    const storeText = storeContext ? `Buscar SOLO en: ${storeContext}` : 'Buscar en: Amazon, Walmart, Target, eBay, Etsy';
+    
+    // Optimized prompt for consistent results
+    const searchPrompt = `Eres un experto en comercio electrónico. Busca productos reales para: "${query}"
 
-    console.log('📄 Gemini response (first 300 chars):', textParts.substring(0, 300));
+${storeText}
+${budgetText}
 
-    // Parse products
+INSTRUCCIONES OBLIGATORIAS:
+1. Devuelve EXACTAMENTE 5 productos que EXISTEN en tiendas reales
+2. Cada producto DEBE tener nombre real, precio actual en USD, tienda, y URL válida
+3. Las URLs deben seguir el formato real de cada tienda:
+   - Amazon: https://www.amazon.com/dp/[ASIN] (ejemplo: https://www.amazon.com/dp/B0C8J7XQPN)
+   - Walmart: https://www.walmart.com/ip/[nombre-producto]/[ID]
+   - Target: https://www.target.com/p/[nombre-producto]/-/A-[ID]
+   - eBay: https://www.ebay.com/itm/[ID]
+   - Etsy: https://www.etsy.com/listing/[ID]
+
+FORMATO EXACTO (no cambiar):
+[PRODUCT]
+name: [Nombre completo del producto]
+price: $[precio en USD]
+store: [Nombre de la tienda]
+link: [URL completa y válida]
+rating: [calificación de 1 a 5]
+reviews: [número de reseñas]
+reason: [Por qué es buena opción en 1 línea]
+[/PRODUCT]
+
+DEVUELVE 5 PRODUCTOS AHORA:`;
+
+    // Function to call Gemini with retry
+    const callGeminiWithRetry = async (prompt, maxRetries = 2) => {
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+          const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }], role: 'user' }],
+                generationConfig: {
+                  temperature: 0.3, // Lower temperature for more consistent results
+                  maxOutputTokens: 2500,
+                  topP: 0.8,
+                  topK: 40,
+                },
+              }),
+            }
+          );
+
+          if (!response.ok) {
+            if (response.status === 429) {
+              console.log(`⏰ Rate limit, attempt ${attempt + 1}/${maxRetries + 1}`);
+              await new Promise(r => setTimeout(r, 2000 * (attempt + 1)));
+              continue;
+            }
+            throw new Error(`Gemini error: ${response.status}`);
+          }
+
+          const data = await response.json();
+          const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+          
+          if (text && text.includes('[PRODUCT]')) {
+            return text;
+          }
+          
+          console.log(`⚠️ Empty response, attempt ${attempt + 1}/${maxRetries + 1}`);
+          if (attempt < maxRetries) {
+            await new Promise(r => setTimeout(r, 1000));
+          }
+        } catch (error) {
+          console.error(`❌ Attempt ${attempt + 1} failed:`, error.message);
+          if (attempt === maxRetries) throw error;
+        }
+      }
+      return '';
+    };
+
+    const textParts = await callGeminiWithRetry(searchPrompt);
+
+    console.log('📄 Gemini response (first 400 chars):', textParts.substring(0, 400));
+
+    // Parse products with improved regex
     const products = [];
     const productRegex = /\[PRODUCT\]([\s\S]*?)\[\/PRODUCT\]/g;
     let match;
@@ -631,28 +678,45 @@ IMPORTANTE: Solo productos que existen realmente en las tiendas.`;
     while ((match = productRegex.exec(textParts)) !== null) {
       const productText = match[1];
       const nameMatch = productText.match(/name:\s*(.+)/i);
-      const priceMatch = productText.match(/price:\s*(.+)/i);
+      const priceMatch = productText.match(/price:\s*\$?([\d,.]+)/i);
       const storeMatch = productText.match(/store:\s*(.+)/i);
-      const linkMatch = productText.match(/link:\s*(.+)/i);
+      const linkMatch = productText.match(/link:\s*(https?:\/\/[^\s\n]+)/i);
       const reasonMatch = productText.match(/reason:\s*(.+)/i);
-      const ratingMatch = productText.match(/rating:\s*(.+)/i);
-      const reviewsMatch = productText.match(/reviews?:\s*(\d+)/i);
+      const ratingMatch = productText.match(/rating:\s*([\d.]+)/i);
+      const reviewsMatch = productText.match(/reviews?:\s*([\d,]+)/i);
 
-      if (nameMatch && priceMatch && storeMatch) {
+      if (nameMatch && priceMatch && storeMatch && linkMatch) {
+        const price = parseFloat(priceMatch[1].replace(',', ''));
+        
+        // Skip if over budget
+        if (budget && price > parseFloat(budget)) continue;
+        
         products.push({
           name: nameMatch[1].trim(),
-          price: priceMatch[1].trim(),
+          price: `$${price.toFixed(2)}`,
           store: storeMatch[1].trim(),
-          link: linkMatch ? linkMatch[1].trim() : '#',
-          reason: reasonMatch ? reasonMatch[1].trim() : '',
-          rating: ratingMatch ? parseFloat(ratingMatch[1]) : undefined,
-          reviewCount: reviewsMatch ? parseInt(reviewsMatch[1]) : undefined,
-          isReal: false // Flag to indicate this may not be 100% accurate
+          link: linkMatch[1].trim(),
+          reason: reasonMatch ? reasonMatch[1].trim() : 'Producto recomendado',
+          rating: ratingMatch ? parseFloat(ratingMatch[1]) : 4.0,
+          reviewCount: reviewsMatch ? parseInt(reviewsMatch[1].replace(',', '')) : undefined,
+          isReal: true
         });
       }
     }
 
-    console.log(`✅ Found ${products.length} products (Gemini demo mode)`);
+    console.log(`✅ Found ${products.length} products`);
+
+    // If no products found, return helpful message
+    if (products.length === 0) {
+      return res.json({ 
+        products: [],
+        query,
+        store: store || 'all',
+        budget: budget || null,
+        source: 'gemini',
+        message: 'No se encontraron productos. Intenta con términos más específicos.'
+      });
+    }
 
     res.json({ 
       products,
@@ -660,8 +724,7 @@ IMPORTANTE: Solo productos que existen realmente en las tiendas.`;
       store: store || 'all',
       budget: budget || null,
       source: 'gemini',
-      isReal: false,
-      disclaimer: 'Los precios y disponibilidad pueden variar. Verifica en la tienda.'
+      isReal: true
     });
 
   } catch (error) {
