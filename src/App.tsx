@@ -9,7 +9,6 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { AIShoppingAssistant } from "@/components/AIShoppingAssistant";
 import { InstallPWA } from "@/components/InstallPWA";
-import { DebugPanel } from "@/components/DebugPanel";
 import { CookieConsent } from "@/components/CookieConsent";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -36,6 +35,9 @@ import AdminAuditLogs from "./pages/AdminAuditLogs";
 import AdminCorrections from "./pages/AdminCorrections";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminStats from "./pages/AdminStats";
+import { lazy, Suspense } from "react";
+
+const DebugPanel = lazy(() => import("@/components/DebugPanel").then(m => ({ default: m.DebugPanel })));
 
 const queryClient = new QueryClient();
 
@@ -51,7 +53,11 @@ const App = () => (
             <AnalyticsProvider>
               <AIShoppingAssistant />
               <InstallPWA />
-              <DebugPanel />
+              {import.meta.env.DEV && (
+                <Suspense fallback={null}>
+                  <DebugPanel />
+                </Suspense>
+              )}
               <CookieConsent />
               <Routes>
                 <Route path="/" element={<Index />} />

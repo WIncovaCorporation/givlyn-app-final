@@ -30,50 +30,44 @@ export const CookieConsent = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-card border-t border-border shadow-lg animate-in slide-in-from-bottom-5 duration-500">
+    <div className="fixed bottom-0 left-0 right-0 z-50 p-2 sm:p-3 bg-card/95 backdrop-blur-sm border-t border-border shadow-lg animate-in slide-in-from-bottom-5 duration-300">
       <div className="container mx-auto max-w-6xl">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex-1">
-            <h3 className="font-semibold text-foreground mb-2">
-              {language === 'es' ? '🍪 Uso de Cookies' : '🍪 Cookie Notice'}
-            </h3>
-            <p className="text-sm text-muted-foreground">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs sm:text-sm text-muted-foreground flex-1">
+            <span className="hidden sm:inline">
               {language === 'es'
-                ? 'Utilizamos cookies esenciales para el funcionamiento del sitio y cookies de análisis para mejorar tu experiencia. Al hacer clic en "Aceptar", consientes el uso de todas las cookies.'
-                : 'We use essential cookies for site functionality and analytics cookies to improve your experience. By clicking "Accept", you consent to the use of all cookies.'}
-            </p>
-            <Link
-              to="/privacy"
-              className="text-sm text-primary hover:underline inline-block mt-1"
-            >
-              {language === 'es' ? 'Más información' : 'Learn more'}
+                ? 'Usamos cookies para mejorar tu experiencia. '
+                : 'We use cookies to improve your experience. '}
+            </span>
+            <Link to="/privacy" className="text-primary hover:underline">
+              {language === 'es' ? 'Más info' : 'Learn more'}
             </Link>
-          </div>
+          </p>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
               onClick={handleDecline}
-              className="whitespace-nowrap"
+              className="text-xs h-7 px-2 sm:px-3"
             >
-              {language === 'es' ? 'Solo Esenciales' : 'Essential Only'}
+              {language === 'es' ? 'Esenciales' : 'Essential'}
             </Button>
             <Button
               size="sm"
               onClick={handleAccept}
-              className="whitespace-nowrap"
+              className="text-xs h-7 px-2 sm:px-3"
             >
-              {language === 'es' ? 'Aceptar Todas' : 'Accept All'}
+              {language === 'es' ? 'Aceptar' : 'Accept'}
             </Button>
             <Button
               variant="ghost"
               size="icon"
               onClick={handleDecline}
-              className="shrink-0"
+              className="h-7 w-7"
               aria-label={language === 'es' ? 'Cerrar' : 'Close'}
             >
-              <X className="h-4 w-4" />
+              <X className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>

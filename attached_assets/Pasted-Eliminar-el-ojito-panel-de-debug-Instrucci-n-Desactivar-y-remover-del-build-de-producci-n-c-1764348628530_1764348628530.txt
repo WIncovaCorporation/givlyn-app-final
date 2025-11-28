@@ -1,0 +1,39 @@
+Eliminar el “ojito” / panel de debug
+
+Instrucción: “Desactivar y remover del build de producción cualquier widget flotante de debug o inspección (el icono flotante abajo a la derecha). Solo debe cargarse en entornos de desarrollo/staging.”
+
+Foco brutal en el CTA principal
+
+Ahora hay dos botones igual de fuertes (“Empezar a Ahorrar” y “Ver Cómo Funciona”).
+
+Instrucción: “Convertir ‘Empezar a Ahorrar’ en CTA dominante (color sólido, más contraste) y ‘Ver Cómo Funciona’ en botón secundario o enlace. Objetivo: que el 80% de clics vayan al flujo de onboarding/registro.”
+
+Claridad del mensaje principal
+
+“Compra Mejor, Ahorra Más” es muy bueno, pero el subtítulo es largo.
+
+Instrucción: “Reducir subtítulo a 2 frases cortas, enfocadas en beneficio tangible (ej. cuánto ahorra, en qué categorías, qué tan rápido). Menos texto, más impacto, sobre todo en móvil.”
+
+Hero más accionable en móvil
+
+En desktop se ve perfecto, pero en móvil suele quedar texto + imagen y el botón se pierde.
+
+Instrucción: “En mobile, colocar los botones inmediatamente debajo del titular y antes de la imagen; asegurar que el primer pantallazo muestre un CTA sin hacer scroll.”
+
+Consistencia entre ‘Iniciar sesión’ y ‘Empezar a ahorrar’
+
+“Iniciar Sesión” arriba a la derecha lleva a login, pero “Empezar a Ahorrar” ¿qué hace exactamente?
+
+Instrucción: “Definir y alinear el flujo: si el usuario no está logueado, ‘Empezar a Ahorrar’ debe llevar a registro guiado (no solo a login). Mensaje: no quiero que el usuario se pierda viendo opciones.”
+
+Barra de cookies menos invasiva
+
+La franja de cookies ocupa bastante espacio visual.
+
+Instrucción: “Compactar el banner de cookies (una sola línea, botones más pequeños) y ofrecer la opción de cerrarlo claramente, para no competir con el hero principal.”
+
+Prueba social ligera
+
+Ahora la pantalla promete mucho, pero no muestra evidencia.
+
+Instrucción: “Debajo del hero, añadir una franja corta con prueba social: número de usuarios, valor ahorrado promedio o logos de tiendas compatibles. Esto da confianza y refuerza el click.”
