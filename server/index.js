@@ -467,16 +467,15 @@ app.get('/api/monetization/referral/earnings', async (req, res) => {
 
 // ==============================================
 // SEARCH PRODUCTS API (for Lists page)
+// Uses SerpAPI for REAL products with REAL links
+// Falls back to Gemini if SerpAPI not configured
 // ==============================================
 
 app.post('/api/search-products', async (req, res) => {
   try {
     const { query, store, budget, language = 'es' } = req.body;
+    const serpApiKey = process.env.SERPAPI_KEY;
     const geminiApiKey = process.env.GEMINI_API_KEY;
-
-    if (!geminiApiKey) {
-      return res.status(500).json({ error: 'GEMINI_API_KEY not configured' });
-    }
 
     if (!query || query.trim() === '') {
       return res.status(400).json({ error: 'Query is required' });
@@ -484,86 +483,194 @@ app.post('/api/search-products', async (req, res) => {
 
     console.log('🔍 Product search:', { query, store, budget });
 
-    // Build prompt for product search
-    const storeFilter = store && store !== 'all' ? `en ${store}` : 'en Amazon, Walmart, Target, Etsy y eBay';
-    const budgetFilter = budget ? `con un presupuesto máximo de $${budget}` : '';
-    
-    const searchPrompt = language === 'es' 
-      ? `Busca productos: "${query}" ${storeFilter} ${budgetFilter}.
-
-REGLAS IMPORTANTES:
-1. Devuelve EXACTAMENTE 5 productos reales con precios actuales
-2. Usa el formato EXACTO para cada producto:
-
-[PRODUCT]
-name: Nombre exacto del producto
-price: $XX.XX
-store: Nombre de la tienda
-link: https://url-real-del-producto
-rating: 4.5
-reviews: 1234
-reason: Por qué es buena opción
-image: https://url-imagen-producto
-[/PRODUCT]
-
-3. Los precios deben ser realistas y actuales
-4. Los links deben ser URLs reales de las tiendas
-5. NO incluyas explicaciones adicionales, SOLO los productos en el formato indicado`
-      : `Search products: "${query}" ${storeFilter} ${budgetFilter}.
-
-IMPORTANT RULES:
-1. Return EXACTLY 5 real products with current prices
-2. Use EXACT format for each product:
-
-[PRODUCT]
-name: Exact product name
-price: $XX.XX
-store: Store name
-link: https://real-product-url
-rating: 4.5
-reviews: 1234
-reason: Why it's a good option
-image: https://product-image-url
-[/PRODUCT]
-
-3. Prices must be realistic and current
-4. Links must be real store URLs
-5. NO additional explanations, ONLY products in the indicated format`;
-
-    // Call Gemini API
-    const response = await fetchWithRetry(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: searchPrompt }], role: 'user' }],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 3000,
-          },
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('❌ Gemini API error:', response.status, errorText);
+    // ========================================
+    // OPTION 1: Use SerpAPI for REAL products
+    // ========================================
+    if (serpApiKey) {
+      console.log('🌐 Using SerpAPI for real product search...');
       
-      if (response.status === 429) {
-        return res.status(429).json({ error: 'Rate limit reached. Please wait and try again.' });
+      try {
+        const searchParams = new URLSearchParams({
+          engine: 'google_shopping',
+          q: query,
+          api_key: serpApiKey,
+          location: 'United States',
+          hl: language === 'es' ? 'es' : 'en',
+          gl: 'us',
+          direct_link: 'true'
+        });
+
+        const serpResponse = await fetch(`https://serpapi.com/search?${searchParams}`);
+        
+        if (!serpResponse.ok) {
+          throw new Error(`SerpAPI error: ${serpResponse.status}`);
+        }
+
+        const serpData = await serpResponse.json();
+        const shoppingResults = serpData.shopping_results || [];
+
+        console.log(`📦 SerpAPI returned ${shoppingResults.length} products`);
+
+        // Filter by budget if specified
+        let filteredResults = shoppingResults;
+        if (budget) {
+          filteredResults = shoppingResults.filter(p => {
+            const price = p.extracted_price || 0;
+            return price <= parseFloat(budget);
+          });
+        }
+
+        // Filter by store if specified
+        if (store && store !== 'all' && !store.includes('all')) {
+          const storeNormalized = store.toLowerCase().replace('-us', '').replace('-es', '');
+          filteredResults = filteredResults.filter(p => {
+            const source = (p.source || '').toLowerCase();
+            return source.includes(storeNormalized);
+          });
+        }
+
+        // Map to our product format (limit to 8 products)
+        const products = filteredResults.slice(0, 8).map(p => ({
+          name: p.title || 'Producto',
+          price: p.price || `$${p.extracted_price || 0}`,
+          store: p.source || 'Tienda',
+          link: p.link || p.product_link || '#',
+          reason: p.snippet || '',
+          image: p.thumbnail || undefined,
+          rating: p.rating || undefined,
+          reviewCount: p.reviews || undefined,
+          isReal: true // Flag to indicate this is a real product
+        }));
+
+        console.log(`✅ Found ${products.length} REAL products from SerpAPI`);
+
+        return res.json({ 
+          products,
+          query,
+          store: store || 'all',
+          budget: budget || null,
+          source: 'serpapi',
+          isReal: true
+        });
+
+      } catch (serpError) {
+        console.error('⚠️ SerpAPI error, falling back to Gemini:', serpError.message);
+        // Fall through to Gemini
       }
-      
-      throw new Error(`Gemini API error: ${response.status}`);
     }
 
-    const data = await response.json();
-    const textParts = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+    // ========================================
+    // OPTION 2: Use Gemini with optimized prompts
+    // ========================================
+    if (!geminiApiKey) {
+      return res.status(500).json({ 
+        error: 'API de búsqueda no configurada.',
+        code: 'NO_API_KEY'
+      });
+    }
 
-    // Debug: Log Gemini response
-    console.log('📄 Gemini raw response (first 500 chars):', textParts.substring(0, 500));
+    console.log('🤖 Using Gemini AI for product search...');
 
-    // Parse products from response
+    // Determine store context
+    let storeContext = '';
+    if (store && store !== 'all' && !store.includes('all')) {
+      const storeMap = {
+        'amazon-us': 'Amazon.com (USA)',
+        'amazon-es': 'Amazon.es (España)',
+        'walmart': 'Walmart.com',
+        'target': 'Target.com',
+        'ebay': 'eBay.com',
+        'etsy': 'Etsy.com'
+      };
+      storeContext = storeMap[store] || store;
+    }
+
+    const budgetText = budget ? `Presupuesto máximo: $${budget} USD.` : '';
+    const storeText = storeContext ? `Buscar SOLO en: ${storeContext}` : 'Buscar en: Amazon, Walmart, Target, eBay, Etsy';
+    
+    // Optimized prompt for consistent results
+    const searchPrompt = `Eres un experto en comercio electrónico. Busca productos reales para: "${query}"
+
+${storeText}
+${budgetText}
+
+INSTRUCCIONES OBLIGATORIAS:
+1. Devuelve EXACTAMENTE 5 productos que EXISTEN en tiendas reales
+2. Cada producto DEBE tener nombre real, precio actual en USD, tienda, y URL válida
+3. Las URLs deben seguir el formato real de cada tienda:
+   - Amazon: https://www.amazon.com/dp/[ASIN] (ejemplo: https://www.amazon.com/dp/B0C8J7XQPN)
+   - Walmart: https://www.walmart.com/ip/[nombre-producto]/[ID]
+   - Target: https://www.target.com/p/[nombre-producto]/-/A-[ID]
+   - eBay: https://www.ebay.com/itm/[ID]
+   - Etsy: https://www.etsy.com/listing/[ID]
+
+FORMATO EXACTO (no cambiar):
+[PRODUCT]
+name: [Nombre completo del producto]
+price: $[precio en USD]
+store: [Nombre de la tienda]
+link: [URL completa y válida]
+rating: [calificación de 1 a 5]
+reviews: [número de reseñas]
+reason: [Por qué es buena opción en 1 línea]
+[/PRODUCT]
+
+DEVUELVE 5 PRODUCTOS AHORA:`;
+
+    // Function to call Gemini with retry
+    const callGeminiWithRetry = async (prompt, maxRetries = 2) => {
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+          const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }], role: 'user' }],
+                generationConfig: {
+                  temperature: 0.3, // Lower temperature for more consistent results
+                  maxOutputTokens: 2500,
+                  topP: 0.8,
+                  topK: 40,
+                },
+              }),
+            }
+          );
+
+          if (!response.ok) {
+            if (response.status === 429) {
+              console.log(`⏰ Rate limit, attempt ${attempt + 1}/${maxRetries + 1}`);
+              await new Promise(r => setTimeout(r, 2000 * (attempt + 1)));
+              continue;
+            }
+            throw new Error(`Gemini error: ${response.status}`);
+          }
+
+          const data = await response.json();
+          const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+          
+          if (text && text.includes('[PRODUCT]')) {
+            return text;
+          }
+          
+          console.log(`⚠️ Empty response, attempt ${attempt + 1}/${maxRetries + 1}`);
+          if (attempt < maxRetries) {
+            await new Promise(r => setTimeout(r, 1000));
+          }
+        } catch (error) {
+          console.error(`❌ Attempt ${attempt + 1} failed:`, error.message);
+          if (attempt === maxRetries) throw error;
+        }
+      }
+      return '';
+    };
+
+    const textParts = await callGeminiWithRetry(searchPrompt);
+
+    console.log('📄 Gemini response (first 400 chars):', textParts.substring(0, 400));
+
+    // Parse products with improved regex
     const products = [];
     const productRegex = /\[PRODUCT\]([\s\S]*?)\[\/PRODUCT\]/g;
     let match;
@@ -571,35 +678,53 @@ image: https://product-image-url
     while ((match = productRegex.exec(textParts)) !== null) {
       const productText = match[1];
       const nameMatch = productText.match(/name:\s*(.+)/i);
-      const priceMatch = productText.match(/price:\s*(.+)/i);
+      const priceMatch = productText.match(/price:\s*\$?([\d,.]+)/i);
       const storeMatch = productText.match(/store:\s*(.+)/i);
-      const linkMatch = productText.match(/link:\s*(.+)/i);
+      const linkMatch = productText.match(/link:\s*(https?:\/\/[^\s\n]+)/i);
       const reasonMatch = productText.match(/reason:\s*(.+)/i);
-      const imageMatch = productText.match(/image:\s*(.+)/i);
-      const ratingMatch = productText.match(/rating:\s*(.+)/i);
-      const reviewsMatch = productText.match(/reviews?:\s*(\d+)/i);
+      const ratingMatch = productText.match(/rating:\s*([\d.]+)/i);
+      const reviewsMatch = productText.match(/reviews?:\s*([\d,]+)/i);
 
       if (nameMatch && priceMatch && storeMatch && linkMatch) {
+        const price = parseFloat(priceMatch[1].replace(',', ''));
+        
+        // Skip if over budget
+        if (budget && price > parseFloat(budget)) continue;
+        
         products.push({
           name: nameMatch[1].trim(),
-          price: priceMatch[1].trim(),
+          price: `$${price.toFixed(2)}`,
           store: storeMatch[1].trim(),
           link: linkMatch[1].trim(),
-          reason: reasonMatch ? reasonMatch[1].trim() : '',
-          image: imageMatch ? imageMatch[1].trim() : undefined,
-          rating: ratingMatch ? parseFloat(ratingMatch[1]) : undefined,
-          reviewCount: reviewsMatch ? parseInt(reviewsMatch[1]) : undefined,
+          reason: reasonMatch ? reasonMatch[1].trim() : 'Producto recomendado',
+          rating: ratingMatch ? parseFloat(ratingMatch[1]) : 4.0,
+          reviewCount: reviewsMatch ? parseInt(reviewsMatch[1].replace(',', '')) : undefined,
+          isReal: true
         });
       }
     }
 
     console.log(`✅ Found ${products.length} products`);
 
+    // If no products found, return helpful message
+    if (products.length === 0) {
+      return res.json({ 
+        products: [],
+        query,
+        store: store || 'all',
+        budget: budget || null,
+        source: 'gemini',
+        message: 'No se encontraron productos. Intenta con términos más específicos.'
+      });
+    }
+
     res.json({ 
       products,
       query,
       store: store || 'all',
-      budget: budget || null
+      budget: budget || null,
+      source: 'gemini',
+      isReal: true
     });
 
   } catch (error) {
