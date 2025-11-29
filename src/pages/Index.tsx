@@ -54,7 +54,7 @@ const Index = () => {
         <div className="container mx-auto px-4 sm:px-8 py-3 flex items-center justify-between">
           <a href="/" className="flex items-center gap-3 hover:scale-105 transition-transform duration-300 cursor-pointer group">
             <img 
-              src="https://lh3.googleusercontent.com/d/1EplOOyBX3x9SOvLawyPkJeaJ9T8KA6oh" 
+              src="/givlyn-logo.png" 
               alt="Givlyn Logo" 
               className="w-[70px] h-[70px] sm:w-[90px] sm:h-[90px] object-contain drop-shadow-lg transition-all duration-300"
             />
