@@ -1,0 +1,323 @@
+cd ~/workspace
+
+cat > public/header-premium-v2.html << 'EOF'
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Givlyn - Header Premium</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #E53935;
+            --primary-dark: #C62828;
+            --text: #1A3E3E;
+            --white: #FFFFFF;
+            --spacing: 1rem;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #F5F5F5 0%, #FFFFFF 100%);
+            padding-top: 80px;
+        }
+
+        /* HEADER PREMIUM - Glassmorphism */
+        header {
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            padding: 12px 32px;
+            
+            /* Glassmorphism Effect */
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            
+            transition: all 0.3s ease;
+        }
+
+        /* Scroll Effect - Más opaco */
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(30px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 10px 32px;
+        }
+
+        /* Logo Container - Premium */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logo-container:hover {
+            transform: scale(1.05);
+        }
+
+        /* Logo Imagen - Grande y Visible */
+        .logo-container img {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 12px rgba(229, 57, 53, 0.15));
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled .logo-container img {
+            width: 75px;
+            height: 75px;
+        }
+
+        /* Logo Text - Animado */
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .logo-text h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .logo-text .subtitle {
+            font-size: 11px;
+            color: var(--primary);
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: slideInSubtitle 0.6s ease-out forwards;
+            animation-delay: 0.2s;
+        }
+
+        @keyframes slideInSubtitle {
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Nav Menu */
+        .nav-primary {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-primary a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            font-size: 14px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-primary a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-primary a:hover {
+            color: var(--primary);
+        }
+
+        .nav-primary a:hover::after {
+            width: 100%;
+        }
+
+        /* CTA Button - Premium */
+        .cta-header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 12px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            
+            box-shadow: 0 4px 12px rgba(229, 57, 53, 0.3);
+        }
+
+        .cta-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            transition: left 0.3s ease;
+        }
+
+        .cta-header:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(229, 57, 53, 0.4);
+        }
+
+        .cta-header:hover::before {
+            left: 100%;
+        }
+
+        .cta-header:active {
+            transform: translateY(0);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 10px 16px;
+            }
+
+            .logo-container img {
+                width: 70px;
+                height: 70px;
+            }
+
+            header.scrolled .logo-container img {
+                width: 60px;
+                height: 60px;
+            }
+
+            .logo-text h1 {
+                font-size: 20px;
+            }
+
+            .logo-text .subtitle {
+                font-size: 10px;
+            }
+
+            .nav-primary {
+                display: none;
+            }
+
+            .cta-header {
+                padding: 10px 20px;
+                font-size: 12px;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 32px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            color: var(--text);
+            margin-bottom: 16px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER PREMIUM -->
+    <header id="header">
+        <a href="/" class="logo-container">
+            <img src="/givlyn-logo.png" alt="Givlyn" loading="lazy">
+            <div class="logo-text">
+                <h1>Givlyn</h1>
+                <span class="subtitle">AI Savings</span>
+            </div>
+        </a>
+        <nav class="nav-primary">
+            <li><a href="#features">Características</a></li>
+            <li><a href="#como-funciona">Cómo Funciona</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+        </nav>
+        <a href="#signup" class="cta-header">Empezar Gratis</a>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Bienvenido a Givlyn</h1>
+        <p>Compra mejor, ahorra más con IA</p>
+    </section>
+
+    <script>
+        // Scroll Effect - Glassmorphism Dinamico
+        const header = document.getElementById('header');
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+EOF
+
+git add .
+git commit -m "🎨 Header Premium V2 - Glassmorphism, Logo 90px, Animaciones suaves"
+git push origin main
+
+echo "✅ Header Premium implementado!"
+echo "✨ Features:"
+echo "  - Logo 90px visible desktop"
+echo "  - Glassmorphism backdrop-blur"
+echo "  - Animación subtítulo suave"
+echo "  - Scroll effect progresivo"
+echo "  - Hover animations premium"
+echo "  - Mobile optimizado 70px"
+echo "🚀 Deploy en Vercel..."

@@ -50,42 +50,42 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
-      <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between gap-2">
-          <a href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-90 transition-opacity cursor-pointer">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-[20px] border-b border-white/20 transition-all duration-300">
+        <div className="container mx-auto px-4 sm:px-8 py-3 flex items-center justify-between">
+          <a href="/" className="flex items-center gap-3 hover:scale-105 transition-transform duration-300 cursor-pointer group">
             <img 
               src="/givlyn-logo.png" 
               alt="Givlyn Logo" 
-              className="w-14 h-14 sm:w-[70px] sm:h-[70px] object-contain"
+              className="w-[70px] h-[70px] sm:w-[90px] sm:h-[90px] object-contain drop-shadow-lg transition-all duration-300"
             />
+            <div className="hidden sm:flex flex-col gap-0.5">
+              <span className="text-xl sm:text-2xl font-bold text-[#1A3E3E] tracking-tight">Givlyn</span>
+              <span className="text-[10px] sm:text-xs font-semibold text-primary uppercase tracking-widest animate-fade-in">AI Savings</span>
+            </div>
           </a>
           
-          <div className="flex items-center gap-2 sm:gap-3">
+          <nav className="hidden md:flex items-center gap-8">
+            <a href="#features" className="text-sm font-medium text-[#1A3E3E] hover:text-primary transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-0.5 after:bg-primary after:transition-all hover:after:w-full">
+              {language === 'es' ? 'Características' : 'Features'}
+            </a>
+            <a href="/how-it-works" className="text-sm font-medium text-[#1A3E3E] hover:text-primary transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-0.5 after:bg-primary after:transition-all hover:after:w-full">
+              {language === 'es' ? 'Cómo Funciona' : 'How It Works'}
+            </a>
+            <a href="/contact" className="text-sm font-medium text-[#1A3E3E] hover:text-primary transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-0.5 after:bg-primary after:transition-all hover:after:w-full">
+              {language === 'es' ? 'Contacto' : 'Contact'}
+            </a>
+          </nav>
+
+          <div className="flex items-center gap-3">
             <LanguageSelector />
             {user ? (
               <div className="flex items-center gap-2">
-                <div className="hidden md:flex items-center gap-2 px-3 py-2 bg-muted/50 rounded-lg">
-                  <User className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-medium truncate max-w-[120px]">
-                    {user.user_metadata?.display_name || user.email?.split('@')[0] || 'Usuario'}
-                  </span>
-                </div>
                 <Button 
                   onClick={() => navigate("/dashboard")}
                   size="sm"
-                  variant="outline"
-                  className="hidden sm:flex"
+                  className="bg-primary hover:bg-primary/90 text-white font-semibold px-5 py-2.5 rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300"
                 >
                   Dashboard
-                </Button>
-                <Button 
-                  onClick={() => navigate("/dashboard")}
-                  size="icon"
-                  variant="outline"
-                  className="sm:hidden h-9 w-9"
-                  aria-label="Dashboard"
-                >
-                  <User className="h-4 w-4" />
                 </Button>
                 <Button 
                   onClick={handleSignOut}
@@ -100,16 +100,16 @@ const Index = () => {
             ) : (
               <Button 
                 onClick={() => navigate("/auth")}
-                size="sm"
-                variant="ghost"
-                className="text-xs sm:text-sm"
+                className="bg-primary hover:bg-primary/90 text-white font-semibold px-5 sm:px-7 py-2.5 rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 text-sm"
               >
-                {t("auth.signIn")}
+                {language === 'es' ? 'Empezar Gratis' : 'Start Free'}
               </Button>
             )}
           </div>
         </div>
       </header>
+      
+      <div className="h-[94px] sm:h-[114px]" />
 
       <section className="relative overflow-hidden" aria-label="Sección principal">
         <div className="absolute inset-0 bg-gradient-hero opacity-5" aria-hidden="true" />
