@@ -56,7 +56,7 @@ const Index = () => {
             <img 
               src="/givlyn-logo.png" 
               alt="Givlyn Logo" 
-              className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+              className="w-14 h-14 sm:w-[70px] sm:h-[70px] object-contain"
             />
           </a>
           

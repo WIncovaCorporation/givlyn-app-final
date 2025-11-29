@@ -146,7 +146,7 @@ const Dashboard = () => {
             <img 
               src="/givlyn-logo.png" 
               alt="Givlyn Logo" 
-              className="w-12 h-12 object-contain"
+              className="w-14 h-14 sm:w-[70px] sm:h-[70px] object-contain"
             />
             <div>
               <p className="text-sm text-muted-foreground">{t("dashboard.welcomeBack")}</p>
