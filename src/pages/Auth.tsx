@@ -199,7 +199,7 @@ const Auth = () => {
           <div>
             <a href="/" className="inline-block mb-6">
               <img 
-                src="https://drive.google.com/uc?export=view&id=1EplOOyBX3x9SOvLawyPkJeaJ9T8KA6oh" 
+                src="https://lh3.googleusercontent.com/d/1EplOOyBX3x9SOvLawyPkJeaJ9T8KA6oh" 
                 alt="Givlyn" 
                 className="w-16 h-16 object-contain bg-white/20 rounded-xl p-2"
               />
