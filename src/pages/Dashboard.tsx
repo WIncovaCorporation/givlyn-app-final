@@ -142,15 +142,16 @@ const Dashboard = () => {
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <SkipToContent />
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-warm rounded-xl flex items-center justify-center shadow-soft">
-              <Gift className="w-6 h-6 text-primary-foreground" />
-            </div>
+          <a href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity cursor-pointer">
+            <img 
+              src="/givlyn-logo.png" 
+              alt="Givlyn Logo" 
+              className="w-12 h-12 object-contain"
+            />
             <div>
-              <h1 className="text-xl font-bold">Givlyn</h1>
               <p className="text-sm text-muted-foreground">{t("dashboard.welcomeBack")}</p>
             </div>
-          </div>
+          </a>
           <div className="flex items-center gap-3">
             <LanguageSelector />
             {user && <ProfileMenu user={user} />}

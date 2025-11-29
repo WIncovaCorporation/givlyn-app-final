@@ -252,9 +252,13 @@ const Auth = () => {
       <div className="flex-1 flex items-center justify-center p-4 py-8">
         <div className="w-full max-w-md mx-auto">
           <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-warm rounded-2xl shadow-large mb-4">
-              <Gift className="w-8 h-8 text-primary-foreground" />
-            </div>
+            <a href="/" className="inline-block hover:opacity-90 transition-opacity cursor-pointer mb-4">
+              <img 
+                src="/givlyn-logo.png" 
+                alt="Givlyn Logo" 
+                className="w-20 h-20 object-contain mx-auto"
+              />
+            </a>
             <h1 className="text-3xl font-bold">{t("auth.welcome")}</h1>
             <p className="text-muted-foreground mt-2 flex items-center justify-center gap-2">
               <Sparkles className="h-4 w-4 text-primary" />

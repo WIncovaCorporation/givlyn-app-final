@@ -52,12 +52,13 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
       <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-warm rounded-xl flex items-center justify-center shadow-soft">
-              <Gift className="w-4 h-4 sm:w-6 sm:h-6 text-primary-foreground" />
-            </div>
-            <h1 className="text-base sm:text-lg font-bold">Givlyn</h1>
-          </div>
+          <a href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-90 transition-opacity cursor-pointer">
+            <img 
+              src="/givlyn-logo.png" 
+              alt="Givlyn Logo" 
+              className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+            />
+          </a>
           
           <div className="flex items-center gap-2 sm:gap-3">
             <LanguageSelector />
