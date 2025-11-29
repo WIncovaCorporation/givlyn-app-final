@@ -1,0 +1,489 @@
+cd ~/workspace
+
+cat > public/dashboard-personalized.html << 'EOF'
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Givlyn Dashboard - Personalizado</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #E53935;
+            --success: #4CAF50;
+            --text: #1A3E3E;
+            --text-light: #666;
+            --bg: #F5F5F5;
+            --white: #FFF;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            padding-top: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* WELCOME SECTION - PERSONALIZATION */
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary) 0%, #C62828 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(229, 57, 53, 0.2);
+        }
+
+        .welcome-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .welcome-greeting h2 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .welcome-greeting .username {
+            font-size: 28px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0 12px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .welcome-time-emoji {
+            font-size: 48px;
+        }
+
+        .welcome-subtitle {
+            font-size: 16px;
+            opacity: 0.95;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* PREDICTIVE INSIGHT */
+        .insight-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 4px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .insight-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .insight-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        /* QUICK STATS */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            border-top: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+
+        /* HABIT TRACKER */
+        .habit-section {
+            background: var(--white);
+            padding: 24px;
+            border-radius: 12px;
+            margin-top: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .habit-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .habit-header h3 {
+            font-size: 18px;
+            color: var(--text);
+        }
+
+        .habit-streak {
+            background: var(--success);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* PROGRESS BAR */
+        .progress-wrapper {
+            margin-top: 16px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #E0E0E0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #FF6B6B);
+            border-radius: 4px;
+            transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* SOCIAL PROOF */
+        .social-proof {
+            background: #F0F7FF;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .social-proof-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .social-proof-text {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .social-name {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* ACTIONS SECTION */
+        .actions-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        .action-btn {
+            background: var(--white);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .welcome-section {
+                padding: 24px;
+            }
+
+            .welcome-header {
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+            }
+
+            .welcome-greeting h2 {
+                font-size: 24px;
+            }
+
+            .welcome-greeting .username {
+                font-size: 22px;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- PERSONALIZED WELCOME SECTION -->
+        <div class="welcome-section">
+            <div class="welcome-header">
+                <div class="welcome-greeting">
+                    <h2>¡Bienvenido de Nuevo!</h2>
+                    <div class="username" id="userName">JUAN</div>
+                </div>
+                <div class="welcome-time-emoji" id="timeEmoji">🌅</div>
+            </div>
+
+            <p class="welcome-subtitle" id="welcomeSubtitle">
+                Nos alegra verte por aquí. Vamos a ayudarte a ahorrar dinero inteligentemente hoy.
+            </p>
+
+            <div class="insight-card">
+                <div class="insight-label">💰 Predicción Inteligente</div>
+                <div class="insight-value" id="prediction">Ahorrarás ~$15 hoy</div>
+                <p style="font-size: 12px; opacity: 0.8; margin-top: 8px;">
+                    Basado en tu historial de compras y patrones de ahorro
+                </p>
+            </div>
+        </div>
+
+        <!-- QUICK STATS -->
+        <div class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value" id="totalSaved">$450</div>
+                <div class="stat-label">Ahorrado Este Mes</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-value" id="listCount">1</div>
+                <div class="stat-label">Listas Activas</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value" id="nextMilestone">23</div>
+                <div class="stat-label">Hasta Próximo Badge</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-value" id="streak">7</div>
+                <div class="stat-label">Días Activos</div>
+            </div>
+        </div>
+
+        <!-- HABIT TRACKER -->
+        <div class="habit-section">
+            <div class="habit-header">
+                <h3>Mi Racha de Ahorros</h3>
+                <span class="habit-streak" id="streakText">7 días activo 🔥</span>
+            </div>
+
+            <p style="font-size: 13px; color: var(--text-light); margin-bottom: 16px;">
+                Crear una lista de compras toma solo 30 segundos. Conviértelo en hábito.
+            </p>
+
+            <div class="progress-wrapper">
+                <div class="progress-label">
+                    <span>Progreso semanal</span>
+                    <span id="progressText">70%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar" style="width: 70%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOCIAL PROOF / FOMO -->
+        <div class="social-proof">
+            <div class="social-proof-title">👥 Comunidad Givlyn</div>
+            <div class="social-proof-text">
+                <span class="social-name" id="socialName">María</span> acaba de ahorrar $45 comprando electrodomésticos. 
+                ¿Quieres hacerlo igual?
+            </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="actions-section">
+            <button class="action-btn">+ Crear Lista</button>
+            <button class="action-btn">📊 Ver Reportes</button>
+            <button class="action-btn">🎁 Referir Amigos</button>
+            <button class="action-btn">⚙️ Preferencias</button>
+        </div>
+    </div>
+
+    <script>
+        // ============ PERSONALIZATION ENGINE ============
+        
+        // Get user name from localStorage (simulated)
+        const userName = localStorage.getItem('userName') || 'JUAN';
+        document.getElementById('userName').textContent = userName.toUpperCase();
+
+        // ============ NEUROSCIENCIA #1: TIME-BASED EMOJI ============
+        function getTimeEmoji() {
+            const hour = new Date().getHours();
+            if (hour >= 6 && hour < 12) return '🌅';
+            if (hour >= 12 && hour < 17) return '🌆';
+            if (hour >= 17 && hour < 21) return '🌙';
+            return '🌙';
+        }
+
+        document.getElementById('timeEmoji').textContent = getTimeEmoji();
+
+        // ============ NEUROSCIENCIA #2: PREDICTIVE INSIGHTS ============
+        function getPredictiveInsight() {
+            const day = new Date().getDay();
+            const savings = [15, 18, 12, 20, 17, 22, 14][day];
+            return `Ahorrarás ~$${savings} hoy`;
+        }
+
+        document.getElementById('prediction').textContent = getPredictiveInsight();
+
+        // ============ NEUROCIENCIA #3: DYNAMIC SOCIAL PROOF ============
+        function getRandomSocialProof() {
+            const names = ['María', 'Carlos', 'Ana', 'Pedro', 'Lucia'];
+            const amounts = ['$45', '$67', '$32', '$58', '$41'];
+            const products = ['electrodomésticos', 'ropa', 'tecnología', 'artículos del hogar'];
+            
+            const name = names[Math.floor(Math.random() * names.length)];
+            const amount = amounts[Math.floor(Math.random() * amounts.length)];
+            const product = products[Math.floor(Math.random() * products.length)];
+            
+            return { name, amount, product };
+        }
+
+        const proof = getRandomSocialProof();
+        document.getElementById('socialName').textContent = proof.name;
+        document.querySelector('.social-proof-text').innerHTML = `
+            <span class="social-name">${proof.name}</span> acaba de ahorrar ${proof.amount} comprando ${proof.product}. 
+            ¿Quieres hacerlo igual?
+        `;
+
+        // ============ NEUROCIENCIA #4: PROGRESS GAMIFICATION ============
+        const progress = 70;
+        document.getElementById('progressBar').style.width = `${progress}%`;
+        document.getElementById('progressText').textContent = `${progress}%`;
+
+        // ============ NEUROCIENCIA #5: WELCOME MESSAGE VARIATION ============
+        function getWelcomeMessage() {
+            const messages = [
+                'Nos alegra verte por aquí. Vamos a ayudarte a ahorrar dinero inteligentemente hoy.',
+                'Tu inteligencia financiera está creciendo. Hoy haremos más ahorros juntos.',
+                'Cada compra inteligente te acerca a tus metas. ¡Vamos!',
+                'Te extrañamos. Hagamos que hoy sea un gran día de ahorros.'
+            ];
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        document.getElementById('welcomeSubtitle').textContent = getWelcomeMessage();
+
+        // ============ ANIMATION: Progress bar animation on load ============
+        window.addEventListener('load', () => {
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '0%';
+            
+            setTimeout(() => {
+                progressBar.style.transition = 'width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                progressBar.style.width = `${progress}%`;
+            }, 100);
+        });
+
+        // ============ INTERACTIVITY ============
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                console.log('Action:', this.textContent);
+                // TODO: Route to respective pages
+            });
+        });
+
+        // ============ REAL-TIME UPDATE (Every minute) ============
+        setInterval(() => {
+            // Update social proof every 2 minutes
+            if (Math.random() > 0.7) {
+                const newProof = getRandomSocialProof();
+                document.querySelector('.social-proof-text').innerHTML = `
+                    <span class="social-name">${newProof.name}</span> acaba de ahorrar ${newProof.amount} comprando ${newProof.product}. 
+                    ¿Quieres hacerlo igual?
+                `;
+            }
+        }, 120000);
+
+    </script>
+</body>
+</html>
+EOF
+
+git add .
+git commit -m "🧠 Dashboard Personalizado V2 - Neurociencia Aplicada (Nombre Usuario, Predicción, Social Proof, Gamificación)"
+git push origin main
+
+echo "✅ Dashboard Personalizado implementado!"
+echo ""
+echo "🧠 NEUROCIENCIA IMPLEMENTADA:"
+echo "  ✓ 'Bienvenido de Nuevo, JUAN' (Reconocimiento amígdala)"
+echo "  ✓ Emoji según hora (Estimulación emocional)"
+echo "  ✓ Predicción de ahorro (Anticipación = dopamina)"
+echo "  ✓ Social proof dinámico (FOMO + reciprocidad)"
+echo "  ✓ Barra de progreso (Completitud cognitiva)"
+echo "  ✓ Racha de días (Gamificación + hábito)"
+echo "  ✓ Variación de mensaje (Evita habituación)"
+echo ""
+echo "💰 COSTO: $0 (TODO vanilla JavaScript)"
+echo "🚀 Deploy en Vercel..."
