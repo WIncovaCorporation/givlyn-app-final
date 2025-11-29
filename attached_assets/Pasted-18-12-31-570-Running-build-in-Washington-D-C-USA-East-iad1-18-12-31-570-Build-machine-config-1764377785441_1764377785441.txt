@@ -1,0 +1,70 @@
+18:12:31.570 Running build in Washington, D.C., USA (East) – iad1
+18:12:31.570 Build machine configuration: 4 cores, 8 GB
+18:12:31.694 Cloning github.com/WIncovaCorporation/givlyn-app-final (Branch: main, Commit: c5d31c7)
+18:12:33.608 Cloning completed: 1.914s
+18:12:33.766 Restored build cache from previous deployment (6z8CgvPjkRZAsmAHR1NPxEU5yBa3)
+18:12:34.560 Running "vercel build"
+18:12:34.970 Vercel CLI 48.12.0
+18:12:35.612 Installing dependencies...
+18:12:39.830 npm warn ERESOLVE overriding peer dependency
+18:12:39.831 npm warn While resolving: @vitest/mocker@4.0.8
+18:12:39.831 npm warn Found: vite@5.4.19
+18:12:39.831 npm warn node_modules/vite
+18:12:39.831 npm warn   dev vite@"^5.4.19" from the root project
+18:12:39.831 npm warn   3 more (@vitejs/plugin-react-swc, lovable-tagger, vite-plugin-pwa)
+18:12:39.831 npm warn
+18:12:39.831 npm warn Could not resolve dependency:
+18:12:39.831 npm warn peerOptional vite@"^6.0.0 || ^7.0.0-0" from @vitest/mocker@4.0.8
+18:12:39.832 npm warn node_modules/@vitest/mocker
+18:12:39.832 npm warn   @vitest/mocker@"4.0.8" from vitest@4.0.8
+18:12:39.832 npm warn   node_modules/vitest
+18:12:39.832 npm warn
+18:12:39.832 npm warn Conflicting peer dependency: vite@7.2.4
+18:12:39.832 npm warn node_modules/vite
+18:12:39.832 npm warn   peerOptional vite@"^6.0.0 || ^7.0.0-0" from @vitest/mocker@4.0.8
+18:12:39.832 npm warn   node_modules/@vitest/mocker
+18:12:39.832 npm warn     @vitest/mocker@"4.0.8" from vitest@4.0.8
+18:12:39.832 npm warn     node_modules/vitest
+18:12:40.418 
+18:12:40.418 up to date in 5s
+18:12:40.418 
+18:12:40.418 189 packages are looking for funding
+18:12:40.419   run `npm fund` for details
+18:12:40.569 
+18:12:40.569 > vite_react_shadcn_ts@0.0.0 build
+18:12:40.569 > vite build
+18:12:40.569 
+18:12:40.946 [36mvite v5.4.19 [32mbuilding for production...[36m[39m
+18:12:41.000 transforming...
+18:12:46.977 [32m✓[39m 3028 modules transformed.
+18:12:47.253 rendering chunks...
+18:12:47.661 computing gzip size...
+18:12:47.696 [2mdist/[22m[32mregisterSW.js                   [39m[1m[2m    0.13 kB[22m[1m[22m
+18:12:47.697 [2mdist/[22m[32mmanifest.webmanifest            [39m[1m[2m    0.49 kB[22m[1m[22m
+18:12:47.697 [2mdist/[22m[32mindex.html                      [39m[1m[2m    1.72 kB[22m[1m[22m[2m │ gzip:   0.73 kB[22m
+18:12:47.697 [2mdist/[22m[2massets/[22m[32mhero-gifts-CDGKo9pO.jpg  [39m[1m[2m  104.14 kB[22m[1m[22m
+18:12:47.697 [2mdist/[22m[2massets/[22m[35mindex-CVBi4dzR.css       [39m[1m[2m  102.15 kB[22m[1m[22m[2m │ gzip:  16.57 kB[22m
+18:12:47.697 [2mdist/[22m[2massets/[22m[36mDebugPanel-CZGdDGRM.js   [39m[1m[2m    0.18 kB[22m[1m[22m[2m │ gzip:   0.16 kB[22m
+18:12:47.697 [2mdist/[22m[2massets/[22m[36mindex-Y3SN6DLs.js        [39m[1m[33m1,187.30 kB[39m[22m[2m │ gzip: 338.76 kB[22m
+18:12:47.697 [33m
+18:12:47.697 (!) Some chunks are larger than 500 kB after minification. Consider:
+18:12:47.698 - Using dynamic import() to code-split the application
+18:12:47.698 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+18:12:47.698 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+18:12:47.698 [32m✓ built in 6.73s[39m
+18:12:50.139 [31merror during build:
+18:12:50.140 Error: 
+18:12:50.140   Configure "workbox.maximumFileSizeToCacheInBytes" to change the limit: the default value is 2 MiB.
+18:12:50.140   Check https://vite-pwa-org.netlify.app/guide/faq.html#missing-assets-from-sw-precache-manifest for more information.
+18:12:50.140   Assets exceeding the limit:
+18:12:50.140   - givlyn-logo.png is 3.65 MB, and won't be precached.
+18:12:50.140 
+18:12:50.140     at logWorkboxResult (file:///vercel/path0/node_modules/vite-plugin-pwa/dist/chunk-G4TAN34B.js:44:13)
+18:12:50.140     at generateServiceWorker (file:///vercel/path0/node_modules/vite-plugin-pwa/dist/index.js:209:3)
+18:12:50.140     at async _generateSW (file:///vercel/path0/node_modules/vite-plugin-pwa/dist/index.js:234:5)
+18:12:50.140     at async Object.handler (file:///vercel/path0/node_modules/vite-plugin-pwa/dist/index.js:427:13)
+18:12:50.140     at async PluginDriver.hookParallel (file:///vercel/path0/node_modules/vite/node_modules/rollup/dist/es/shared/node-entry.js:22355:17)
+18:12:50.140     at async Object.close (file:///vercel/path0/node_modules/vite/node_modules/rollup/dist/es/shared/node-entry.js:23374:13)
+18:12:50.140     at async build (file:///vercel/path0/node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:65716:17)
+18:12:50.141     at async CAC.<anonymous> (file:///vercel/path0/node_modules/vite/dist/node/cli.js:829:5)[39m
+18:12:50.191 Error: Command "npm run build" exited with 1

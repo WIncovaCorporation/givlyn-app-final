@@ -199,7 +199,7 @@ const Auth = () => {
           <div>
             <a href="/" className="inline-block mb-6">
               <img 
-                src="/givlyn-logo.png" 
+                src="/logo.svg" 
                 alt="Givlyn" 
                 className="w-16 h-16 object-contain bg-white/20 rounded-xl p-2"
               />

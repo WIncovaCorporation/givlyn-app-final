@@ -192,7 +192,7 @@ const Dashboard = () => {
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <a href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
             <img 
-              src="/givlyn-logo.png" 
+              src="/logo.svg" 
               alt="Givlyn" 
               className="w-12 h-12 sm:w-14 sm:h-14 object-contain"
             />
