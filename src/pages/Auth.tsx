@@ -4,17 +4,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Gift, Eye, EyeOff, Mail, Lock, User, ArrowRight, Sparkles } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Check, Shield, Lock as LockIcon } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSelector from "@/components/LanguageSelector";
-import Footer from "@/components/Footer";
 
 const Auth = () => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +19,7 @@ const Auth = () => {
   const [resetEmail, setResetEmail] = useState("");
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -56,16 +54,6 @@ const Auth = () => {
       toast.error("La contraseña debe tener al menos 8 caracteres");
       return;
     }
-    
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumbers = /\d/.test(password);
-    
-    if (!(hasUpperCase && hasLowerCase && hasNumbers)) {
-      toast.info("💡 Tip: Usa mayúsculas, minúsculas y números para mayor seguridad", {
-        duration: 5000,
-      });
-    }
 
     setLoading(true);
 
@@ -88,7 +76,7 @@ const Auth = () => {
         return;
       }
 
-      toast.success("🎉 ¡Cuenta creada! Revisa tu correo para confirmar.");
+      toast.success("¡Cuenta creada! Revisa tu correo para confirmar.");
       setEmail("");
       setPassword("");
       setDisplayName("");
@@ -128,22 +116,16 @@ const Auth = () => {
 
       if (error) throw error;
 
-      toast.success("¡Bienvenido de nuevo! 🎉");
+      toast.success("¡Bienvenido de nuevo!");
       setEmail("");
       setPassword("");
     } catch (error: any) {
-      console.error("Error de inicio de sesión:", error);
-      
       if (error.message.includes("Invalid login credentials") || error.message.includes("Invalid") || error.message.includes("credentials")) {
-        toast.error("Correo o contraseña incorrectos", {
-          duration: 5000,
-        });
+        toast.error("Correo o contraseña incorrectos");
       } else if (error.message.includes("Email not confirmed")) {
-        toast.error("Confirma tu correo antes de iniciar sesión. Revisa tu bandeja de entrada.", {
-          duration: 6000,
-        });
+        toast.error("Confirma tu correo antes de iniciar sesión.");
       } else {
-        toast.error(error.message || "Error al iniciar sesión. Intenta nuevamente.");
+        toast.error(error.message || "Error al iniciar sesión.");
       }
     } finally {
       setLoading(false);
@@ -161,7 +143,6 @@ const Auth = () => {
 
       if (error) throw error;
     } catch (error: any) {
-      console.error("Error al iniciar sesión con Google:", error);
       toast.error("Error al conectar con Google. Intenta nuevamente.");
     }
   };
@@ -179,347 +160,299 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.functions.invoke('send-password-reset', {
-        body: { email: normalizedEmail }
+      const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
+        redirectTo: `${window.location.origin}/update-password`,
       });
 
-      if (error) {
-        console.error("Error al enviar correo:", error);
-        throw error;
-      }
+      if (error) throw error;
 
-      toast.success("✅ Correo de recuperación enviado", {
-        duration: 6000,
-      });
-      toast.info("📧 Revisa tu bandeja de entrada y SPAM", {
-        duration: 6000,
-      });
-      
+      toast.success("Te enviamos un enlace para restablecer tu contraseña. Revisa tu correo.");
       setShowResetPassword(false);
       setResetEmail("");
     } catch (error: any) {
-      console.error("Error completo al enviar correo de recuperación:", error);
-      
-      if (error.message?.includes('Email not found') || error.message?.includes('User not found')) {
-        toast.error("Este correo no está registrado. Verifica o crea una cuenta nueva.", {
-          duration: 6000,
-        });
-      } else if (error.message?.includes('rate limit')) {
-        toast.error("Demasiados intentos. Espera 5 minutos.", {
-          duration: 6000,
-        });
-      } else {
-        toast.error("Error al enviar correo. Intenta nuevamente.", {
-          duration: 6000,
-        });
-      }
+      toast.error(error.message || "Error al enviar correo.");
     } finally {
       setLoading(false);
     }
   };
 
-  const PasswordInput = ({ id, value, onChange, placeholder }: { id: string; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; placeholder: string }) => (
-    <div className="relative w-full overflow-hidden box-border">
-      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
-      <Input
-        id={id}
-        type={showPassword ? "text" : "password"}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        required
-        minLength={8}
-        className="pl-10 pr-10 h-12 w-full max-w-full"
-        autoComplete="current-password"
-      />
-      <button
-        type="button"
-        onClick={() => setShowPassword(!showPassword)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors z-10"
-        tabIndex={-1}
-      >
-        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-      </button>
-    </div>
-  );
+  const benefits = language === 'es' ? [
+    "Comparación de precios en segundos",
+    "5+ tiendas conectadas simultáneamente", 
+    "Notificaciones de descuentos automáticas"
+  ] : [
+    "Price comparison in seconds",
+    "5+ stores connected simultaneously",
+    "Automatic discount notifications"
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-4">
       <div className="fixed top-4 right-4 z-50">
         <LanguageSelector />
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-4 py-8">
-        <div className="w-full max-w-md mx-auto">
-          <div className="text-center mb-6">
-            <a href="/" className="inline-block hover:opacity-90 transition-opacity cursor-pointer mb-4">
+      <div className="w-full max-w-5xl grid md:grid-cols-2 gap-0 bg-white rounded-2xl shadow-2xl overflow-hidden">
+        
+        {/* LEFT SIDE - VALUE PROPOSITION */}
+        <div className="bg-gradient-to-br from-primary to-red-700 text-white p-8 md:p-12 flex flex-col justify-between order-2 md:order-1">
+          <div>
+            <a href="/" className="inline-block mb-6">
               <img 
                 src="/givlyn-logo.png" 
-                alt="Givlyn Logo" 
-                className="w-20 h-20 object-contain mx-auto"
+                alt="Givlyn" 
+                className="w-16 h-16 object-contain bg-white/20 rounded-xl p-2"
               />
             </a>
-            <h1 className="text-3xl font-bold">{t("auth.welcome")}</h1>
-            <p className="text-muted-foreground mt-2 flex items-center justify-center gap-2">
-              <Sparkles className="h-4 w-4 text-primary" />
-              <span>Ahorra hasta 40% comparando precios al instante</span>
+            
+            <h1 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">
+              {language === 'es' ? 'Ahorra Dinero en Cada Compra' : 'Save Money on Every Purchase'}
+            </h1>
+            
+            <p className="text-white/90 mb-8 leading-relaxed">
+              {language === 'es' 
+                ? 'Compara precios automáticamente en Amazon, Walmart, Target y más. Ahorra hasta 40%.'
+                : 'Automatically compare prices on Amazon, Walmart, Target and more. Save up to 40%.'}
             </p>
+
+            <div className="space-y-4 mb-8">
+              {benefits.map((benefit, index) => (
+                <div key={index} className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-white/30 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Check className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-sm md:text-base">{benefit}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <Card className="shadow-large border-border/50">
-            <CardHeader className="text-center pb-2">
-              <CardTitle className="text-xl">{t("auth.getStarted")}</CardTitle>
-              <CardDescription>
-                Encuentra los mejores precios en Amazon, Walmart, Target y más
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-4">
-              {showResetPassword ? (
-                <div className="space-y-4">
-                  <div className="text-center space-y-1">
-                    <h3 className="text-lg font-semibold">{t("auth.resetPassword")}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Te enviaremos un enlace para crear una nueva contraseña
-                    </p>
-                  </div>
-                  <form onSubmit={handleResetPassword} className="space-y-4 w-full overflow-hidden">
-                    <div className="space-y-2 w-full">
-                      <Label htmlFor="reset-email">{t("auth.email")}</Label>
-                      <div className="relative w-full overflow-hidden box-border">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
-                        <Input
-                          id="reset-email"
-                          type="email"
-                          inputMode="email"
-                          placeholder="tu@correo.com"
-                          value={resetEmail}
-                          onChange={(e) => setResetEmail(e.target.value)}
-                          required
-                          autoComplete="email"
-                          className="pl-10 h-12 w-full max-w-full"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button type="submit" className="flex-1 h-12 text-base font-semibold" disabled={loading}>
-                        {loading ? "Enviando..." : "Enviar enlace"}
-                      </Button>
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        className="h-12"
-                        onClick={() => {
-                          setShowResetPassword(false);
-                          setResetEmail("");
-                        }}
-                        disabled={loading}
-                      >
-                        Volver
-                      </Button>
-                    </div>
-                    <p className="text-xs text-center text-muted-foreground">
-                      El correo puede tardar hasta 5 minutos. Revisa SPAM si no lo ves.
-                    </p>
-                  </form>
-                </div>
-              ) : (
-                <Tabs 
-                  defaultValue="signin" 
-                  className="w-full"
-                  onValueChange={() => {
-                    setEmail("");
-                    setPassword("");
-                    setDisplayName("");
-                  }}
-                >
-                  <TabsList className="grid w-full grid-cols-2 mb-6 h-12">
-                    <TabsTrigger value="signin" className="text-base font-medium">{t("auth.signIn")}</TabsTrigger>
-                    <TabsTrigger value="signup" className="text-base font-medium">{t("auth.signUp")}</TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="signin">
-                    <div className="space-y-4">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-full h-12 bg-white hover:bg-gray-50 text-gray-700 border-gray-300 flex items-center justify-center gap-3 text-base"
-                        onClick={handleGoogleSignIn}
-                      >
-                        <svg className="w-5 h-5" viewBox="0 0 24 24">
-                          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                        </svg>
-                        Continuar con Google
-                      </Button>
-
-                      <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                          <span className="w-full border-t" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                          <span className="bg-card px-2 text-muted-foreground">o con email</span>
-                        </div>
-                      </div>
-
-                      <form onSubmit={handleSignIn} className="space-y-4 w-full overflow-hidden">
-                        <div className="space-y-2 w-full">
-                          <Label htmlFor="signin-email">{t("auth.email")}</Label>
-                          <div className="relative w-full overflow-hidden box-border">
-                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
-                            <Input
-                              id="signin-email"
-                              type="email"
-                              inputMode="email"
-                              placeholder={t("auth.emailPlaceholder")}
-                              value={email}
-                              onChange={(e) => setEmail(e.target.value)}
-                              required
-                              className="pl-10 h-12 w-full max-w-full"
-                              autoComplete="email"
-                            />
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <Label htmlFor="signin-password">{t("auth.password")}</Label>
-                            <Button 
-                              type="button"
-                              variant="link"
-                              className="px-0 h-auto text-xs text-primary hover:text-primary/80"
-                              onClick={() => setShowResetPassword(true)}
-                            >
-                              ¿Olvidaste tu contraseña?
-                            </Button>
-                          </div>
-                          <PasswordInput
-                            id="signin-password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="••••••••"
-                          />
-                        </div>
-                        <Button 
-                          type="submit" 
-                          className="w-full h-14 text-lg font-semibold bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg transition-all" 
-                          disabled={loading}
-                        >
-                          {loading ? "Ingresando..." : (
-                            <span className="flex items-center gap-2">
-                              Iniciar Sesión
-                              <ArrowRight className="h-5 w-5" />
-                            </span>
-                          )}
-                        </Button>
-                      </form>
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="signup">
-                    <div className="space-y-4">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-full h-12 bg-white hover:bg-gray-50 text-gray-700 border-gray-300 flex items-center justify-center gap-3 text-base"
-                        onClick={handleGoogleSignIn}
-                      >
-                        <svg className="w-5 h-5" viewBox="0 0 24 24">
-                          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                        </svg>
-                        Registrarse con Google
-                      </Button>
-
-                      <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                          <span className="w-full border-t" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                          <span className="bg-card px-2 text-muted-foreground">o con email</span>
-                        </div>
-                      </div>
-
-                      <form onSubmit={handleSignUp} className="space-y-4 w-full overflow-hidden">
-                        <div className="space-y-2 w-full">
-                          <Label htmlFor="signup-name">{t("auth.name")}</Label>
-                          <div className="relative w-full overflow-hidden box-border">
-                            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
-                            <Input
-                              id="signup-name"
-                              type="text"
-                              placeholder={t("auth.namePlaceholder")}
-                              value={displayName}
-                              onChange={(e) => setDisplayName(e.target.value)}
-                              required
-                              className="pl-10 h-12 w-full max-w-full"
-                              autoComplete="name"
-                            />
-                          </div>
-                        </div>
-                        <div className="space-y-2 w-full">
-                          <Label htmlFor="signup-email">{t("auth.email")}</Label>
-                          <div className="relative w-full overflow-hidden box-border">
-                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
-                            <Input
-                              id="signup-email"
-                              type="email"
-                              inputMode="email"
-                              placeholder={t("auth.emailPlaceholder")}
-                              value={email}
-                              onChange={(e) => setEmail(e.target.value)}
-                              required
-                              className="pl-10 h-12 w-full max-w-full"
-                              autoComplete="email"
-                            />
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="signup-password">{t("auth.password")}</Label>
-                          <PasswordInput
-                            id="signup-password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Mínimo 8 caracteres"
-                          />
-                          <p className="text-xs text-muted-foreground">
-                            Incluye mayúsculas, minúsculas y números
-                          </p>
-                        </div>
-                        <Button 
-                          type="submit" 
-                          className="w-full h-14 text-lg font-semibold bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg transition-all" 
-                          disabled={loading}
-                        >
-                          {loading ? "Creando cuenta..." : (
-                            <span className="flex items-center gap-2">
-                              Crear Cuenta Gratis
-                              <ArrowRight className="h-5 w-5" />
-                            </span>
-                          )}
-                        </Button>
-                        <p className="text-xs text-center text-muted-foreground">
-                          Al registrarte aceptas nuestros términos y política de privacidad
-                        </p>
-                      </form>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              )}
-            </CardContent>
-          </Card>
-
-          <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              ¿Necesitas ayuda? <a href="/contact" className="text-primary hover:underline">Contáctanos</a>
+          <div className="bg-white/15 backdrop-blur-sm rounded-xl p-4">
+            <p className="text-lg font-bold mb-1">5,000+ {language === 'es' ? 'usuarios' : 'users'}</p>
+            <p className="text-sm text-white/90">
+              {language === 'es' 
+                ? 'ahorran en promedio $450 mensualmente con Givlyn'
+                : 'save an average of $450 monthly with Givlyn'}
             </p>
           </div>
         </div>
-      </div>
 
-      <Footer />
+        {/* RIGHT SIDE - FORM */}
+        <div className="p-8 md:p-12 flex flex-col justify-center order-1 md:order-2">
+          {showResetPassword ? (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+                  {language === 'es' ? 'Recuperar Contraseña' : 'Reset Password'}
+                </h2>
+                <p className="text-gray-500 text-sm">
+                  {language === 'es' 
+                    ? 'Te enviaremos un enlace para crear una nueva contraseña'
+                    : "We'll send you a link to create a new password"}
+                </p>
+              </div>
+
+              <form onSubmit={handleResetPassword} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="reset-email" className="text-xs font-semibold uppercase tracking-wider text-gray-700">
+                    {language === 'es' ? 'Correo Electrónico' : 'Email'}
+                  </Label>
+                  <Input
+                    id="reset-email"
+                    type="email"
+                    placeholder="tu@email.com"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    required
+                    className="h-12 border-gray-200 focus:border-primary focus:ring-primary/20"
+                  />
+                </div>
+
+                <div className="flex gap-3">
+                  <Button 
+                    type="submit" 
+                    className="flex-1 h-12 bg-primary hover:bg-primary/90 font-semibold shadow-lg shadow-primary/30"
+                    disabled={loading}
+                  >
+                    {loading ? (language === 'es' ? 'Enviando...' : 'Sending...') : (language === 'es' ? 'Enviar enlace' : 'Send link')}
+                  </Button>
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    className="h-12 px-6"
+                    onClick={() => {
+                      setShowResetPassword(false);
+                      setResetEmail("");
+                    }}
+                  >
+                    {language === 'es' ? 'Volver' : 'Back'}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+                  {isSignUp 
+                    ? (language === 'es' ? 'Crear Cuenta' : 'Create Account')
+                    : (language === 'es' ? 'Bienvenido de Nuevo' : 'Welcome Back')}
+                </h2>
+                <p className="text-gray-500 text-sm">
+                  {isSignUp 
+                    ? (language === 'es' ? '¿Ya tienes cuenta? ' : 'Already have an account? ')
+                    : (language === 'es' ? '¿No tienes cuenta? ' : "Don't have an account? ")}
+                  <button 
+                    onClick={() => {
+                      setIsSignUp(!isSignUp);
+                      setEmail("");
+                      setPassword("");
+                      setDisplayName("");
+                    }}
+                    className="text-primary font-semibold hover:underline"
+                  >
+                    {isSignUp 
+                      ? (language === 'es' ? 'Inicia sesión aquí' : 'Sign in here')
+                      : (language === 'es' ? 'Crea una gratis aquí' : 'Create one free here')}
+                  </button>
+                </p>
+              </div>
+
+              <form onSubmit={isSignUp ? handleSignUp : handleSignIn} className="space-y-4">
+                {isSignUp && (
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-xs font-semibold uppercase tracking-wider text-gray-700">
+                      {language === 'es' ? 'Nombre' : 'Name'}
+                    </Label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Input
+                        id="name"
+                        type="text"
+                        placeholder={language === 'es' ? 'Tu nombre' : 'Your name'}
+                        value={displayName}
+                        onChange={(e) => setDisplayName(e.target.value)}
+                        required
+                        className="pl-10 h-12 border-gray-200 focus:border-primary focus:ring-primary/20"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-xs font-semibold uppercase tracking-wider text-gray-700">
+                    {language === 'es' ? 'Correo Electrónico' : 'Email'}
+                  </Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="tu@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="pl-10 h-12 border-gray-200 focus:border-primary focus:ring-primary/20"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password" className="text-xs font-semibold uppercase tracking-wider text-gray-700">
+                      {language === 'es' ? 'Contraseña' : 'Password'}
+                    </Label>
+                    {!isSignUp && (
+                      <button
+                        type="button"
+                        onClick={() => setShowResetPassword(true)}
+                        className="text-xs text-primary font-semibold hover:underline"
+                      >
+                        {language === 'es' ? '¿Olvidaste tu contraseña?' : 'Forgot password?'}
+                      </button>
+                    )}
+                  </div>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      minLength={8}
+                      className="pl-10 pr-10 h-12 border-gray-200 focus:border-primary focus:ring-primary/20"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <Button 
+                  type="submit" 
+                  className="w-full h-14 bg-primary hover:bg-primary/90 text-base font-semibold shadow-lg shadow-primary/30 hover:shadow-xl hover:-translate-y-0.5 transition-all"
+                  disabled={loading}
+                >
+                  {loading 
+                    ? (language === 'es' ? 'Procesando...' : 'Processing...')
+                    : (
+                      <span className="flex items-center justify-center gap-2">
+                        {isSignUp 
+                          ? (language === 'es' ? 'Crear Cuenta' : 'Create Account')
+                          : (language === 'es' ? 'Iniciar Sesión' : 'Sign In')}
+                        <ArrowRight className="w-5 h-5" />
+                      </span>
+                    )}
+                </Button>
+              </form>
+
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-gray-200" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="bg-white px-3 text-gray-500">
+                    {language === 'es' ? 'O continúa con' : 'Or continue with'}
+                  </span>
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full h-12 border-gray-200 hover:bg-gray-50 font-semibold"
+                onClick={handleGoogleSignIn}
+              >
+                <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                </svg>
+                {language === 'es' ? 'Continuar con Google' : 'Continue with Google'}
+              </Button>
+
+              {/* Trust Badges */}
+              <div className="flex items-center justify-center gap-6 pt-4 border-t border-gray-100">
+                <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                  <LockIcon className="w-3.5 h-3.5" />
+                  <span>{language === 'es' ? 'Encriptado 256-bit' : '256-bit Encrypted'}</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                  <Shield className="w-3.5 h-3.5" />
+                  <span>GDPR Compliant</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
