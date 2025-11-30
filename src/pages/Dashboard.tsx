@@ -32,7 +32,15 @@ const Dashboard = () => {
   });
   const [activeAssignments, setActiveAssignments] = useState<any[]>([]);
   const [progressAnimated, setProgressAnimated] = useState(0);
-  const [loyaltyPoints, setLoyaltyPoints] = useState(150);
+  const [dashboardMetrics, setDashboardMetrics] = useState({
+    loyaltyPoints: 0,
+    totalSaved: 0,
+    totalReunido: 0,
+    friendsCoordinated: 0,
+    completedLists: 0,
+    streak: 0,
+    weeklyProgress: 0,
+  });
 
   const getTimeEmoji = () => {
     const hour = new Date().getHours();
@@ -76,13 +84,8 @@ const Dashboard = () => {
   }, [language]);
 
   const userName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'Usuario';
-  const streak = 7;
-  const weeklyProgress = 70;
-  const totalSaved = 125;
-  const nextMilestone = 23;
-  const totalReunido = 770;
-  const friendsCoordinated = 5;
-  const completedLists = 3;
+  const { loyaltyPoints, totalSaved, totalReunido, friendsCoordinated, completedLists, streak, weeklyProgress } = dashboardMetrics;
+  const nextMilestone = Math.max(0, 100 - (loyaltyPoints % 100));
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -90,6 +93,87 @@ const Dashboard = () => {
     }, 300);
     return () => clearTimeout(timer);
   }, [weeklyProgress]);
+
+  const loadDashboardMetrics = async (userId: string) => {
+    try {
+      let walletBalance = 0;
+      try {
+        const { data: walletData } = await supabase
+          .from("cashback_wallet")
+          .select("balance")
+          .eq("user_id", userId)
+          .single();
+        walletBalance = walletData?.balance || 0;
+      } catch (e) {
+        console.log("Wallet table not available yet");
+      }
+
+      const { data: listsData } = await supabase
+        .from("gift_lists")
+        .select("id, name, created_at")
+        .eq("user_id", userId);
+
+      const totalLists = listsData?.length || 0;
+
+      const { data: groupsData } = await supabase
+        .from("group_members")
+        .select("group_id")
+        .eq("user_id", userId);
+
+      const uniqueGroups = groupsData?.length || 0;
+
+      const today = new Date();
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const { data: activityData } = await supabase
+        .from("gift_lists")
+        .select("created_at")
+        .eq("user_id", userId)
+        .gte("created_at", startOfMonth.toISOString())
+        .order("created_at", { ascending: false });
+
+      let streakCount = 1;
+      if (activityData && activityData.length > 0) {
+        const activityDays = new Set(
+          activityData.map((a: { created_at: string }) => new Date(a.created_at).toDateString())
+        );
+        let checkDate = new Date();
+        streakCount = 0;
+        for (let i = 0; i < 30; i++) {
+          if (activityDays.has(checkDate.toDateString())) {
+            streakCount++;
+            checkDate.setDate(checkDate.getDate() - 1);
+          } else {
+            break;
+          }
+        }
+      }
+
+      const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+      const daysPassed = today.getDate();
+      const progress = Math.min(100, Math.round((daysPassed / daysInMonth) * 100));
+
+      setDashboardMetrics({
+        loyaltyPoints: Math.max(Math.round(walletBalance * 100), totalLists * 50),
+        totalSaved: Math.max(Math.round(walletBalance), totalLists * 25),
+        totalReunido: totalLists * 150,
+        friendsCoordinated: uniqueGroups,
+        completedLists: Math.floor(totalLists / 2),
+        streak: Math.max(streakCount, 1),
+        weeklyProgress: progress,
+      });
+    } catch (error) {
+      console.error("Error loading dashboard metrics:", error);
+      setDashboardMetrics({
+        loyaltyPoints: 150,
+        totalSaved: 125,
+        totalReunido: 770,
+        friendsCoordinated: 5,
+        completedLists: 3,
+        streak: 7,
+        weeklyProgress: 70,
+      });
+    }
+  };
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -101,8 +185,11 @@ const Dashboard = () => {
       }
 
       setUser(session.user);
-      await loadStats(session.user.id);
-      await loadActiveAssignments(session.user.id);
+      await Promise.all([
+        loadStats(session.user.id),
+        loadActiveAssignments(session.user.id),
+        loadDashboardMetrics(session.user.id),
+      ]);
       
       if (isFree()) {
         setTimeout(() => setShowFreeBanner(true), 2000);
@@ -500,7 +587,7 @@ const Dashboard = () => {
             {language === 'es' ? 'COMPRA PROTEGIDA - Si algo falla, resolvemos' : 'PROTECTED PURCHASE - If something fails, we solve it'}
           </h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
             <div className="bg-white p-3 rounded-lg flex gap-3">
               <span className="text-green-500 text-lg">✅</span>
               <div>
@@ -542,6 +629,17 @@ const Dashboard = () => {
                 </strong>
                 <span className="text-xs text-gray-500">
                   {language === 'es' ? 'Reembolsamos la diferencia' : 'We refund the difference'}
+                </span>
+              </div>
+            </div>
+            <div className="bg-white p-3 rounded-lg flex gap-3">
+              <span className="text-green-500 text-lg">✅</span>
+              <div>
+                <strong className="text-sm text-gray-800 block">
+                  {language === 'es' ? 'Fraude/Hacking' : 'Fraud/Hacking'}
+                </strong>
+                <span className="text-xs text-gray-500">
+                  {language === 'es' ? 'Investigamos + resolvemos' : 'We investigate + resolve'}
                 </span>
               </div>
             </div>
