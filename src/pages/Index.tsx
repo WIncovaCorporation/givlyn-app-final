@@ -116,12 +116,14 @@ const Index = () => {
       zIndex: 100,
     },
     logo: {
-      fontSize: '18px',
-      fontWeight: 700,
-      color: '#E53935',
       display: 'flex',
       alignItems: 'center',
-      gap: '4px',
+      height: '40px',
+    },
+    logoImage: {
+      height: '40px',
+      width: 'auto',
+      objectFit: 'contain' as const,
     },
     main: {
       maxWidth: '600px',
@@ -297,7 +299,13 @@ const Index = () => {
       {/* HEADER */}
       <header style={styles.header}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={styles.logo}>💰 Givlyn</div>
+          <div style={styles.logo}>
+            <img 
+              src="/logo-givlyn.png" 
+              alt="Givlyn – Organiza regalos y consigue mejor precio"
+              style={styles.logoImage}
+            />
+          </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <button
@@ -338,7 +346,7 @@ const Index = () => {
         {/* HERO */}
         <section style={styles.hero}>
           <h1 style={styles.heroTitle}>
-            💰 {t.heroTitle}<br />
+            {t.heroTitle}<br />
             {language === 'es' ? 'Consigue ' : 'Get '}
             <span style={styles.heroHighlight}>{t.heroHighlight}</span>.<br />
             {t.heroSubtitle}

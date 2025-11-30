@@ -1,0 +1,136 @@
+Perfecto. Te dejo las instrucciones **exactas y lisas para copiar-pegar** para implementar tu logo de Givlyn en el header de la landing.
+
+***
+
+# 📋 INSTRUCCIÓN PARA DEV: CAMBIAR LOGO EN HEADER
+
+## **PASO 1: Descargar tu logo**
+
+1. Ve a: https://drive.google.com/file/d/1rR6Pl73gpusvjuZo8heo1JOSjj5ndtl3/view?usp=sharing
+2. Descarga el archivo (botón derecho → Descargar)
+3. Guarda la imagen en tu proyecto en esta ruta:
+   ```
+   proyecto-givlyn/
+   └── public/
+       └── logo-givlyn.png  (← Aquí)
+   ```
+
+## **PASO 2: Actualizar el HTML del Header**
+
+**ARCHIVO:** `src/pages/Index.tsx` (o componente donde esté el header)
+
+**BUSCAR:**
+```jsx
+<header className="header">
+    <div className="logo">💰 Givlyn</div>
+    <!-- resto del header -->
+</header>
+```
+
+**REEMPLAZAR CON:**
+```jsx
+<header className="header">
+    <div className="logo">
+        <img 
+            src="/logo-givlyn.png" 
+            alt="Givlyn – Organiza regalos y consigue mejor precio"
+            className="logo-image"
+        />
+    </div>
+    <!-- resto del header -->
+</header>
+```
+
+## **PASO 3: Agregar CSS para el logo**
+
+**ARCHIVO:** `src/styles/index.css` (o donde esté tu CSS del header)
+
+**AGREGAR ESTE CSS:**
+```css
+.logo {
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+.logo-image {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+/* Responsive para mobile */
+@media (max-width: 768px) {
+    .logo {
+        height: 32px;
+    }
+    
+    .logo-image {
+        height: 32px;
+    }
+}
+```
+
+## **PASO 4: Actualizar también el Favicon**
+
+**ARCHIVO:** `index.html` (o HTML principal)
+
+**BUSCAR:**
+```html
+<head>
+    ...
+    <link rel="icon" href="...">
+    ...
+</head>
+```
+
+**REEMPLAZAR CON:**
+```html
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Givlyn – Organiza regalos y consigue mejor precio</title>
+    <meta name="description" content="Coordina regalos en grupo, compra donde siempre (Amazon, Walmart, etc.) y evita pagar de más. Crea tu lista gratis en minutos.">
+    
+    <!-- Favicon (Logo en pestaña del navegador) -->
+    <link rel="icon" href="/logo-givlyn.png" type="image/png">
+    <link rel="apple-touch-icon" href="/logo-givlyn.png">
+</head>
+```
+
+## **PASO 5: Test**
+
+```bash
+1. En Replit: Click "Run"
+2. Abre en navegador: https://givlyn.com
+3. Verifica:
+   ✅ Logo aparece en el header (lado izquierdo)
+   ✅ Logo se ve claro y sin distorsión
+   ✅ En pestaña del navegador aparece el icono (favicon)
+   ✅ Responsive: se ve bien en mobile (más pequeño)
+```
+
+***
+
+## 🎯 RESULTADO FINAL
+
+**Antes:**
+```
+| 💰 Givlyn  (emoji genérico + texto)
+```
+
+**Después:**
+```
+| [LOGO GIVLYN] (tu imagen real)
+```
+
+El logo se mostrará:
+- ✅ En el header (40px de altura)
+- ✅ En la pestaña del navegador (favicon)
+- ✅ Responsive en mobile (32px)
+
+***
+
+**EQUIPO REPLIT: Solo sigue estos 5 pasos y el logo está listo. ¡Adelante!**
+
+[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/images/130248095/4d8ca028-b036-4fa7-b6ac-12f3948e2192/image.jpg?AWSAccessKeyId=ASIA2F3EMEYEZJUL6U3G&Signature=kqol%2F5yBwFviOpPWvDPZ%2Fn538hQ%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEB0aCXVzLWVhc3QtMSJHMEUCIGwKeENY%2FHLCOGT3W9TtE8oUMhcC92VmbyHdWaf31la3AiEAsoSKhRSLH0sariyNJe9SLdjz9ZPgzDGq%2Fc4NgVBPWz0q%2FAQI5v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARABGgw2OTk3NTMzMDk3MDUiDEcTSZB7dNCH43mn7CrQBEsgvn%2BUyBxnbi785CC6IfFOP0ZA6oW9ncAIjoBiMRTHVc5mh%2FqfAQGFWZrQlXeAwQ6By6SfmZMMPALsiu8vBJBR9%2FqYHI02PKgIcQq52OOuHQ9TsJvbJhNRjYYkl0R1SQOS3zZlX8RKh1GH86FCDRw%2BdVPPFWoCLrOzBo7Ih2yVIijx8mPaqceKbgEf2EZ6CjBdyVtr%2BUhK2dZGKb3siYQfqI2DS2piSUIiX4M0TXlTR15XsOX8MtWwti6BXcjUyXUfjNTYHGZ692fey%2FGdVVMB0KhhvxAwRaRchNGgKFzkYkWpg4x1hp7PiZkqhPp5qW%2B5QUtBLqGsDo%2Bevmgeyp6ceTNrAGYhBSMJqN6yZr16AOTirJC1NCF1Qf4ylO%2FWJIwunkp0Nrq3D3Bwrvc9qbzc3UuzSmy%2BMCDCyZXyL%2Fl20U3oyDBuiCKLTqQS1TcPI%2BKXidu%2Fli2oi%2B%2FIr%2BcCnY7wQvSVJf4cVHUyLHaRE9%2FdC7tf2S3mhD5na%2Fp9jTxoCRtj%2FkZUBvDEuMx%2FhkUI5BsGfq02LupAWEHcgxYiUZWBivNSlVe6ek6ptmHkpQi6hCVSaP90cbx2ul3vJC1eAjt0WnSOpLbeQ5je%2BCQ9D5N3tBM1BHUnLHwdd7o2R%2Bwp8Xu5bPSVvsn3q6pVqBY%2Bq1FtOoFWrSbfYpmC7UGmG7CxxjJvyfedWkwb66CSf0fIgOSaUNgIJta6hHJ2Y%2F9EZDVQO0BEOfP5UH0i2el2DtUUzFwtfcoHsiBO%2FW8oPfOP7gGiHNejTxOuHd6TVdGLXhQwxPmwyQY6mAFnEYFUwOcHZputlLsshViVwm93IdqcgN46Opbt2cmNwlH7aBxBkjeC0xbsye%2FPNcDX24kDFuWz3kXd6Ih5snou7vKiFbe1FAFYLoje5gvvjhDOk7%2BSLfdPxZ1bR56a1ReA6zeiBNvVwkF5f0xvPA34IBM6cJIW8J0mvRFJRSUSzYs53qbHBS4vXd1Btk0x7ck0DkOH5U6gcg%3D%3D&Expires=1764507460)
