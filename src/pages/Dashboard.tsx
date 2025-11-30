@@ -97,15 +97,19 @@ const Dashboard = () => {
   const loadDashboardMetrics = async (userId: string) => {
     try {
       let walletBalance = 0;
+      let walletPoints = 0;
       try {
-        const { data: walletData } = await supabase
+        const { data: walletData, error } = await supabase
           .from("cashback_wallet")
           .select("balance")
           .eq("user_id", userId)
-          .single();
-        walletBalance = walletData?.balance || 0;
+          .maybeSingle();
+        if (!error && walletData) {
+          walletBalance = walletData.balance || 0;
+          walletPoints = Math.round(walletBalance * 100);
+        }
       } catch (e) {
-        console.log("Wallet table not available yet");
+        console.log("Wallet table query failed:", e);
       }
 
       const { data: listsData } = await supabase
@@ -120,7 +124,7 @@ const Dashboard = () => {
         .select("group_id")
         .eq("user_id", userId);
 
-      const uniqueGroups = groupsData?.length || 0;
+      const totalGroups = groupsData?.length || 0;
 
       const today = new Date();
       const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -131,18 +135,17 @@ const Dashboard = () => {
         .gte("created_at", startOfMonth.toISOString())
         .order("created_at", { ascending: false });
 
-      let streakCount = 1;
+      let streakCount = 0;
       if (activityData && activityData.length > 0) {
         const activityDays = new Set(
           activityData.map((a: { created_at: string }) => new Date(a.created_at).toDateString())
         );
         let checkDate = new Date();
-        streakCount = 0;
         for (let i = 0; i < 30; i++) {
           if (activityDays.has(checkDate.toDateString())) {
             streakCount++;
             checkDate.setDate(checkDate.getDate() - 1);
-          } else {
+          } else if (streakCount > 0) {
             break;
           }
         }
@@ -150,27 +153,27 @@ const Dashboard = () => {
 
       const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
       const daysPassed = today.getDate();
-      const progress = Math.min(100, Math.round((daysPassed / daysInMonth) * 100));
+      const monthProgress = Math.min(100, Math.round((daysPassed / daysInMonth) * 100));
 
       setDashboardMetrics({
-        loyaltyPoints: Math.max(Math.round(walletBalance * 100), totalLists * 50),
-        totalSaved: Math.max(Math.round(walletBalance), totalLists * 25),
-        totalReunido: totalLists * 150,
-        friendsCoordinated: uniqueGroups,
-        completedLists: Math.floor(totalLists / 2),
-        streak: Math.max(streakCount, 1),
-        weeklyProgress: progress,
+        loyaltyPoints: walletPoints,
+        totalSaved: walletBalance,
+        totalReunido: 0,
+        friendsCoordinated: totalGroups,
+        completedLists: 0,
+        streak: streakCount,
+        weeklyProgress: monthProgress,
       });
     } catch (error) {
       console.error("Error loading dashboard metrics:", error);
       setDashboardMetrics({
-        loyaltyPoints: 150,
-        totalSaved: 125,
-        totalReunido: 770,
-        friendsCoordinated: 5,
-        completedLists: 3,
-        streak: 7,
-        weeklyProgress: 70,
+        loyaltyPoints: 0,
+        totalSaved: 0,
+        totalReunido: 0,
+        friendsCoordinated: 0,
+        completedLists: 0,
+        streak: 0,
+        weeklyProgress: 0,
       });
     }
   };
