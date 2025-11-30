@@ -31,48 +31,29 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run = true, onCo
   const steps: Step[] = [
     {
       target: 'body',
-      content: (
-        <div>
-          <h2 className="text-xl font-bold mb-2">
-            {t('tourWelcome') || '¡Bienvenido a Givlyn! 🎁'}
-          </h2>
-          <p className="mb-3">
-            {t('tourWelcomeMessage') || 'Organiza, comparte y coordina tus regalos de forma inteligente.'}
-          </p>
-          <p className="text-sm text-muted-foreground">
-            {t('tourWelcomeSubtitle') || 'Te mostraremos en 4 pasos cómo funciona todo.'}
-          </p>
-        </div>
-      ),
+      title: t('tourWelcome') || '¡Bienvenido a Givlyn! 🎁',
+      content: `${t('tourWelcomeMessage') || 'Compra más inteligente con comparaciones de precios y ofertas impulsadas por IA.'}\n\n${t('tourWelcomeSubtitle') || 'Te mostraremos en 4 pasos cómo ahorrar dinero.'}`,
       placement: 'center',
       disableBeacon: true,
     },
     {
       target: '[data-tour="quick-actions"]',
-      content: (
-        <div>
-          <p className="mb-2">
-            {t('tourActionsStep') || 'Estas son las 3 funciones principales de Givlyn:'}
-          </p>
-          <ul className="list-disc pl-5 space-y-1 text-sm">
-            <li>{t('tourActionsLists') || '📝 Listas: Organiza ideas de regalos'}</li>
-            <li>{t('tourActionsGroups') || '👥 Grupos: Comparte y coordina con amigos/familia'}</li>
-            <li>{t('tourActionsEvents') || '🎉 Eventos: Planifica ocasiones especiales'}</li>
-          </ul>
-        </div>
-      ),
+      title: t('tourActionsStep') || 'Acciones Rápidas',
+      content: '📝 CREAR LISTA: Organiza regalos para cualquier ocasión\n🔍 BUSCAR OFERTAS: Encuentra el mejor precio en 5+ tiendas\n💰 GANAR CASHBACK: Acumula puntos en cada compra',
       placement: 'bottom',
       disableBeacon: true,
     },
     {
       target: '[data-tour="create-list"]',
-      content: t('tourCreateListStep') || '¡Empieza aquí! Crea tu primera lista de regalos. Puedes añadir productos manualmente o buscar ideas con IA. Decide si es privada o compartida.',
+      title: t('tourCreateListTitle') || 'Crea Tu Primera Lista',
+      content: t('tourCreateListStep') || '¡Empieza aquí! Crea una lista para cumpleaños, bodas, o compras diarias. Comparte con amigos y coordina sin duplicados.',
       placement: 'bottom',
       disableBeacon: true,
     },
     {
       target: '[data-tour="stats-overview"]',
-      content: t('tourStatsStep') || 'Aquí verás tu progreso: listas creadas, grupos donde participas y eventos próximos. ¡Todo tu universo de regalos en un vistazo!',
+      title: t('tourStatsTitle') || 'Tu Resumen',
+      content: t('tourStatsStep') || 'Aquí verás tu ahorro total, listas activas y próximos eventos. ¡Todo en un vistazo!',
       placement: 'bottom',
       disableBeacon: true,
     },

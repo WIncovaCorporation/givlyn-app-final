@@ -26,18 +26,35 @@ export function DebugPanel() {
     const originalWarn = console.warn;
     const originalError = console.error;
 
+    const safeStringify = (obj: any): string => {
+      try {
+        const seen = new WeakSet();
+        return JSON.stringify(obj, (key, value) => {
+          if (typeof value === 'object' && value !== null) {
+            if (seen.has(value)) return '[Circular]';
+            seen.add(value);
+          }
+          if (value instanceof HTMLElement) return `[HTMLElement: ${value.tagName}]`;
+          if (typeof value === 'function') return '[Function]';
+          return value;
+        }, 2);
+      } catch {
+        return String(obj);
+      }
+    };
+
     const addLog = (level: LogEntry['level'], args: any[]) => {
       const message = args
-        .map(arg => typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg))
+        .map(arg => typeof arg === 'object' ? safeStringify(arg) : String(arg))
         .join(' ');
       
       setLogs(prev => [
-        ...prev.slice(-49), // Mantener últimos 50 logs
+        ...prev.slice(-49),
         {
           timestamp: new Date(),
           level,
           message,
-          data: args.find(arg => typeof arg === 'object')
+          data: null
         }
       ]);
     };
