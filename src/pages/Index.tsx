@@ -108,7 +108,7 @@ const Index = () => {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: '16px 24px',
+      padding: '12px 24px',
       background: 'white',
       borderBottom: '1px solid #e0e0e0',
       position: 'sticky' as const,
@@ -118,10 +118,10 @@ const Index = () => {
     logo: {
       display: 'flex',
       alignItems: 'center',
-      height: '40px',
+      height: '64px',
     },
     logoImage: {
-      height: '40px',
+      height: '64px',
       width: 'auto',
       objectFit: 'contain' as const,
     },

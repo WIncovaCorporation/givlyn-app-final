@@ -1,0 +1,409 @@
+# 📋 MEMORANDO TÉCNICO PARA EQUIPO DE DESARROLLADORES
+
+**DE:** AI Product Strategy  
+**PARA:** Dev Team  
+**ASUNTO:** Givlyn Landing v5.0 - Blueprint Bimodal + Transparencia Total  
+**FECHA:** 30 Nov 2025  
+**PRIORIDAD:** 🔴 CRÍTICA - DEPLOY ESTA SEMANA  
+
+***
+
+## 🎯 CONTEXTO ESTRATÉGICO (LEER PRIMERO)
+
+**Givlyn NO es marketplace.** Es un **ASISTENTE DE REGALOS + COMPRAS INTELIGENTES** monetizado 100% por comisiones afiliadas.
+
+### Modelo de Negocio:
+```
+Usuario crea LISTA o busca regalo
+        ↓
+Givlyn recomienda tiendas reales (Amazon, Walmart, etc)
+        ↓
+Usuario compra EN TIENDA OFICIAL (pago, garantía, envío)
+        ↓
+Givlyn gana comisión afiliada (3-5% típicamente)
+        ↓
+Givlyn NUNCA toca dinero del usuario
+```
+
+**Mentalidad:** Alex Hormozi (resolver problemas) + Google (simplicidad) + Amazon (confianza).
+
+***
+
+## 📱 ARQUITECTURA LANDING v5.0
+
+### A) ESTRUCTURA (Mobile-First, Sin Scroll)
+
+```
+VIEWPORT 1 (100vh - visible sin scroll):
+
+┌─────────────────────────────────────┐
+│ HEADER (60px)                       │
+│  💰 Givlyn    [Idioma] [Comenzar]  │
+├─────────────────────────────────────┤
+│ HERO SECTION (40vh)                 │
+│ ¿Buscas regalo para alguien         │
+│ especial?                            │
+├─────────────────────────────────────┤
+│ VALUE PROPS (2 opciones - 50vh)     │
+│ 1️⃣ CREA LISTA (Boda, Baby Shower)  │
+│ 2️⃣ BUSCA REGALO (Mejor precio)     │
+│                                     │
+│ [🎁 CREAR LISTA] [🔍 BUSCAR REGALO]│
+├─────────────────────────────────────┤
+│ TRUST ROW (20px)                    │
+│ ✅ Compra 100% en tienda oficial    │
+│ ✅ Garantía de tienda               │
+└─────────────────────────────────────┘
+
+VIEWPORT 2 (Scroll Down - Mobile):
+
+┌─────────────────────────────────────┐
+│ STORE LOGOS (30vh)                  │
+│ 🏪 Amazon 🏪 Walmart 🏪 Target    │
+│ 🏪 Etsy 🏪 eBay 🏪 MercadoLibre   │
+│ "+30 tiendas más"                   │
+├─────────────────────────────────────┤
+│ FOOTER (50px)                       │
+│ 🌐 [ES] [EN] [PT] [FR]             │
+│ SSL | GDPR | CCPA | LPPDP          │
+│ Comisiones | Privacidad | Términos  │
+└─────────────────────────────────────┘
+```
+
+***
+
+## 🎨 COMPONENTES CLAVE
+
+### 1️⃣ LANGUAGE SELECTOR (Multiidioma)
+
+**Requisitos:**
+- [ ] Flags selector: ES, EN, PT (future FR, IT, DE)
+- [ ] Almacenar en `localStorage`
+- [ ] Aplicar a TODO el contenido (hero, buttons, footer)
+- [ ] Cambio instantáneo sin reload
+
+**Idiomas Prioritarios:**
+```
+ES (Español) - América Latina + España
+EN (English) - USA + Global
+PT (Português) - Brasil + Portugal
+```
+
+**Contenido bilingüe necesario:**
+```javascript
+const content = {
+  es: {
+    hero_q: "¿Buscas regalo para alguien especial?",
+    option1: "Crea una LISTA (Boda, Baby Shower, Cumpleaños, Amigo Secreto)",
+    option2: "O busca MEJOR PRECIO ahora",
+    btn_create: "🎁 CREAR LISTA GRATIS",
+    btn_search: "🔍 BUSCAR REGALO",
+    trust1: "Compra 100% en tienda oficial",
+    trust2: "Garantía de tienda",
+    footer_affiliate: "Givlyn gana comisiones de afiliados. Tu compra es 100% en tienda oficial."
+  },
+  en: {
+    hero_q: "Looking for the perfect gift?",
+    option1: "Create a LIST (Wedding, Baby Shower, Birthday, Secret Santa)",
+    option2: "Or find BETTER PRICE now",
+    btn_create: "🎁 CREATE LIST FREE",
+    btn_search: "🔍 SEARCH GIFT",
+    trust1: "Shop 100% at official store",
+    trust2: "Store's guarantee applies",
+    footer_affiliate: "Givlyn earns affiliate commissions. Your purchase is 100% at the official store."
+  },
+  pt: {
+    hero_q: "Procurando o presente perfeito?",
+    option1: "Crie uma LISTA (Casamento, Baby Shower, Aniversário, Amigo Secreto)",
+    option2: "Ou encontre MELHOR PREÇO agora",
+    btn_create: "🎁 CRIAR LISTA GRÁTIS",
+    btn_search: "🔍 BUSCAR PRESENTE",
+    trust1: "Compre 100% na loja oficial",
+    trust2: "Garantia da loja",
+    footer_affiliate: "Givlyn ganha comissões de afiliados. Sua compra é 100% na loja oficial."
+  }
+}
+```
+
+***
+
+### 2️⃣ DUAL CTA (Crear Lista vs Buscar Regalo)
+
+**Botón 1: CREAR LISTA**
+```
+Ruta: /auth/register?mode=list
+Diseño: Rojo (#E53935), grande, prominente
+Texto: "🎁 CREAR LISTA GRATIS"
+Subtext: "3 min. Gratis. Sin tarjeta."
+Función: Redirect a registro (después a crear lista)
+```
+
+**Botón 2: BUSCAR REGALO**
+```
+Ruta: /search (o /auth/register?mode=search si requiere login)
+Diseño: Outline blanco/gris, secundario
+Texto: "🔍 BUSCAR REGALO"
+Subtext: "Compara precios ahora"
+Función: Redirect a búsqueda (puede ser público o requiere login)
+```
+
+***
+
+### 3️⃣ STORE LOGOS (Confianza Visual)
+
+**Tiendas a mostrar (Primera fase):**
+```
+Tier 1 (Grandes):
+- Amazon
+- Walmart
+- Target
+
+Tier 2 (Especializadas):
+- Etsy (DIY, regalos únicos)
+- eBay (productos variados)
+- Best Buy (electrónica)
+
+Tier 3 (Regionales):
+- MercadoLibre (LATAM)
+- Coppel (México)
+- Falabella (Chile)
+
+Nota: "+30 tiendas más" (link a página completa de integraciones)
+```
+
+**Requisito técnico:**
+- [ ] Logos deben ser SVG (100% escalables)
+- [ ] Clickeables → Modal con "Qué compras en [tienda]"
+- [ ] Animación hover (escala 1.1, sombra)
+- [ ] Responsive: 3 logos por fila (desktop), 2-3 (tablet), 1-2 (mobile)
+
+***
+
+### 4️⃣ SEGURIDAD Y TRANSPARENCIA (Footer)
+
+**Elementos Footer:**
+
+```html
+<!-- Fila 1: Idiomas -->
+<div class="language-selector">
+  <span>🌐 Idioma:</span>
+  <button data-lang="es">🇪🇸 Español</button>
+  <button data-lang="en">🇺🇸 English</button>
+  <button data-lang="pt">🇧🇷 Português</button>
+</div>
+
+<!-- Fila 2: Certificaciones de seguridad -->
+<div class="security-badges">
+  🔒 SSL 256-bit | GDPR | CCPA | LPPDP
+</div>
+
+<!-- Fila 3: Links legales -->
+<div class="footer-links">
+  <a href="/legal/affiliate-disclosure">💰 Comisiones Afiliadas</a>
+  <a href="/privacy">📋 Privacidad</a>
+  <a href="/terms">⚖️ Términos</a>
+  <a href="/contact">📞 Contacto</a>
+</div>
+
+<!-- Fila 4: Disclaimer crucial -->
+<div class="disclaimer">
+  <p>⚠️ <strong>Transparencia Total:</strong></p>
+  <p>"Givlyn gana comisiones de afiliados cuando compras a través de nuestros enlaces.
+     Tu compra, pago y garantía son 100% gestionados por la tienda oficial.
+     Givlyn nunca almacena datos de pago."</p>
+</div>
+```
+
+**Requisitos legales:**
+- [ ] Affiliate Disclosure visible (no escondido)
+- [ ] GDPR clause (si opera en EU)
+- [ ] CCPA clause (si opera en California)
+- [ ] LPPDP clause (si opera en Chile)
+- [ ] Términos de Servicio accesibles (1 click)
+
+***
+
+## 💻 ESPECIFICACIONES TÉCNICAS
+
+### Responsive Breakpoints:
+```css
+/* Mobile-first */
+320px - 480px: Phones (1 col, 100% width)
+480px - 768px: Tablets portrait (2 cols)
+768px+:       Desktop (3 cols, centered)
+```
+
+### Performance Targets:
+- [ ] Lighthouse Score: 90+
+- [ ] First Contentful Paint: < 1.5s
+- [ ] Time to Interactive: < 3s
+- [ ] Total Bundle Size: < 100KB (HTML + CSS + JS inline)
+
+### Accessibility (WCAG 2.1 AA):
+- [ ] Color contrast 4.5:1 (text vs background)
+- [ ] Keyboard navigation (Tab, Enter, Escape)
+- [ ] ARIA labels en botones
+- [ ] Alt text en logos/imágenes
+- [ ] Focus visible en todos los elementos interactivos
+
+***
+
+## 📝 COPY STYLE GUIDE
+
+**Tono:** Claro, honesto, sin hype.
+
+✅ **HACER:**
+- "Compra 100% en tienda oficial"
+- "Tu garantía es la de la tienda"
+- "Somos nuevos. Somos transparentes."
+
+❌ **NO HACER:**
+- "Mejor precio garantizado al 100%" (no siempre)
+- "Ahorrado 50,000 personas" (fake metric)
+- "Recomendado por expertos" (sin evidence)
+- "Ganador de awards" (no tenemos)
+
+***
+
+## 🔗 RUTAS Y NAVEGACIÓN
+
+```
+Landing: /
+  ├─ /auth/register?mode=list  ← Crear lista
+  ├─ /search                    ← Buscar regalo
+  └─ /legal/*                   ← Páginas legales
+      ├─ /affiliate-disclosure
+      ├─ /privacy
+      └─ /terms
+```
+
+***
+
+## 📊 TRACKING Y ANALYTICS
+
+**Events a trackear (GA4):**
+```javascript
+// Click "Crear Lista"
+gtag('event', 'create_list_click', {
+  language: localStorage.getItem('language'),
+  device: 'mobile' | 'desktop'
+});
+
+// Click "Buscar Regalo"
+gtag('event', 'search_gift_click', {
+  language: localStorage.getItem('language'),
+  device: 'mobile' | 'desktop'
+});
+
+// Click logo tienda
+gtag('event', 'store_logo_click', {
+  store: 'amazon' | 'walmart' | etc,
+  language: localStorage.getItem('language')
+});
+
+// Click idioma
+gtag('event', 'language_change', {
+  from: oldLang,
+  to: newLang
+});
+```
+
+***
+
+## ✅ CHECKLIST PRE-DEPLOYMENT
+
+**HTML/CSS:**
+- [ ] Mobile-first responsive (probado 320px, 768px, 1024px)
+- [ ] Todos los idiomas funcionan (ES, EN, PT)
+- [ ] Language selector guarda en localStorage
+- [ ] Logos tiendas cargan sin delay
+- [ ] Color contrast WCAG AA (4.5:1+)
+
+**Funcionalidad:**
+- [ ] Botones redirigen correctamente (/auth/register, /search)
+- [ ] Links footer funcionan (privacidad, términos, etc)
+- [ ] Disclaimer visible y legible
+- [ ] SSL badge aparece
+
+**Performance:**
+- [ ] Lighthouse 90+
+- [ ] <1.5s FCP
+- [ ] <100KB bundle size
+
+**Seguridad:**
+- [ ] No hay tracking sin consentimiento
+- [ ] GA4 implementado correctamente
+- [ ] GDPR/CCPA/LPPDP menciones visibles
+
+**Legal:**
+- [ ] Affiliate disclosure prominente
+- [ ] Términos de Servicio enlazado
+- [ ] Privacidad enlazada
+- [ ] Contact email funciona
+
+***
+
+## 🚀 DEPLOYMENT
+
+**Ambiente de prueba:**
+```
+1. Deploy en Replit (dev-givlyn.repl.co)
+2. Testear en mobile (iPhone SE 375px, Android 412px)
+3. Testear en tablet (iPad 768px)
+4. Testear en desktop (Chrome 1920px)
+5. Verificar todos los idiomas
+```
+
+**Producción:**
+```
+1. givlyn.com (CNAME en DNS)
+2. SSL certificate (Replit auto)
+3. GA4 implementado
+4. Monitoring activo
+```
+
+***
+
+## 📞 CONTACTO Y SOPORTE
+
+- **Preguntas sobre estrategia:** CEO
+- **Preguntas sobre código:** Dev Lead
+- **Issues de deployment:** DevOps
+- **Cambios legales:** Legal Team
+
+***
+
+## 📌 PRÓXIMAS SPRINTS
+
+**Sprint 1 (Esta semana):**
+- [ ] Landing v5.0 live
+- [ ] Multiidioma funcionando
+- [ ] GA4 tracking
+
+**Sprint 2 (Próxima semana):**
+- [ ] Página /search (búsqueda regalo)
+- [ ] Página /auth/register (crear cuenta)
+- [ ] Dashboard post-login
+
+**Sprint 3 (2 semanas):**
+- [ ] Feature "Crear Lista"
+- [ ] Feature "Compartir lista"
+- [ ] Tracking de compras
+
+***
+
+**GENERADO:** 30 Nov 2025, 7:36 AM CST  
+**STATUS:** ✅ LISTO PARA DESARROLLO  
+**PRIORIDAD:** 🔴 CRÍTICA
+
+***
+
+## 🎯 ÚLTIMA NOTA IMPORTANTE
+
+> *"No inventamos nada. No somos 'top rated' ni 'confiables' hasta que lo demostremos. Somos transparentes, nuevos, y resolvemos el problema real: 'Ayúdame a comprar mejor regalo sin perder dinero'. El código debe reflejar esto."*
+
+**- Mentalidad Givlyn**
+
+***
+
+**LISTO PARA COPIAR Y ENVIAR AL EQUIPO ✅**
