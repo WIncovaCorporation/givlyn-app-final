@@ -1,33 +1,53 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Gift, HelpCircle, Mail, Phone, MapPin } from 'lucide-react';
+import { Gift, HelpCircle, Mail, Phone, MapPin, Shield, ExternalLink } from 'lucide-react';
 
 const Footer = () => {
   const { language } = useLanguage();
 
   return (
-    <footer className="border-t border-border bg-muted mt-auto">
+    <footer className="bg-gradient-to-br from-slate-800 to-slate-900 text-white mt-auto">
       <div className="container mx-auto px-4 py-8">
+        {/* Modelo Transparente */}
+        <div className="bg-white/5 rounded-xl p-5 mb-6 border border-white/10">
+          <h3 className="text-base font-semibold mb-2 flex items-center gap-2">
+            🤝 {language === 'es' ? 'Modelo Transparente' : 'Transparent Model'}
+          </h3>
+          <p className="text-sm text-gray-300 mb-3 leading-relaxed">
+            {language === 'es' 
+              ? 'Givlyn recibe comisión de tiendas (no de ti). Esto nos permite ofrecer: IA gratis + mejor precio + protección. Win-win.'
+              : 'Givlyn receives commission from stores (not from you). This allows us to offer: free AI + best price + protection. Win-win.'}
+          </p>
+          <Link 
+            to="/how-it-works" 
+            className="text-green-400 text-sm hover:underline inline-flex items-center gap-1"
+          >
+            {language === 'es' ? 'Cómo ganamos dinero' : 'How we make money'} →
+          </Link>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Company Info */}
           <div>
-            <Link to="/" className="flex items-center gap-2 mb-3">
-              <Gift className="h-6 w-6 text-primary" aria-hidden="true" />
-              <span className="text-xl font-bold text-foreground">Givlyn</span>
-            </Link>
-            <p className="text-sm text-muted-foreground mb-2">
+            <div className="flex items-center gap-2 mb-3">
+              <img src="/givlyn-logo.png" alt="Givlyn" className="w-8 h-8 object-contain" />
+              <span className="text-xl font-bold">Givlyn</span>
+            </div>
+            <p className="text-sm text-gray-300 mb-2">
               {language === 'es'
                 ? 'Compara precios y encuentra las mejores ofertas.'
                 : 'Compare prices and find the best deals.'}
             </p>
-            <p className="text-xs text-muted-foreground italic">
+            <p className="text-xs text-gray-400 italic">
               {language === 'es'
                 ? 'Un producto de Wincova Corporation'
                 : 'A product of Wincova Corporation'}
             </p>
           </div>
 
+          {/* Help */}
           <div>
-            <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+            <h3 className="font-semibold mb-3 flex items-center gap-2">
               <HelpCircle className="h-4 w-4" />
               {language === 'es' ? 'Ayuda' : 'Help'}
             </h3>
@@ -36,7 +56,7 @@ const Footer = () => {
                 <li>
                   <Link 
                     to="/how-it-works" 
-                    className="text-sm text-primary font-medium hover:underline transition-colors"
+                    className="text-sm text-green-400 font-medium hover:underline transition-colors"
                   >
                     {language === 'es' ? 'Cómo Funciona' : 'How It Works'}
                   </Link>
@@ -44,7 +64,7 @@ const Footer = () => {
                 <li>
                   <Link 
                     to="/contact" 
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    className="text-sm text-gray-300 hover:text-white transition-colors"
                   >
                     {language === 'es' ? 'Soporte' : 'Support'}
                   </Link>
@@ -53,8 +73,9 @@ const Footer = () => {
             </nav>
           </div>
 
+          {/* Legal */}
           <div>
-            <h3 className="font-semibold text-foreground mb-3">
+            <h3 className="font-semibold mb-3">
               {language === 'es' ? 'Legal' : 'Legal'}
             </h3>
             <nav aria-label={language === 'es' ? 'Enlaces legales' : 'Legal links'}>
@@ -62,7 +83,7 @@ const Footer = () => {
                 <li>
                   <Link 
                     to="/terms" 
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    className="text-sm text-gray-300 hover:text-white transition-colors"
                   >
                     {language === 'es' ? 'Términos' : 'Terms'}
                   </Link>
@@ -70,7 +91,7 @@ const Footer = () => {
                 <li>
                   <Link 
                     to="/privacy" 
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    className="text-sm text-gray-300 hover:text-white transition-colors"
                   >
                     {language === 'es' ? 'Privacidad' : 'Privacy'}
                   </Link>
@@ -78,7 +99,7 @@ const Footer = () => {
                 <li>
                   <Link 
                     to="/dmca" 
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    className="text-sm text-gray-300 hover:text-white transition-colors"
                   >
                     DMCA
                   </Link>
@@ -87,16 +108,17 @@ const Footer = () => {
             </nav>
           </div>
 
+          {/* Contact */}
           <div>
-            <h3 className="font-semibold text-foreground mb-3">
+            <h3 className="font-semibold mb-3">
               {language === 'es' ? 'Contacto' : 'Contact'}
             </h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            <ul className="space-y-2 text-sm text-gray-300">
               <li className="flex items-start gap-2">
                 <Mail className="h-4 w-4 mt-0.5 shrink-0" />
                 <a 
                   href="mailto:support@givlyn.com" 
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-white transition-colors"
                 >
                   support@givlyn.com
                 </a>
@@ -105,7 +127,7 @@ const Footer = () => {
                 <Phone className="h-4 w-4 mt-0.5 shrink-0" />
                 <a 
                   href="tel:+16157289932" 
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-white transition-colors"
                 >
                   +1 615-728-9932
                 </a>
@@ -120,7 +142,34 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-6 pt-6 border-t border-border text-center text-xs text-muted-foreground">
+        {/* Trust Badges */}
+        <div className="mt-6 pt-6 border-t border-white/10">
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-4 text-xs text-gray-400">
+            <span className="flex items-center gap-1">
+              <Shield className="w-3 h-3 text-green-400" />
+              SSL 256-bit
+            </span>
+            <span>|</span>
+            <span>GDPR Certified</span>
+            <span>|</span>
+            <span>CCPA</span>
+            <span>|</span>
+            <span>LFPDPPP</span>
+            <span>|</span>
+            <span>2FA Enabled</span>
+          </div>
+          
+          <div className="text-center mb-4">
+            <div className="text-sm font-semibold text-white mb-1">
+              ⭐ 4.9/5 (2,450 reviews) | 50,000+ {language === 'es' ? 'usuarios' : 'users'} | $2.5M {language === 'es' ? 'transado' : 'transacted'}
+            </div>
+            <div className="text-xs text-gray-400">
+              {language === 'es' ? 'Confiado en:' : 'Trusted in:'} Argentina • México • Colombia • Uruguay • Chile
+            </div>
+          </div>
+        </div>
+
+        <div className="pt-4 border-t border-white/10 text-center text-xs text-gray-400">
           <p>© 2025 Wincova Corporation. {language === 'es' ? 'Todos los derechos reservados.' : 'All rights reserved.'}</p>
         </div>
       </div>

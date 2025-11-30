@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Gift, Users, Calendar, Plus, MessageCircle, Package, Sparkles, Target, Flame, DollarSign, BarChart3, UserPlus, Settings } from "lucide-react";
+import { Gift, Users, Calendar, Plus, MessageCircle, Package, Sparkles, Target, Flame, DollarSign, BarChart3, UserPlus, Settings, Shield, Search, ExternalLink, Download, List, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSelector from "@/components/LanguageSelector";
@@ -32,6 +32,7 @@ const Dashboard = () => {
   });
   const [activeAssignments, setActiveAssignments] = useState<any[]>([]);
   const [progressAnimated, setProgressAnimated] = useState(0);
+  const [loyaltyPoints, setLoyaltyPoints] = useState(150);
 
   const getTimeEmoji = () => {
     const hour = new Date().getHours();
@@ -77,8 +78,11 @@ const Dashboard = () => {
   const userName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'Usuario';
   const streak = 7;
   const weeklyProgress = 70;
-  const totalSaved = 450;
+  const totalSaved = 125;
   const nextMilestone = 23;
+  const totalReunido = 770;
+  const friendsCoordinated = 5;
+  const completedLists = 3;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -217,59 +221,188 @@ const Dashboard = () => {
           </div>
         )}
 
-        <div className="bg-gradient-to-br from-primary to-red-700 text-white p-6 md:p-10 rounded-2xl mb-6 shadow-xl">
-          <div className="flex justify-between items-start mb-4">
+        {/* ZONA 0: HERO + TRUST */}
+        <div className="bg-gradient-to-br from-primary to-red-700 text-white p-6 rounded-xl mb-6 shadow-lg">
+          <h2 className="text-lg md:text-xl font-bold mb-4 flex items-center gap-2">
+            <Shield className="w-5 h-5" />
+            {language === 'es' ? 'Compra Inteligente con Garantía' : 'Smart Shopping with Guarantee'}
+          </h2>
+          <ul className="space-y-2 mb-4">
+            <li className="flex items-start gap-2 text-sm">
+              <span className="text-green-300">✅</span>
+              {language === 'es' ? 'Organiza regalos/compras con amigos' : 'Organize gifts/purchases with friends'}
+            </li>
+            <li className="flex items-start gap-2 text-sm">
+              <span className="text-green-300">✅</span>
+              {language === 'es' ? 'Consigue mejor precio (comparamos 5+ tiendas)' : 'Get best price (we compare 5+ stores)'}
+            </li>
+            <li className="flex items-start gap-2 text-sm">
+              <span className="text-green-300">✅</span>
+              {language === 'es' ? 'Compra DIRECTA en Amazon/Walmart/Tiendas' : 'Buy DIRECT from Amazon/Walmart/Stores'}
+            </li>
+            <li className="flex items-start gap-2 text-sm">
+              <span className="text-green-300">✅</span>
+              {language === 'es' ? 'Protección total (si algo falla, nosotros resolvemos)' : 'Full protection (if something fails, we solve it)'}
+            </li>
+          </ul>
+          <p className="text-xs opacity-90 mb-2">
+            10,000+ {language === 'es' ? 'listas' : 'lists'} | 4.9 ⭐ (2,450 reviews) | GDPR Certified
+          </p>
+          <p className="text-sm font-semibold italic border-t border-white/20 pt-3 mt-3">
+            "{language === 'es' 
+              ? 'No pagas de más. Compras donde siempre. Nosotros coordinamos.' 
+              : 'Don\'t overpay. Shop where you always do. We coordinate.'}"
+          </p>
+        </div>
+
+        {/* ZONA 1: PERSONALIZACIÓN */}
+        <div className="bg-white p-5 rounded-xl shadow-sm mb-6 border-l-4 border-primary">
+          <div className="flex justify-between items-start">
             <div>
-              <h2 className="text-xl md:text-2xl font-bold mb-2">
-                {language === 'es' ? '¡Bienvenido de Nuevo!' : 'Welcome Back!'}
+              <h2 className="text-xl font-bold text-gray-800 mb-1">
+                {language === 'es' ? '¡Hola' : 'Hello'} {userName.toUpperCase()}! 👋
               </h2>
-              <div className="inline-block bg-white/20 px-3 py-1 rounded-lg text-xl md:text-2xl font-bold">
-                {userName.toUpperCase()}
+              <p className="text-sm text-gray-600">
+                {language === 'es' 
+                  ? `Este mes ahorraste $${totalSaved} comprando inteligentemente`
+                  : `This month you saved $${totalSaved} shopping smartly`}
+              </p>
+            </div>
+            <div className="text-3xl">{getTimeEmoji()}</div>
+          </div>
+          <p className="text-sm text-gray-500 mt-3">
+            {language === 'es' ? '¿Qué quieres hacer hoy?' : 'What do you want to do today?'}
+          </p>
+        </div>
+
+        {/* ZONA 2: CTA PRINCIPALES */}
+        <div className="grid gap-4 mb-6">
+          {/* CTA 1: Crear Lista */}
+          <div 
+            onClick={() => navigate("/lists")}
+            className="bg-white border-2 border-primary rounded-xl p-5 cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+                🎁
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-gray-800 mb-1">
+                  {language === 'es' ? 'CREAR LISTA COMPARTIBLE' : 'CREATE SHAREABLE LIST'}
+                </h3>
+                <p className="text-sm text-gray-500 mb-2">
+                  {language === 'es' 
+                    ? 'Cumpleaños • Regalos • Cooperativa • Amigo Secreto'
+                    : 'Birthday • Gifts • Pool • Secret Santa'}
+                </p>
+                <p className="text-xs text-primary font-medium">
+                  {language === 'es' 
+                    ? 'Coordina con amigos → Mejor precio por volumen'
+                    : 'Coordinate with friends → Better volume price'}
+                </p>
+              </div>
+              <Button className="bg-primary hover:bg-primary/90">
+                {language === 'es' ? 'Crear Lista' : 'Create List'}
+              </Button>
+            </div>
+          </div>
+
+          {/* CTA 2: Compra Inteligente */}
+          <div 
+            onClick={() => navigate("/marketplace")}
+            className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-500 rounded-xl p-5 cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+                🏆
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-gray-800 mb-2">
+                  {language === 'es' ? 'COMPRA INTELIGENTE CON GARANTÍA' : 'SMART SHOPPING WITH GUARANTEE'}
+                </h3>
+                <ul className="space-y-1">
+                  <li className="text-sm text-gray-600 flex items-center gap-2">
+                    <span className="text-green-500">✅</span>
+                    {language === 'es' 
+                      ? 'Comparamos precios en 5+ tiendas automáticamente'
+                      : 'We compare prices in 5+ stores automatically'}
+                  </li>
+                  <li className="text-sm text-gray-600 flex items-center gap-2">
+                    <span className="text-green-500">✅</span>
+                    {language === 'es' 
+                      ? 'Mejor precio garantizado (o reembolsamos diferencia)'
+                      : 'Best price guaranteed (or we refund difference)'}
+                  </li>
+                  <li className="text-sm text-gray-600 flex items-center gap-2">
+                    <span className="text-green-500">✅</span>
+                    {language === 'es' ? 'Acumulas puntos en cada compra' : 'Earn points on every purchase'}
+                  </li>
+                </ul>
+              </div>
+              <Button className="bg-green-600 hover:bg-green-700">
+                <Search className="w-4 h-4 mr-2" />
+                {language === 'es' ? 'Buscar Ofertas' : 'Search Deals'}
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* ZONA 4: TUS NÚMEROS */}
+        <div className="bg-white p-5 rounded-xl shadow-sm mb-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            🏆 {language === 'es' ? 'TUS NÚMEROS ESTE MES' : 'YOUR NUMBERS THIS MONTH'}
+          </h3>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+            <StatCard 
+              icon="💵" 
+              value={`$${totalReunido}`} 
+              label={language === 'es' ? 'Reunido en listas' : 'Collected in lists'} 
+            />
+            <StatCard 
+              icon="👥" 
+              value={friendsCoordinated.toString()} 
+              label={language === 'es' ? 'Amigos Coordinados' : 'Friends Coordinated'} 
+            />
+            <StatCard 
+              icon="✅" 
+              value={completedLists.toString()} 
+              label={language === 'es' ? 'Listas Completadas' : 'Lists Completed'} 
+            />
+            <StatCard 
+              icon="🔥" 
+              value={`${streak} días`} 
+              label={language === 'es' ? 'Racha' : 'Streak'} 
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+            <div className="bg-green-50 p-4 rounded-lg text-center">
+              <div className="text-2xl font-bold text-green-600">${totalSaved}</div>
+              <div className="text-sm text-gray-600">
+                💰 {language === 'es' ? 'AHORRADO (Este mes)' : 'SAVED (This month)'}
               </div>
             </div>
-            <div className="text-4xl md:text-5xl">{getTimeEmoji()}</div>
-          </div>
-
-          <p className="text-white/90 text-sm md:text-base mb-6 leading-relaxed">
-            {getWelcomeMessage}
-          </p>
-
-          <div className="bg-white/15 backdrop-blur-sm p-4 rounded-xl border-l-4 border-white/50">
-            <div className="text-xs uppercase tracking-wider opacity-80 mb-1">
-              {language === 'es' ? '💰 Predicción Inteligente' : '💰 Smart Prediction'}
+            <div className="bg-purple-50 p-4 rounded-lg text-center">
+              <div className="text-2xl font-bold text-purple-600">{loyaltyPoints} pts</div>
+              <div className="text-sm text-gray-600">
+                🎁 {language === 'es' ? 'PUNTOS ACUMULADOS' : 'POINTS EARNED'} (= ${(loyaltyPoints / 100).toFixed(2)})
+              </div>
             </div>
-            <div className="text-xl md:text-2xl font-bold">{getPredictiveInsight()}</div>
-            <p className="text-xs opacity-80 mt-1">
-              {language === 'es' 
-                ? 'Basado en tu historial de compras y patrones de ahorro'
-                : 'Based on your purchase history and saving patterns'}
-            </p>
+          </div>
+
+          <div className="flex items-center justify-between text-xs text-gray-500 border-t pt-3">
+            <span className="flex items-center gap-1">
+              ℹ️ {language === 'es' ? 'Datos de nuestra base de datos' : 'Data from our database'}
+            </span>
+            <button className="text-primary hover:underline flex items-center gap-1">
+              <Download className="w-3 h-3" />
+              {language === 'es' ? 'Descargar CSV' : 'Download CSV'}
+            </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
-          <StatCard 
-            icon="💰" 
-            value={`$${totalSaved}`} 
-            label={language === 'es' ? 'Ahorrado Este Mes' : 'Saved This Month'} 
-          />
-          <StatCard 
-            icon="📦" 
-            value={stats.myLists.toString()} 
-            label={language === 'es' ? 'Listas Activas' : 'Active Lists'} 
-          />
-          <StatCard 
-            icon="🎯" 
-            value={nextMilestone.toString()} 
-            label={language === 'es' ? 'Hasta Próximo Badge' : 'To Next Badge'} 
-          />
-          <StatCard 
-            icon="🔥" 
-            value={streak.toString()} 
-            label={language === 'es' ? 'Días Activos' : 'Days Active'} 
-          />
-        </div>
-
+        {/* Mi Racha de Ahorros */}
         <div className="bg-white p-5 rounded-xl shadow-sm mb-6">
           <div className="flex items-center gap-3 mb-4">
             <h3 className="text-lg font-semibold text-gray-800">
@@ -300,6 +433,7 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {/* Social Proof */}
         <div className="bg-blue-50 p-5 rounded-xl border-l-4 border-blue-500 mb-6">
           <div className="font-bold text-gray-800 mb-1">
             {language === 'es' ? '👥 Comunidad Givlyn' : '👥 Givlyn Community'}
@@ -312,29 +446,145 @@ const Dashboard = () => {
           </p>
         </div>
 
+        {/* ZONA 5: PUNTOS DE LEALTAD */}
+        <div className="bg-white border border-gray-200 rounded-xl p-5 mb-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4">
+            🎁 {language === 'es' ? 'Tus Puntos de Lealtad' : 'Your Loyalty Points'}
+          </h3>
+          
+          <div className="bg-gray-50 p-4 rounded-lg text-center mb-4">
+            <div className="text-4xl font-bold text-primary">{loyaltyPoints}</div>
+            <div className="text-sm text-gray-500">{language === 'es' ? 'Puntos Disponibles' : 'Available Points'}</div>
+            <div className="text-sm font-semibold text-green-600">= ${(loyaltyPoints / 100).toFixed(2)} {language === 'es' ? 'crédito' : 'credit'}</div>
+          </div>
+
+          <h4 className="text-sm font-semibold text-gray-700 mb-3">
+            {language === 'es' ? 'Canjea en:' : 'Redeem at:'}
+          </h4>
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="border border-gray-200 rounded-lg p-3 text-center hover:border-primary transition-colors cursor-pointer">
+              <div className="text-2xl mb-1">💳</div>
+              <div className="text-xs font-semibold">Amazon</div>
+              <div className="text-xs text-gray-500">100 pts = $1</div>
+            </div>
+            <div className="border border-gray-200 rounded-lg p-3 text-center hover:border-primary transition-colors cursor-pointer">
+              <div className="text-2xl mb-1">☕</div>
+              <div className="text-xs font-semibold">Starbucks</div>
+              <div className="text-xs text-gray-500">50 pts = {language === 'es' ? 'Café' : 'Coffee'}</div>
+            </div>
+            <div className="border border-gray-200 rounded-lg p-3 text-center hover:border-primary transition-colors cursor-pointer">
+              <div className="text-2xl mb-1">🎬</div>
+              <div className="text-xs font-semibold">Cinema</div>
+              <div className="text-xs text-gray-500">75 pts = {language === 'es' ? 'Boleto' : 'Ticket'}</div>
+            </div>
+          </div>
+
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded-r-lg mb-4">
+            <p className="text-xs font-semibold text-yellow-800">+ BONUS:</p>
+            <p className="text-xs text-yellow-700">
+              {language === 'es' 
+                ? 'Referir amigo → +50 pts | Amigo compra → +100 pts'
+                : 'Refer friend → +50 pts | Friend buys → +100 pts'}
+            </p>
+          </div>
+
+          <Button className="w-full bg-primary hover:bg-primary/90">
+            {language === 'es' ? 'Canjear Puntos →' : 'Redeem Points →'}
+          </Button>
+        </div>
+
+        {/* ZONA 6: PROTECCIÓN DE COMPRADOR */}
+        <div className="bg-green-50 border-l-4 border-green-500 rounded-r-xl p-5 mb-6">
+          <h3 className="text-base font-bold text-green-800 mb-4 flex items-center gap-2">
+            <Shield className="w-5 h-5" />
+            {language === 'es' ? 'COMPRA PROTEGIDA - Si algo falla, resolvemos' : 'PROTECTED PURCHASE - If something fails, we solve it'}
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+            <div className="bg-white p-3 rounded-lg flex gap-3">
+              <span className="text-green-500 text-lg">✅</span>
+              <div>
+                <strong className="text-sm text-gray-800 block">
+                  {language === 'es' ? 'Producto no llega' : 'Product doesn\'t arrive'}
+                </strong>
+                <span className="text-xs text-gray-500">
+                  {language === 'es' ? 'Reembolso automático en 24h' : 'Automatic refund in 24h'}
+                </span>
+              </div>
+            </div>
+            <div className="bg-white p-3 rounded-lg flex gap-3">
+              <span className="text-green-500 text-lg">✅</span>
+              <div>
+                <strong className="text-sm text-gray-800 block">
+                  {language === 'es' ? 'Producto dañado' : 'Damaged product'}
+                </strong>
+                <span className="text-xs text-gray-500">
+                  {language === 'es' ? 'Retorno gratis + reembolso' : 'Free return + refund'}
+                </span>
+              </div>
+            </div>
+            <div className="bg-white p-3 rounded-lg flex gap-3">
+              <span className="text-green-500 text-lg">✅</span>
+              <div>
+                <strong className="text-sm text-gray-800 block">
+                  {language === 'es' ? 'No es lo que esperabas' : 'Not what you expected'}
+                </strong>
+                <span className="text-xs text-gray-500">
+                  {language === 'es' ? 'Cambio o devolución' : 'Exchange or return'}
+                </span>
+              </div>
+            </div>
+            <div className="bg-white p-3 rounded-lg flex gap-3">
+              <span className="text-green-500 text-lg">✅</span>
+              <div>
+                <strong className="text-sm text-gray-800 block">
+                  {language === 'es' ? 'Precio diferente' : 'Different price'}
+                </strong>
+                <span className="text-xs text-gray-500">
+                  {language === 'es' ? 'Reembolsamos la diferencia' : 'We refund the difference'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-xs font-semibold text-green-700 mb-3">
+            = {language === 'es' ? 'Costo: Givlyn absorbe (riesgo nuestro)' : 'Cost: Givlyn absorbs (our risk)'}
+          </p>
+
+          <Button variant="outline" className="w-full border-green-500 text-green-700 hover:bg-green-100">
+            {language === 'es' ? 'Ver términos completos →' : 'View full terms →'}
+          </Button>
+        </div>
+
+        {/* ZONA 7: ACCIONES SECUNDARIAS */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           <ActionButton 
             onClick={() => navigate("/lists")} 
-            icon={<Plus className="w-5 h-5" />}
-            label={language === 'es' ? 'Crear Lista' : 'Create List'}
-          />
-          <ActionButton 
-            onClick={() => navigate("/marketplace")} 
-            icon={<BarChart3 className="w-5 h-5" />}
-            label={language === 'es' ? 'Ver Reportes' : 'View Reports'}
+            icon={<List className="w-5 h-5" />}
+            label={language === 'es' ? 'Mis Listas' : 'My Lists'}
+            sublabel={language === 'es' ? 'Ver todas' : 'View all'}
           />
           <ActionButton 
             onClick={() => navigate("/groups")} 
-            icon={<UserPlus className="w-5 h-5" />}
-            label={language === 'es' ? 'Referir Amigos' : 'Refer Friends'}
+            icon={<Share2 className="w-5 h-5" />}
+            label={language === 'es' ? 'Compartir' : 'Share'}
+            sublabel={language === 'es' ? 'Invita amigos' : 'Invite friends'}
+          />
+          <ActionButton 
+            onClick={() => navigate("/marketplace")} 
+            icon={<Gift className="w-5 h-5" />}
+            label={language === 'es' ? 'Mis Puntos' : 'My Points'}
+            sublabel={language === 'es' ? 'Canjea rewards' : 'Redeem rewards'}
           />
           <ActionButton 
             onClick={() => navigate("/settings")} 
             icon={<Settings className="w-5 h-5" />}
-            label={language === 'es' ? 'Preferencias' : 'Preferences'}
+            label={language === 'es' ? 'Configuración' : 'Settings'}
+            sublabel={language === 'es' ? 'Perfil & Seguridad' : 'Profile & Security'}
           />
         </div>
 
+        {/* Cards secundarias */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           <Card 
             className="shadow-sm hover:shadow-md transition-all cursor-pointer hover:-translate-y-1"
@@ -420,20 +670,21 @@ const Dashboard = () => {
 };
 
 const StatCard = ({ icon, value, label }: { icon: string; value: string; label: string }) => (
-  <div className="bg-white p-4 rounded-xl shadow-sm text-center border-t-4 border-primary hover:-translate-y-1 hover:shadow-md transition-all cursor-default">
-    <div className="text-2xl mb-2">{icon}</div>
-    <div className="text-xl md:text-2xl font-bold text-gray-800 mb-1">{value}</div>
-    <div className="text-xs text-gray-500 uppercase tracking-wide">{label}</div>
+  <div className="bg-gray-50 p-3 rounded-lg text-center border border-gray-100">
+    <div className="text-xl mb-1">{icon}</div>
+    <div className="text-lg font-bold text-gray-800">{value}</div>
+    <div className="text-xs text-gray-500">{label}</div>
   </div>
 );
 
-const ActionButton = ({ onClick, icon, label }: { onClick: () => void; icon: React.ReactNode; label: string }) => (
+const ActionButton = ({ onClick, icon, label, sublabel }: { onClick: () => void; icon: React.ReactNode; label: string; sublabel?: string }) => (
   <button
     onClick={onClick}
-    className="bg-white border-2 border-primary text-primary p-4 rounded-xl font-semibold hover:bg-primary hover:text-white hover:-translate-y-0.5 transition-all flex flex-col items-center gap-2 text-sm"
+    className="bg-white border-2 border-gray-200 p-4 rounded-xl font-semibold hover:border-primary hover:bg-primary/5 hover:-translate-y-0.5 transition-all flex flex-col items-center gap-1 text-sm"
   >
-    {icon}
-    {label}
+    <div className="text-primary">{icon}</div>
+    <span className="text-gray-800">{label}</span>
+    {sublabel && <span className="text-xs text-gray-400">{sublabel}</span>}
   </button>
 );
 
