@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Givlyn - Organiza Regalos, Consigue Mejor Precio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #1a3e3e;
+        }
+
+        header {
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 32px;
+            font-weight: 700;
+            color: #E53935;
+        }
+
+        .logo span:first-child {
+            font-size: 32px;
+            line-height: 1;
+        }
+
+        .logo span:last-child {
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        nav .cta {
+            background: #E53935;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        nav .cta:hover {
+            background: #C62828;
+        }
+
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #1a3e3e;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 32px;
+        }
+
+        .hero-cta {
+            background: #E53935;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .hero-cta:hover {
+            background: #C62828;
+            transform: translateY(-2px);
+        }
+
+        .features {
+            background: white;
+            padding: 60px 20px;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 48px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        .feature-card {
+            padding: 24px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #E53935;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .trust {
+            background: #E53935;
+            color: white;
+            padding: 48px 20px;
+            text-align: center;
+        }
+
+        .trust h2 {
+            font-size: 32px;
+            margin-bottom: 24px;
+        }
+
+        .trust-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .trust-stat h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        footer {
+            background: #1a3e3e;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+            nav {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <span>💰</span>
+                <span>Givlyn</span>
+            </div>
+            <a href="#crear" class="cta">Comenzar</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Organiza Regalos.<br>Consigue Mejor Precio.<br>Sin Intermediarios.</h1>
+        <p>Compara precios entre Amazon, Walmart, Target, Etsy y eBay en segundos. Gana cashback en cada compra.</p>
+        <button class="hero-cta" id="crear" onclick="alert('¡Próximamente!')">CREAR LISTA GRATIS</button>
+    </section>
+
+    <section class="features">
+        <div class="features-container">
+            <h2>¿Por qué Givlyn?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>⚡ Búsqueda Inteligente</h3>
+                    <p>IA que compara precios en 5 tiendas automáticamente.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💰 Cashback Garantizado</h3>
+                    <p>Gana 2-4% en cada compra. Sin mínimo. Sin trampas.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎁 Compras en Grupo</h3>
+                    <p>Coordina regalos con amigos. Divide costos automáticamente.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📱 100% Móvil</h3>
+                    <p>Funciona como app. Sin descargar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="trust">
+        <h2>Honestidad desde el Día 1</h2>
+        <div class="trust-stats">
+            <div class="trust-stat">
+                <h3>Cero</h3>
+                <p>Fake metrics</p>
+            </div>
+            <div class="trust-stat">
+                <h3>100%</h3>
+                <p>Transparencia</p>
+            </div>
+            <div class="trust-stat">
+                <h3>Siempre</h3>
+                <p>Mejor precio</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Privacidad</a>
+            <a href="#">Términos</a>
+            <a href="#">Contacto</a>
+        </div>
+        <p>&copy; 2025 Givlyn. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
