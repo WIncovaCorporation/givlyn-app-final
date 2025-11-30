@@ -1,10 +1,4 @@
-import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Gift, Users, Sparkles, Shield, LogOut, User, ArrowRight, Store, TrendingDown, Clock } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
-import LanguageSelector from "@/components/LanguageSelector";
-import Footer from "@/components/Footer";
-import heroImage from "@/assets/hero-gifts.jpg";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -12,8 +6,8 @@ import { toast } from "sonner";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { t, language } = useLanguage();
   const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [language, setLanguage] = useState<'es' | 'en'>('es');
 
   useEffect(() => {
     const checkSession = async () => {
@@ -30,17 +24,7 @@ const Index = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const handleSignOut = async () => {
-    try {
-      await supabase.auth.signOut();
-      toast.success(t("dashboard.signedOut"));
-      setUser(null);
-    } catch (error) {
-      toast.error(t("dashboard.signOutFailed"));
-    }
-  };
-
-  const handleStartSaving = () => {
+  const handleCreateList = () => {
     if (user) {
       navigate("/dashboard");
     } else {
@@ -48,260 +32,360 @@ const Index = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-[20px] border-b border-white/20 transition-all duration-300">
-        <div className="container mx-auto px-4 sm:px-8 py-3 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-3 hover:scale-105 transition-transform duration-300 cursor-pointer group">
-            <img 
-              src="/givlyn-logo.png" 
-              alt="Givlyn Logo" 
-              className="w-[70px] h-[70px] sm:w-[90px] sm:h-[90px] object-contain drop-shadow-lg transition-all duration-300"
-            />
-            <div className="hidden sm:flex flex-col gap-0.5">
-              <span className="text-xl sm:text-2xl font-bold text-[#1A3E3E] tracking-tight">Givlyn</span>
-              <span className="text-[10px] sm:text-xs font-semibold text-primary uppercase tracking-widest animate-fade-in">AI Savings</span>
-            </div>
-          </a>
-          
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm font-medium text-[#1A3E3E] hover:text-primary transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-0.5 after:bg-primary after:transition-all hover:after:w-full">
-              {language === 'es' ? 'Características' : 'Features'}
-            </a>
-            <a href="/how-it-works" className="text-sm font-medium text-[#1A3E3E] hover:text-primary transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-0.5 after:bg-primary after:transition-all hover:after:w-full">
-              {language === 'es' ? 'Cómo Funciona' : 'How It Works'}
-            </a>
-            <a href="/contact" className="text-sm font-medium text-[#1A3E3E] hover:text-primary transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-0.5 after:bg-primary after:transition-all hover:after:w-full">
-              {language === 'es' ? 'Contacto' : 'Contact'}
-            </a>
-          </nav>
+  const handleSmartSearch = () => {
+    if (user) {
+      navigate("/dashboard");
+    } else {
+      navigate("/auth?tab=signup");
+    }
+  };
 
-          <div className="flex items-center gap-3">
-            <LanguageSelector />
-            {user ? (
-              <div className="flex items-center gap-2">
-                <Button 
-                  onClick={() => navigate("/dashboard")}
-                  size="sm"
-                  className="bg-primary hover:bg-primary/90 text-white font-semibold px-5 py-2.5 rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300"
-                >
-                  Dashboard
-                </Button>
-                <Button 
-                  onClick={handleSignOut}
-                  size="icon"
-                  variant="ghost"
-                  className="h-9 w-9"
-                  aria-label="Sign out"
-                >
-                  <LogOut className="h-4 w-4" />
-                </Button>
-              </div>
-            ) : (
-              <Button 
-                onClick={() => navigate("/auth")}
-                className="bg-primary hover:bg-primary/90 text-white font-semibold px-5 sm:px-7 py-2.5 rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 text-sm"
-              >
-                {language === 'es' ? 'Empezar Gratis' : 'Start Free'}
-              </Button>
-            )}
+  const toggleLanguage = () => {
+    setLanguage(prev => prev === 'es' ? 'en' : 'es');
+  };
+
+  const handleBack = () => {
+    if (document.referrer && document.referrer !== window.location.href) {
+      window.history.back();
+    } else {
+      navigate('/');
+    }
+  };
+
+  const content = {
+    es: {
+      heroTitle: 'Organiza Regalos.',
+      heroHighlight: 'Mejor Precio',
+      heroSubtitle: 'Sin Intermediarios.',
+      heroDesc: 'En 3 minutos. Gratis.',
+      heroDesc2: 'Compra donde ya compras (Amazon, Walmart, etc).',
+      ctaBtn: '🎁 CREAR LISTA GRATIS',
+      trustTitle: '¿Por qué Givlyn?',
+      trust1Title: 'Compra directa en tiendas',
+      trust1Desc: 'Amazon, Walmart, MercadoLibre. Tú eliges.',
+      trust2Title: 'Mejor precio garantizado',
+      trust2Desc: 'Si encuentras más barato, reembolsamos diferencia.',
+      trust3Title: 'Protección si algo falla',
+      trust3Desc: 'Producto no llega? Dañado? Nosotros pagamos.',
+      trust4Title: 'Seguridad real',
+      trust4Desc: 'SSL 256-bit | GDPR | CCPA. Tus datos están seguros.',
+      howTitle: '¿Cómo Funciona?',
+      step1: 'Crea una lista',
+      step2: 'Invita amigos (1 link)',
+      step3: 'Compra en tu tienda',
+      step4: '¡Listo!',
+      secondaryCta: '¿Solo quieres buscar producto inteligente?',
+      searchBtn: '🔍 Buscar Inteligente →',
+    },
+    en: {
+      heroTitle: 'Organize Gifts.',
+      heroHighlight: 'Best Price',
+      heroSubtitle: 'No Middlemen.',
+      heroDesc: 'In 3 minutes. Free.',
+      heroDesc2: 'Buy where you already shop (Amazon, Walmart, etc).',
+      ctaBtn: '🎁 CREATE FREE LIST',
+      trustTitle: 'Why Givlyn?',
+      trust1Title: 'Buy direct from stores',
+      trust1Desc: 'Amazon, Walmart, MercadoLibre. You choose.',
+      trust2Title: 'Best price guaranteed',
+      trust2Desc: 'Find it cheaper? We refund the difference.',
+      trust3Title: 'Protection if something fails',
+      trust3Desc: "Product doesn't arrive? Damaged? We pay.",
+      trust4Title: 'Real security',
+      trust4Desc: 'SSL 256-bit | GDPR | CCPA. Your data is safe.',
+      howTitle: 'How It Works?',
+      step1: 'Create a list',
+      step2: 'Invite friends (1 link)',
+      step3: 'Buy at your store',
+      step4: 'Done!',
+      secondaryCta: 'Just want to search products smartly?',
+      searchBtn: '🔍 Smart Search →',
+    }
+  };
+
+  const t = content[language];
+
+  return (
+    <div style={{
+      fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      background: '#f8f8f8',
+      color: '#1a3e3e',
+      lineHeight: 1.6,
+      minHeight: '100vh',
+    }}>
+      {/* HEADER */}
+      <header style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '16px 24px',
+        background: 'white',
+        borderBottom: '1px solid #e0e0e0',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{
+            fontSize: '18px',
+            fontWeight: 700,
+            color: '#E53935',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+          }}>
+            💰 Givlyn
           </div>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <button
+            onClick={toggleLanguage}
+            style={{
+              background: 'none',
+              border: 'none',
+              fontSize: '14px',
+              cursor: 'pointer',
+              color: '#666',
+              padding: '8px',
+            }}
+          >
+            {language.toUpperCase()} ▼
+          </button>
+          {user && (
+            <button
+              onClick={() => navigate('/dashboard')}
+              style={{
+                background: '#E53935',
+                color: 'white',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '6px',
+                fontSize: '14px',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              Dashboard
+            </button>
+          )}
         </div>
       </header>
-      
-      <div className="h-[94px] sm:h-[114px]" />
 
-      <section className="relative overflow-hidden" aria-label="Sección principal">
-        <div className="absolute inset-0 bg-gradient-hero opacity-5" aria-hidden="true" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" aria-hidden="true" />
-        
-        <div className="container mx-auto px-4 py-8 sm:py-12 lg:py-20">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            <div className="space-y-6 animate-fade-in order-1">
-              <div className="inline-block animate-scale-in">
-                <span className="px-4 py-2 bg-gradient-warm text-primary-foreground rounded-full text-sm font-semibold shadow-medium inline-flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" />
-                  {t("hero.badge")}
-                </span>
-              </div>
-              
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight">
-                {t("hero.title")}
-                <span className="block mt-2 bg-gradient-warm bg-clip-text text-transparent">
-                  {t("hero.titleHighlight")}
-                </span>
-              </h1>
-              
-              <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-lg">
-                {language === 'es' 
-                  ? 'Compara precios en Amazon, Walmart y Target en segundos. Ahorra hasta 40% en cada compra.'
-                  : 'Compare prices across Amazon, Walmart and Target in seconds. Save up to 40% on every purchase.'}
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                <Button 
-                  size="lg" 
-                  className="text-lg px-8 py-6 shadow-large hover:shadow-glow hover:scale-105 transition-all duration-300 group w-full sm:w-auto"
-                  onClick={handleStartSaving}
-                  aria-label={t("hero.cta")}
-                >
-                  {t("hero.cta")}
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="ghost" 
-                  className="text-base px-6 py-6 hover:bg-muted/50 w-full sm:w-auto"
-                  onClick={() => navigate("/how-it-works")}
-                  aria-label={t("hero.demo")}
-                >
-                  {t("hero.demo")}
-                </Button>
-              </div>
-            </div>
-            
-            <div className="relative animate-slide-up order-2 lg:order-2 hidden sm:block">
-              <div className="absolute -inset-4 bg-gradient-warm rounded-3xl blur-3xl opacity-20 animate-pulse" aria-hidden="true" />
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl hover:shadow-glow transition-all duration-500 group">
-                <img 
-                  src={heroImage} 
-                  alt="Cajas de regalo coloridas y elegantes decoradas con lazos dorados"
-                  className="relative w-full transform group-hover:scale-105 transition-transform duration-500"
-                  loading="eager"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* MAIN CONTENT */}
+      <div style={{
+        maxWidth: '600px',
+        margin: '0 auto',
+        padding: '24px',
+      }}>
+        {/* HERO */}
+        <section style={{
+          textAlign: 'center',
+          marginBottom: '48px',
+          padding: '32px 16px',
+        }}>
+          <h1 style={{
+            fontSize: 'clamp(24px, 6vw, 32px)',
+            lineHeight: 1.3,
+            marginBottom: '16px',
+            color: '#1a3e3e',
+          }}>
+            💰 {t.heroTitle}<br />
+            {language === 'es' ? 'Consigue ' : 'Get '}
+            <span style={{ color: '#E53935', fontWeight: 700 }}>{t.heroHighlight}</span>.<br />
+            {t.heroSubtitle}
+          </h1>
+          <p style={{
+            fontSize: '16px',
+            color: '#666',
+            marginBottom: '24px',
+            lineHeight: 1.5,
+          }}>
+            {t.heroDesc}<br />
+            {t.heroDesc2}
+          </p>
+          <button
+            onClick={handleCreateList}
+            style={{
+              display: 'inline-block',
+              background: '#E53935',
+              color: 'white',
+              padding: '16px 32px',
+              borderRadius: '8px',
+              border: 'none',
+              fontSize: '16px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.3s',
+              width: '100%',
+              maxWidth: '320px',
+              textAlign: 'center',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.background = '#C62828';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 8px 16px rgba(229, 57, 53, 0.3)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.background = '#E53935';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          >
+            {t.ctaBtn}
+          </button>
+        </section>
 
-      <section className="py-6 sm:py-8 border-y bg-muted/30" aria-label="Prueba social">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 lg:gap-12 text-center">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Store className="w-5 h-5 text-primary" />
-              <span className="text-sm font-medium">
-                {language === 'es' ? '5+ tiendas conectadas' : '5+ stores connected'}
-              </span>
-            </div>
-            <div className="hidden sm:block w-px h-6 bg-border" />
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <TrendingDown className="w-5 h-5 text-green-500" />
-              <span className="text-sm font-medium">
-                {language === 'es' ? 'Hasta 40% de ahorro' : 'Up to 40% savings'}
-              </span>
-            </div>
-            <div className="hidden sm:block w-px h-6 bg-border" />
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Clock className="w-5 h-5 text-primary" />
-              <span className="text-sm font-medium">
-                {language === 'es' ? 'Resultados en segundos' : 'Results in seconds'}
-              </span>
-            </div>
+        {/* TRUST SECTION */}
+        <section style={{
+          background: 'white',
+          padding: '32px',
+          borderRadius: '12px',
+          marginBottom: '32px',
+          border: '1px solid #e0e0e0',
+        }}>
+          <div style={{
+            fontSize: '18px',
+            fontWeight: 600,
+            marginBottom: '16px',
+            color: '#1a3e3e',
+          }}>
+            {t.trustTitle}
           </div>
           
-          <div className="flex items-center justify-center gap-6 sm:gap-8 mt-6 opacity-60">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              {language === 'es' ? 'Comparamos precios en:' : 'We compare prices at:'}
-            </span>
-          </div>
-          <div className="flex items-center justify-center gap-4 sm:gap-6 mt-3 flex-wrap">
-            <span className="text-sm font-bold text-[#FF9900]">Amazon</span>
-            <span className="text-sm font-bold text-[#0071CE]">Walmart</span>
-            <span className="text-sm font-bold text-[#CC0000]">Target</span>
-            <span className="text-sm font-bold text-[#F56400]">Etsy</span>
-            <span className="text-sm font-bold text-[#E53238]">eBay</span>
-          </div>
-        </div>
-      </section>
+          {[
+            { icon: '✅', title: t.trust1Title, desc: t.trust1Desc },
+            { icon: '✅', title: t.trust2Title, desc: t.trust2Desc },
+            { icon: '✅', title: t.trust3Title, desc: t.trust3Desc },
+            { icon: '🔒', title: t.trust4Title, desc: t.trust4Desc },
+          ].map((item, idx) => (
+            <div key={idx} style={{
+              display: 'flex',
+              gap: '16px',
+              marginBottom: idx === 3 ? 0 : '16px',
+              alignItems: 'flex-start',
+            }}>
+              <div style={{ fontSize: '20px', flexShrink: 0, marginTop: '2px' }}>
+                {item.icon}
+              </div>
+              <div style={{ fontSize: '14px', lineHeight: 1.5 }}>
+                <strong style={{ display: 'block', color: '#1a3e3e', marginBottom: '4px' }}>
+                  {item.title}
+                </strong>
+                <span style={{ color: '#666' }}>{item.desc}</span>
+              </div>
+            </div>
+          ))}
+        </section>
 
-      <section className="py-16 sm:py-24 bg-card/30" aria-label="Características principales">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">{t("features.title")}</h2>
-            <p className="text-lg sm:text-xl text-muted-foreground">{t("features.subtitle")}</p>
+        {/* HOW IT WORKS */}
+        <section style={{ marginBottom: '32px' }}>
+          <div style={{
+            fontSize: '18px',
+            fontWeight: 600,
+            marginBottom: '24px',
+            color: '#1a3e3e',
+            textAlign: 'center',
+          }}>
+            {t.howTitle}
           </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            <FeatureCard
-              icon={<Gift className="w-8 h-8" />}
-              title={t("features.lists.title")}
-              description={t("features.lists.description")}
-              onClick={() => navigate("/lists")}
-            />
-            <FeatureCard
-              icon={<Users className="w-8 h-8" />}
-              title={t("features.groups.title")}
-              description={t("features.groups.description")}
-              onClick={() => navigate("/groups")}
-            />
-            <FeatureCard
-              icon={<Sparkles className="w-8 h-8" />}
-              title={t("features.events.title")}
-              description={t("features.events.description")}
-              onClick={() => navigate("/events")}
-            />
-            <FeatureCard
-              icon={<Shield className="w-8 h-8" />}
-              title={t("features.privacy.title")}
-              description={t("features.privacy.description")}
-              onClick={() => navigate("/dashboard")}
-            />
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '16px',
+          }}>
+            {[
+              { num: '1️⃣', text: t.step1 },
+              { num: '2️⃣', text: t.step2 },
+              { num: '3️⃣', text: t.step3 },
+              { num: '4️⃣', text: t.step4 },
+            ].map((step, idx) => (
+              <div key={idx} style={{
+                background: 'white',
+                padding: '24px',
+                borderRadius: '10px',
+                border: '1px solid #e0e0e0',
+                textAlign: 'center',
+              }}>
+                <div style={{
+                  fontSize: '28px',
+                  fontWeight: 700,
+                  color: '#E53935',
+                  marginBottom: '8px',
+                }}>
+                  {step.num}
+                </div>
+                <div style={{
+                  fontSize: '14px',
+                  color: '#666',
+                  lineHeight: 1.4,
+                }}>
+                  {step.text}
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="py-16 sm:py-24">
-        <div className="container mx-auto px-4">
-          <div className="bg-gradient-warm rounded-3xl p-8 sm:p-12 text-center shadow-large">
-            <h2 className="text-3xl sm:text-4xl font-bold text-primary-foreground mb-4">
-              {t("cta.title")}
-            </h2>
-            <p className="text-lg sm:text-xl text-primary-foreground/90 mb-8 max-w-xl mx-auto">
-              {t("cta.subtitle")}
-            </p>
-            <Button 
-              size="lg" 
-              variant="secondary"
-              className="text-lg px-8 shadow-md hover:shadow-lg"
-              onClick={handleStartSaving}
-            >
-              {t("cta.button")}
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
+        {/* SECONDARY CTA */}
+        <section style={{
+          textAlign: 'center',
+          padding: '24px',
+          marginBottom: '32px',
+        }}>
+          <div style={{
+            fontSize: '14px',
+            color: '#666',
+            marginBottom: '16px',
+          }}>
+            {t.secondaryCta}
           </div>
-        </div>
-      </section>
+          <button
+            onClick={handleSmartSearch}
+            style={{
+              color: '#E53935',
+              textDecoration: 'none',
+              fontWeight: 600,
+              cursor: 'pointer',
+              border: 'none',
+              background: 'none',
+              fontSize: '14px',
+              padding: 0,
+            }}
+            onMouseOver={(e) => e.currentTarget.style.textDecoration = 'underline'}
+            onMouseOut={(e) => e.currentTarget.style.textDecoration = 'none'}
+          >
+            {t.searchBtn}
+          </button>
+        </section>
+      </div>
 
-      <Footer />
+      {/* FOOTER */}
+      <footer style={{
+        background: 'linear-gradient(135deg, #1a3e3e 0%, #2a4e4e 100%)',
+        color: 'white',
+        padding: '24px',
+        textAlign: 'center',
+        fontSize: '12px',
+        marginTop: '40px',
+      }}>
+        <div style={{ marginBottom: '16px' }}>
+          <a href="/privacy" style={{ color: '#4CAF50', textDecoration: 'none', margin: '0 8px' }}>Privacy</a>
+          <a href="/terms" style={{ color: '#4CAF50', textDecoration: 'none', margin: '0 8px' }}>Términos</a>
+          <a href="/contact" style={{ color: '#4CAF50', textDecoration: 'none', margin: '0 8px' }}>Contacto</a>
+        </div>
+        <div style={{
+          fontSize: '11px',
+          color: 'rgba(255, 255, 255, 0.7)',
+          marginBottom: '8px',
+        }}>
+          🔐 SSL 256-bit | GDPR Compliant | CCPA | LFPDPPP
+        </div>
+        <div style={{ fontSize: '12px', marginBottom: '8px' }}>
+          WINCOVA CORPORATION • help@givlyn.com
+        </div>
+      </footer>
     </div>
   );
 };
-
-const FeatureCard = ({ icon, title, description, onClick }: { 
-  icon: React.ReactNode; 
-  title: string; 
-  description: string;
-  onClick?: () => void;
-}) => (
-  <div 
-    onClick={onClick}
-    className="group p-6 sm:p-8 rounded-2xl border bg-card hover:shadow-large hover:shadow-primary/10 transition-all duration-300 cursor-pointer hover:-translate-y-2 hover:border-primary/50 relative overflow-hidden"
-  >
-    <div className="absolute inset-0 bg-gradient-warm opacity-0 group-hover:opacity-5 transition-opacity duration-300" />
-    <div className="relative z-10">
-      <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-warm rounded-2xl flex items-center justify-center text-primary-foreground mb-4 sm:mb-5 shadow-soft group-hover:scale-110 group-hover:shadow-glow transition-all duration-300">
-        {icon}
-      </div>
-      <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 group-hover:text-primary transition-colors">{title}</h3>
-      <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4 leading-relaxed">{description}</p>
-      <div className="text-sm font-semibold text-primary flex items-center gap-2 group-hover:gap-3 transition-all">
-        Explorar
-        <span className="group-hover:translate-x-1 transition-transform">→</span>
-      </div>
-    </div>
-  </div>
-);
 
 export default Index;
