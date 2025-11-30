@@ -96,11 +96,23 @@ const Index = () => {
 
   const t = content[language];
 
+  const colors = {
+    primary: '#1A3E5C',
+    secondary: '#1ABC9C',
+    cta: '#FF9900',
+    ctaHover: '#E07C00',
+    background: '#F7F9FB',
+    surface: '#FFFFFF',
+    textPrimary: '#444444',
+    textSecondary: '#6B7280',
+    border: '#E5E7EB',
+  };
+
   const styles = {
     container: {
-      fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-      background: '#f8f8f8',
-      color: '#1a3e3e',
+      fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      background: colors.background,
+      color: colors.textPrimary,
       lineHeight: 1.6,
       minHeight: '100vh',
     },
@@ -109,8 +121,8 @@ const Index = () => {
       justifyContent: 'space-between',
       alignItems: 'center',
       padding: '12px 24px',
-      background: 'white',
-      borderBottom: '1px solid #e0e0e0',
+      background: colors.surface,
+      borderBottom: `1px solid ${colors.border}`,
       position: 'sticky' as const,
       top: 0,
       zIndex: 100,
@@ -126,94 +138,114 @@ const Index = () => {
       objectFit: 'contain' as const,
     },
     main: {
-      maxWidth: '600px',
+      maxWidth: '800px',
       margin: '0 auto',
-      padding: '24px',
+      padding: '24px 20px',
     },
     hero: {
       textAlign: 'center' as const,
-      marginBottom: '48px',
-      padding: '32px 16px',
+      marginBottom: '24px',
+      padding: '40px 20px 24px',
     },
     heroTitle: {
       fontSize: 'clamp(24px, 6vw, 32px)',
       lineHeight: 1.3,
-      marginBottom: '16px',
-      color: '#1a3e3e',
+      marginBottom: '12px',
+      color: colors.primary,
     },
     heroHighlight: {
-      color: '#E53935',
+      color: colors.cta,
       fontWeight: 700,
     },
     heroSubtitle: {
       fontSize: '16px',
-      color: '#666',
-      marginBottom: '24px',
+      color: colors.textSecondary,
+      marginBottom: '20px',
       lineHeight: 1.6,
+    },
+    heroButtons: {
+      display: 'flex',
+      flexWrap: 'wrap' as const,
+      justifyContent: 'center',
+      gap: '12px',
+      marginBottom: '12px',
     },
     btnPrimary: {
       display: 'inline-block',
-      background: '#E53935',
+      background: colors.cta,
       color: 'white',
-      padding: '14px 32px',
+      padding: '12px 24px',
       borderRadius: '8px',
       border: 'none',
-      fontSize: '16px',
-      fontWeight: 700,
+      fontSize: '14px',
+      fontWeight: 600,
       cursor: 'pointer',
       transition: 'all 250ms ease',
-      width: '100%',
-      maxWidth: '320px',
       textAlign: 'center' as const,
+    },
+    btnSecondary: {
+      display: 'inline-block',
+      background: colors.surface,
+      color: colors.cta,
+      border: `1px solid ${colors.cta}`,
+      padding: '12px 24px',
+      borderRadius: '8px',
+      fontWeight: 600,
+      cursor: 'pointer',
+      transition: 'all 250ms ease',
+      fontSize: '14px',
     },
     microcopy: {
       fontSize: '13px',
-      color: '#999',
+      color: colors.textSecondary,
       marginTop: '12px',
       fontWeight: 500,
     },
     trustSection: {
-      margin: '48px 0',
-      textAlign: 'center' as const,
+      margin: '40px 0 32px',
+      padding: '0',
     },
     trustTitle: {
-      fontSize: '24px',
+      fontSize: '26px',
       marginBottom: '32px',
-      color: '#1a3e3e',
+      color: colors.primary,
       fontWeight: 600,
+      textAlign: 'center' as const,
     },
     trustGrid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-      gap: '16px',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+      gap: '20px',
     },
     trustItem: {
-      background: 'white',
-      border: '1px solid #eee',
-      borderRadius: '8px',
+      background: colors.surface,
+      border: `1px solid ${colors.border}`,
+      borderRadius: '12px',
       padding: '20px',
       textAlign: 'left' as const,
       display: 'flex',
       gap: '12px',
+      boxShadow: '0 2px 4px rgba(15, 23, 42, 0.04)',
     },
     trustIcon: {
       fontSize: '20px',
       flexShrink: 0,
+      color: colors.secondary,
     },
     trustItemTitle: {
-      margin: '0 0 4px 0',
-      fontSize: '14px',
+      margin: '0 0 8px 0',
+      fontSize: '16px',
       fontWeight: 700,
-      color: '#1a3e3e',
+      color: colors.primary,
     },
     trustItemDesc: {
       margin: 0,
-      fontSize: '12px',
-      color: '#666',
+      fontSize: '13px',
+      color: colors.textSecondary,
       lineHeight: 1.5,
     },
     howSection: {
-      margin: '48px 0',
+      margin: '40px 0',
       textAlign: 'center' as const,
     },
     stepsGrid: {
@@ -222,17 +254,18 @@ const Index = () => {
       gap: '20px',
     },
     step: {
-      background: 'white',
-      border: '1px solid #eee',
-      borderRadius: '8px',
+      background: colors.surface,
+      border: `1px solid ${colors.border}`,
+      borderRadius: '12px',
       padding: '24px 16px',
       textAlign: 'center' as const,
+      boxShadow: '0 2px 4px rgba(15, 23, 42, 0.04)',
     },
     stepNumber: {
       fontSize: '32px',
       fontWeight: 700,
-      color: '#4A90E2',
-      background: '#f0f4f9',
+      color: colors.primary,
+      background: colors.background,
       width: '60px',
       height: '60px',
       borderRadius: '50%',
@@ -245,7 +278,7 @@ const Index = () => {
       margin: 0,
       fontSize: '14px',
       fontWeight: 600,
-      color: '#1a3e3e',
+      color: colors.primary,
     },
     secondaryCta: {
       margin: '40px 0',
@@ -253,44 +286,37 @@ const Index = () => {
     },
     secondaryText: {
       fontSize: '14px',
-      color: '#666',
+      color: colors.textSecondary,
       marginBottom: '12px',
     },
-    btnSecondary: {
-      background: 'transparent',
-      color: '#E53935',
-      border: '2px solid #E53935',
-      padding: '10px 20px',
-      borderRadius: '6px',
-      fontWeight: 600,
-      cursor: 'pointer',
-      transition: 'all 250ms ease',
-      fontSize: '14px',
-    },
     footer: {
-      background: 'linear-gradient(135deg, #1a3e3e 0%, #2a4e4e 100%)',
+      background: colors.primary,
       color: 'white',
-      padding: '24px',
+      padding: '32px 20px',
       textAlign: 'center' as const,
       fontSize: '12px',
       marginTop: '40px',
     },
     footerLinks: {
-      marginBottom: '16px',
+      display: 'flex',
+      justifyContent: 'center',
+      gap: '20px',
+      marginBottom: '12px',
+      flexWrap: 'wrap' as const,
     },
     footerLink: {
-      color: '#4CAF50',
+      color: 'white',
       textDecoration: 'none',
-      margin: '0 8px',
+      fontSize: '13px',
     },
     footerSecurity: {
-      fontSize: '11px',
-      color: 'rgba(255, 255, 255, 0.7)',
-      marginBottom: '8px',
+      fontSize: '12px',
+      color: 'rgba(255, 255, 255, 0.8)',
+      marginBottom: '4px',
     },
     footerCompany: {
       fontSize: '12px',
-      marginBottom: '8px',
+      marginBottom: '4px',
     },
   };
 
@@ -325,10 +351,10 @@ const Index = () => {
             <button
               onClick={() => navigate('/dashboard')}
               style={{
-                background: '#E53935',
+                background: colors.cta,
                 color: 'white',
                 border: 'none',
-                padding: '8px 16px',
+                padding: '8px 14px',
                 borderRadius: '6px',
                 fontSize: '14px',
                 fontWeight: 600,
@@ -352,22 +378,36 @@ const Index = () => {
             {t.heroSubtitle}
           </h1>
           <p style={styles.heroSubtitle}>{t.heroDesc}</p>
-          <button
-            onClick={handleCreateList}
-            style={styles.btnPrimary}
-            onMouseOver={(e) => {
-              e.currentTarget.style.background = '#C62828';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 8px 16px rgba(229, 57, 53, 0.3)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.background = '#E53935';
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          >
-            {t.ctaBtn}
-          </button>
+          <div style={styles.heroButtons}>
+            <button
+              onClick={handleCreateList}
+              style={styles.btnPrimary}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = colors.ctaHover;
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 16px rgba(255, 153, 0, 0.3)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = colors.cta;
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              {t.ctaBtn}
+            </button>
+            <button
+              onClick={handleSmartSearch}
+              style={styles.btnSecondary}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = '#FFF7EB';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = colors.surface;
+              }}
+            >
+              {t.searchBtn}
+            </button>
+          </div>
           <p style={styles.microcopy}>{t.microcopy}</p>
         </section>
 
@@ -410,32 +450,23 @@ const Index = () => {
           </div>
         </section>
 
-        {/* SECONDARY CTA */}
-        <section style={styles.secondaryCta}>
-          <p style={styles.secondaryText}>{t.secondaryCta}</p>
-          <button
-            onClick={handleSmartSearch}
-            style={styles.btnSecondary}
-            onMouseOver={(e) => e.currentTarget.style.background = '#fff5f5'}
-            onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
-          >
-            {t.searchBtn}
-          </button>
-        </section>
       </div>
 
       {/* FOOTER */}
       <footer style={styles.footer}>
         <div style={styles.footerLinks}>
-          <a href="/privacy" style={styles.footerLink}>Privacy</a> |
-          <a href="/terms" style={styles.footerLink}>Términos</a> |
-          <a href="/contact" style={styles.footerLink}>Contacto</a>
+          <a href="/privacy" style={styles.footerLink}>Privacy</a>
+          <a href="/terms" style={styles.footerLink}>Terms</a>
+          <a href="/contact" style={styles.footerLink}>Contact</a>
         </div>
         <p style={styles.footerSecurity}>
-          🔐 SSL 256-bit | GDPR Compliant | CCPA | LFPDPPP
+          SSL 256-bit | GDPR | CCPA | LFPDPPP
         </p>
         <p style={styles.footerCompany}>
-          WINCOVA CORPORATION • help@givlyn.com
+          WINCOVA CORPORATION
+        </p>
+        <p style={{...styles.footerCompany, marginTop: '4px'}}>
+          <a href="mailto:help@givlyn.com" style={{color: 'white', textDecoration: 'underline'}}>help@givlyn.com</a>
         </p>
       </footer>
     </div>

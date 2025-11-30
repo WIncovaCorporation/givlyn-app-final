@@ -8,90 +8,98 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* 🎄 Colores Navideños - Tema Claro */
-    --background: 0 0% 98%;
-    --foreground: 145 80% 15%;
+    /* 🎁 Paleta Givlyn - Profesional y Confiable */
+    --background: 210 33% 98%;           /* #F7F9FB - Fondo general */
+    --foreground: 0 0% 27%;              /* #444444 - Texto principal */
 
-    --card: 0 0% 100%;
-    --card-foreground: 145 80% 15%;
+    --card: 0 0% 100%;                   /* #FFFFFF - Tarjetas */
+    --card-foreground: 0 0% 27%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 145 80% 15%;
+    --popover-foreground: 0 0% 27%;
 
-    --primary: 0 75% 50%; /* Rojo Navidad */
+    --primary: 205 56% 23%;              /* #1A3E5C - Azul profundo */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 145 65% 35%; /* Verde Navidad */
+    --secondary: 168 76% 42%;            /* #1ABC9C - Verde esmeralda */
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 145 20% 92%;
-    --muted-foreground: 145 30% 40%;
+    --cta: 36 100% 50%;                  /* #FF9900 - Naranja CTA (Amazon) */
+    --cta-hover: 33 100% 44%;            /* #E07C00 - Hover CTA */
+    --cta-foreground: 0 0% 100%;
 
-    --accent: 45 100% 50%; /* Dorado/Oro */
-    --accent-foreground: 145 80% 15%;
+    --muted: 220 14% 96%;                /* Fondo suave */
+    --muted-foreground: 220 9% 46%;      /* #6B7280 - Texto secundario */
+
+    --accent: 36 100% 50%;               /* Naranja acento */
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 145 65% 45%; /* Verde éxito */
+    --success: 168 76% 42%;              /* Verde éxito = secondary */
     --success-foreground: 0 0% 100%;
 
-    --border: 145 20% 85%;
-    --input: 145 20% 88%;
-    --ring: 0 75% 50%;
+    --border: 220 13% 91%;               /* #E5E7EB */
+    --input: 220 13% 91%;
+    --ring: 36 100% 50%;                 /* Naranja CTA */
 
-    --radius: 1rem;
+    --radius: 0.75rem;
 
-    /* 🎄 Gradientes Navideños */
-    --gradient-warm: linear-gradient(135deg, hsl(0 75% 50%) 0%, hsl(0 85% 60%) 100%); /* Rojo */
-    --gradient-mint: linear-gradient(135deg, hsl(145 65% 35%) 0%, hsl(145 75% 45%) 100%); /* Verde */
-    --gradient-hero: linear-gradient(135deg, hsl(0 75% 50%) 0%, hsl(45 100% 50%) 50%, hsl(145 65% 35%) 100%); /* Rojo-Oro-Verde */
+    /* Gradientes Givlyn */
+    --gradient-warm: linear-gradient(135deg, hsl(36 100% 50%) 0%, hsl(33 100% 44%) 100%);
+    --gradient-mint: linear-gradient(135deg, hsl(168 76% 42%) 0%, hsl(168 76% 52%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(205 56% 23%) 0%, hsl(168 76% 42%) 100%);
     
-    --shadow-soft: 0 2px 8px -2px hsl(0 75% 50% / 0.1);
-    --shadow-medium: 0 4px 16px -4px hsl(0 75% 50% / 0.15);
-    --shadow-large: 0 8px 32px -8px hsl(0 75% 50% / 0.2);
-    --shadow-glow: 0 0 24px hsl(45 100% 50% / 0.35); /* Glow dorado */
+    --shadow-soft: 0 2px 4px rgba(15, 23, 42, 0.04);
+    --shadow-medium: 0 4px 12px rgba(15, 23, 42, 0.08);
+    --shadow-large: 0 8px 24px rgba(15, 23, 42, 0.12);
+    --shadow-glow: 0 0 24px hsl(36 100% 50% / 0.25);
 
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
 
   .dark {
-    /* 🎄 Colores Navideños - Tema Oscuro */
-    --background: 145 80% 8%;
+    /* Tema Oscuro Givlyn */
+    --background: 205 56% 8%;
     --foreground: 0 0% 98%;
 
-    --card: 145 70% 12%;
+    --card: 205 50% 12%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 145 70% 12%;
+    --popover: 205 50% 12%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 0 85% 60%; /* Rojo Navidad brillante */
+    --primary: 205 70% 50%;              /* Azul más claro para contraste */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 145 75% 45%; /* Verde Navidad brillante */
+    --secondary: 168 76% 52%;            /* Verde más brillante */
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 145 40% 20%;
-    --muted-foreground: 145 20% 70%;
+    --cta: 36 100% 55%;
+    --cta-hover: 36 100% 60%;
+    --cta-foreground: 0 0% 100%;
 
-    --accent: 45 100% 55%; /* Dorado brillante */
-    --accent-foreground: 145 80% 8%;
+    --muted: 205 40% 18%;
+    --muted-foreground: 220 9% 70%;
+
+    --accent: 36 100% 55%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 98%;
 
-    --success: 145 75% 50%; /* Verde éxito */
+    --success: 168 76% 52%;
     --success-foreground: 0 0% 100%;
 
-    --border: 145 40% 25%;
-    --input: 145 40% 22%;
-    --ring: 0 85% 60%;
+    --border: 205 40% 25%;
+    --input: 205 40% 22%;
+    --ring: 36 100% 55%;
 
-    --gradient-warm: linear-gradient(135deg, hsl(0 85% 60%) 0%, hsl(0 75% 50%) 100%); /* Rojo oscuro */
-    --gradient-mint: linear-gradient(135deg, hsl(145 75% 45%) 0%, hsl(145 85% 35%) 100%); /* Verde oscuro */
-    --gradient-hero: linear-gradient(135deg, hsl(0 85% 60%) 0%, hsl(45 100% 55%) 50%, hsl(145 75% 45%) 100%); /* Rojo-Oro-Verde oscuro */
+    --gradient-warm: linear-gradient(135deg, hsl(36 100% 55%) 0%, hsl(36 100% 45%) 100%);
+    --gradient-mint: linear-gradient(135deg, hsl(168 76% 52%) 0%, hsl(168 76% 42%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(205 70% 50%) 0%, hsl(168 76% 52%) 100%);
   }
 }
 
