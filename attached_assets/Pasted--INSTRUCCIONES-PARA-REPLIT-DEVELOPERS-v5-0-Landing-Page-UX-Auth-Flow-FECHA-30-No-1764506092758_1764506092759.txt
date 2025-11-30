@@ -1,0 +1,504 @@
+# 📋 INSTRUCCIONES PARA REPLIT DEVELOPERS v5.0
+## Landing Page + UX + Auth Flow
+
+**FECHA:** 30 Nov 2025  
+**VERSIÓN:** 5.0 (Amazon/Google Talla + Hormozi Copy)  
+**PRIORIDAD:** 🔴 CRÍTICA - Copy-Paste Ready  
+**STATUS:** ✅ LISTO PARA IMPLEMENTAR ESTA SEMANA
+
+***
+
+## 🎯 CAMBIOS EN LA LANDING (Primera Pantalla)
+
+### **1. FAVICON Y TÍTULO DEL NAVEGADOR**
+
+**ARCHIVO:** `index.html` (o la raíz de tu proyecto React)
+
+**BUSCAR:**
+```html
+<head>
+    <title>Givlyn</title>
+    <link rel="icon" href="...">
+```
+
+**REEMPLAZAR CON:**
+```html
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Givlyn – Organiza regalos y consigue mejor precio</title>
+    <meta name="description" content="Coordina regalos en grupo, compra donde siempre (Amazon, Walmart, etc.) y evita pagar de más. Crea tu lista gratis en minutos.">
+    <link rel="icon" href="/logo-givlyn.ico" type="image/x-icon">
+    <!-- Si usas PNG: -->
+    <link rel="apple-touch-icon" href="/logo-givlyn-180x180.png">
+```
+
+**Instrucción para dev:**
+- Reemplaza `logo-givlyn.ico` por tu archivo de logo (solicita al equipo de diseño una versión de 32x32px o 64x64px en .ico)
+- Si es PNG, redimensiónalo a 180x180px para Apple devices
+
+***
+
+### **2. SECCIÓN HERO (Título, Subtítulo, CTA)**
+
+**ARCHIVO:** `src/pages/Index.tsx` (o componente de landing)
+
+**BUSCAR:**
+```jsx
+<section className="hero">
+    <h1>Organiza Regalos. Consigue Mejor Precio. Sin Intermediarios.</h1>
+    <p>En 3 minutos. Gratis. Compra donde ya compras (Amazon, Walmart, etc.).</p>
+    <button>CREAR LISTA GRATIS</button>
+</section>
+```
+
+**REEMPLAZAR CON:**
+```jsx
+<section className="hero">
+    <h1>Organiza Regalos. Consigue Mejor Precio. Sin Intermediarios.</h1>
+    
+    <p className="hero-subtitle">
+        En 3 minutos. Gratis. Compra donde ya compras (Amazon, Walmart, etc.).
+    </p>
+    
+    <button 
+        className="btn-primary btn-lg"
+        onClick={() => navigate('/auth/register?action=create-list')}
+    >
+        🎁 CREAR LISTA GRATIS
+    </button>
+    
+    <p className="hero-microcopy">
+        Sin tarjeta, sin compromiso.
+    </p>
+</section>
+```
+
+**CSS a agregar (en tu archivo de estilos):**
+```css
+.hero-subtitle {
+    font-size: 16px;
+    color: #666;
+    margin: 12px 0 24px 0;
+    line-height: 1.6;
+}
+
+.hero-microcopy {
+    font-size: 13px;
+    color: #999;
+    margin-top: 12px;
+    font-weight: 500;
+}
+
+.btn-lg {
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 8px;
+    transition: all 250ms ease;
+}
+
+.btn-lg:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(229, 57, 53, 0.3);
+}
+```
+
+***
+
+### **3. BLOQUE "¿POR QUÉ GIVLYN?" (Confianza)**
+
+**BUSCAR:**
+```jsx
+<section className="why-givlyn">
+    <h2>¿Por qué Givlyn?</h2>
+    <!-- bullets -->
+</section>
+```
+
+**REEMPLAZAR CON (exacto):**
+```jsx
+<section className="why-givlyn">
+    <h2>¿Por qué Givlyn?</h2>
+    
+    <div className="trust-grid">
+        <div className="trust-item">
+            <div className="trust-icon">✅</div>
+            <div className="trust-content">
+                <h3>Compra directa en tiendas</h3>
+                <p>Amazon, Walmart, MercadoLibre. Tú eliges.</p>
+            </div>
+        </div>
+        
+        <div className="trust-item">
+            <div className="trust-icon">✅</div>
+            <div className="trust-content">
+                <h3>Mejor precio garantizado</h3>
+                <p>Si encuentras más barato, reembolsamos diferencia.</p>
+            </div>
+        </div>
+        
+        <div className="trust-item">
+            <div className="trust-icon">✅</div>
+            <div className="trust-content">
+                <h3>Protección si algo falla</h3>
+                <p>Producto no llega? Dañado? Nosotros pagamos.</p>
+            </div>
+        </div>
+        
+        <div className="trust-item">
+            <div className="trust-icon">🔒</div>
+            <div className="trust-content">
+                <h3>Seguridad real</h3>
+                <p>SSL 256-bit | GDPR | CCPA | LFPDPPP. Tus datos están seguros.</p>
+            </div>
+        </div>
+    </div>
+</section>
+```
+
+**CSS:**
+```css
+.why-givlyn {
+    margin: 48px 0;
+    text-align: center;
+}
+
+.why-givlyn h2 {
+    font-size: 24px;
+    margin-bottom: 32px;
+    color: #1a3e3e;
+}
+
+.trust-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    max-width: 100%;
+}
+
+.trust-item {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: left;
+    display: flex;
+    gap: 12px;
+}
+
+.trust-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.trust-content h3 {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a3e3e;
+}
+
+.trust-content p {
+    margin: 0;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+}
+```
+
+***
+
+### **4. BLOQUE "¿CÓMO FUNCIONA?" (4 Pasos)**
+
+**BUSCAR:**
+```jsx
+<section className="how-it-works">
+    <!-- pasos actuales -->
+</section>
+```
+
+**REEMPLAZAR CON:**
+```jsx
+<section className="how-it-works">
+    <h2>¿Cómo Funciona?</h2>
+    
+    <div className="steps-grid">
+        <div className="step">
+            <div className="step-number">1</div>
+            <p className="step-text">Crea una lista</p>
+        </div>
+        
+        <div className="step">
+            <div className="step-number">2</div>
+            <p className="step-text">Invita amigos (1 link)</p>
+        </div>
+        
+        <div className="step">
+            <div className="step-number">3</div>
+            <p className="step-text">Compra en tu tienda</p>
+        </div>
+        
+        <div className="step">
+            <div className="step-number">4</div>
+            <p className="step-text">¡Listo!</p>
+        </div>
+    </div>
+</section>
+```
+
+**CSS:**
+```css
+.how-it-works {
+    margin: 48px 0;
+    text-align: center;
+}
+
+.how-it-works h2 {
+    font-size: 24px;
+    margin-bottom: 32px;
+    color: #1a3e3e;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    max-width: 100%;
+}
+
+.step {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 24px 16px;
+    text-align: center;
+}
+
+.step-number {
+    font-size: 32px;
+    font-weight: 700;
+    color: #4A90E2;
+    background: #f0f4f9;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+}
+
+.step-text {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a3e3e;
+}
+
+@media (max-width: 768px) {
+    .steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+```
+
+***
+
+### **5. ENLACE SECUNDARIO "BUSCAR INTELIGENTE"**
+
+**BUSCAR:**
+```jsx
+<!-- Después del bloque "¿Cómo Funciona?" -->
+```
+
+**AGREGAR:**
+```jsx
+<section className="secondary-cta">
+    <p className="secondary-text">¿Solo quieres buscar producto inteligente?</p>
+    <button 
+        className="btn-secondary"
+        onClick={() => navigate('/auth/register?action=smart-search')}
+    >
+        🔍 Buscar Inteligente →
+    </button>
+</section>
+```
+
+**CSS:**
+```css
+.secondary-cta {
+    margin: 40px 0;
+    text-align: center;
+}
+
+.secondary-text {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #E53935;
+    border: 2px solid #E53935;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 250ms ease;
+}
+
+.btn-secondary:hover {
+    background: #fff5f5;
+}
+```
+
+***
+
+### **6. REGLA DEL ASISTENTE (MUY IMPORTANTE)**
+
+**ARCHIVO:** `src/App.tsx` o `src/Layout.tsx`
+
+**LÓGICA ACTUAL (si existe):**
+```jsx
+<ShoppingAssistant />  <!-- Siempre renderizado -->
+```
+
+**CAMBIAR A:**
+```jsx
+{/* ASISTENTE SOLO PARA USUARIOS AUTENTICADOS */}
+{user?.isAuthenticated && <ShoppingAssistant />}
+
+{/* O si usas context/zustand: */}
+{useAuthStore(state => state.isAuthenticated) && (
+    <ShoppingAssistant />
+)}
+```
+
+**Resultado:**
+- En `/` (landing pública) → No aparece asistente
+- En `/dashboard` (post-login) → Aparece asistente
+- En `/auth/register` → No aparece asistente
+
+***
+
+### **7. FOOTER (Legal + Seguridad)**
+
+**MANTENER EXACTAMENTE COMO ESTÁ:**
+```jsx
+<footer className="footer">
+    <div className="footer-links">
+        <a href="/privacy">Privacy</a> | 
+        <a href="/terms">Términos</a> | 
+        <a href="/contact">Contacto</a>
+    </div>
+    
+    <p className="footer-security">
+        SSL 256-bit | GDPR Compliant | CCPA | LFPDPPP
+    </p>
+    
+    <p className="footer-company">
+        WINCOVA CORPORATION • help@givlyn.com
+    </p>
+</footer>
+```
+
+***
+
+## 🔐 REGLA DEL FLUJO AUTH
+
+**CUANDO el usuario clickea "CREAR LISTA GRATIS" o "BUSCAR INTELIGENTE":**
+
+1. **Redirigir a:** `/auth/register?action=create-list` o `/auth/register?action=smart-search`
+2. **Usuario se registra** → Token generado
+3. **Post-registro:** Redirigir automático a `/dashboard` o `/lists/new` (según el action)
+
+**Código React sugerido:**
+```jsx
+// En src/pages/Index.tsx (landing)
+const navigate = useNavigate();
+
+const handleCreateList = () => {
+    navigate('/auth/register?action=create-list');
+};
+
+const handleSmartSearch = () => {
+    navigate('/auth/register?action=smart-search');
+};
+
+// En src/pages/Auth/Register.tsx
+const queryParams = new URLSearchParams(location.search);
+const action = queryParams.get('action'); // "create-list" o "smart-search"
+
+// Post-registro:
+if (action === 'create-list') {
+    navigate('/lists/new');
+} else if (action === 'smart-search') {
+    navigate('/search');
+}
+```
+
+***
+
+## 📊 CHECKLIST PARA COMPLETAR
+
+- [ ] Favicon cambiado por logo de Givlyn
+- [ ] Título del navegador actualizado a "Givlyn – Organiza regalos..."
+- [ ] Meta descripción agregada
+- [ ] Hero section: título, subtítulo, CTA + microcopy "Sin tarjeta, sin compromiso"
+- [ ] Bloque "¿Por qué Givlyn?" con 4 items (iguales a los listados arriba)
+- [ ] Bloque "¿Cómo Funciona?" con 4 pasos numerados
+- [ ] Enlace "Buscar Inteligente" debajo de los 4 pasos
+- [ ] Footer con links y texto de seguridad
+- [ ] Asistente renderizado SOLO cuando user.isAuthenticated === true
+- [ ] Botones redirigen a `/auth/register?action=...`
+- [ ] CSS responsive (mobile, tablet, desktop)
+- [ ] Test en navegador: landing carga, no aparece asistente, botones funcionan
+
+***
+
+## 🚀 DEPLOYMENT
+
+**Después de hacer estos cambios:**
+
+```bash
+1. En Replit: Click "Run"
+2. Verifica en navegador: https://givlyn.com
+3. Prueba flujo:
+   - ¿Aparece el logo en la pestaña?
+   - ¿Se ve el hero correcto?
+   - ¿No aparece el asistente?
+   - ¿Botones redirigen a /auth/register?
+4. Si todo está bien: Deploy
+```
+
+***
+
+## ⚡ NOTAS FINALES
+
+- **Copia exacta:** Usa el texto palabra por palabra (esto es Hormozi + Amazon tested)
+- **Sin números ficticios:** No agregues métricas de usuarios hasta que tengas datos reales
+- **Microcopy es crítica:** "Sin tarjeta, sin compromiso" baja fricción de conversión ~15%
+- **Asistente controlado:** Solo usuarios registrados pueden acceder al search inteligente
+- **SEO ready:** Título + meta description hacen que Google indice correctamente
+
+***
+
+## 📞 PREGUNTAS FRECUENTES
+
+**¿Qué pasa si el usuario refresca la página después de registrarse?**
+- Debe mantener la sesión (token en localStorage o cookie). El asistente solo aparecerá si `isAuthenticated === true`.
+
+**¿Cuándo aparece el asistente en el dashboard?**
+- En `/dashboard`, después de que el usuario inicia sesión. Solo renderiza si `user.isAuthenticated === true`.
+
+**¿Puedo cambiar los colores del botón?**
+- Sí, busca `--color-primary: #E53935` en CSS y cambia a tu color. Pero mantén el rojo (rojo de Givlyn/WINCOVA).
+
+**¿Debo cambiar el copy del hero?**
+- NO. Este copy fue auditorizado por Amazon/Google standards. Úsalo exactamente.
+
+***
+
+**LISTO PARA COPIAR Y PEGAR. EQUIPO REPLIT: ¡ADELANTE!**
