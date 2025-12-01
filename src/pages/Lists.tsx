@@ -99,6 +99,9 @@ const Lists = () => {
   });
   const [editingItem, setEditingItem] = useState<any>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [listFilter, setListFilter] = useState<'all' | 'with_items' | 'empty'>('all');
+  const [editingList, setEditingList] = useState<{ id: string; name: string } | null>(null);
+  const [editListDialogOpen, setEditListDialogOpen] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -190,6 +193,43 @@ const Lists = () => {
 
   const handleDeleteList = async (listId: string) => {
     setDeleteConfirm({ open: true, id: listId, type: "list" });
+  };
+
+  const handleEditList = (list: GiftList) => {
+    setEditingList({ id: list.id, name: list.name });
+    setEditListDialogOpen(true);
+  };
+
+  const handleUpdateList = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingList || !user) return;
+
+    try {
+      const { error } = await supabase
+        .from("gift_lists")
+        .update({ name: editingList.name })
+        .eq("id", editingList.id);
+
+      if (error) throw error;
+
+      toast.success(language === 'es' ? "Lista actualizada" : "List updated");
+      setEditListDialogOpen(false);
+      setEditingList(null);
+      await loadLists(user.id);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const getFilteredLists = () => {
+    switch (listFilter) {
+      case 'with_items':
+        return lists.filter(list => (list.items?.length || 0) > 0);
+      case 'empty':
+        return lists.filter(list => (list.items?.length || 0) === 0);
+      default:
+        return lists;
+    }
   };
 
   const confirmDelete = async () => {
@@ -664,6 +704,32 @@ const Lists = () => {
           </Button>
         </div>
 
+        {lists.length > 0 && (
+          <div className="flex gap-2 mb-6">
+            <Button
+              variant={listFilter === 'all' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setListFilter('all')}
+            >
+              {language === 'es' ? 'Todas' : 'All'} ({lists.length})
+            </Button>
+            <Button
+              variant={listFilter === 'with_items' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setListFilter('with_items')}
+            >
+              {language === 'es' ? 'Con regalos' : 'With gifts'} ({lists.filter(l => (l.items?.length || 0) > 0).length})
+            </Button>
+            <Button
+              variant={listFilter === 'empty' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setListFilter('empty')}
+            >
+              {language === 'es' ? 'Vacías' : 'Empty'} ({lists.filter(l => (l.items?.length || 0) === 0).length})
+            </Button>
+          </div>
+        )}
+
         {lists.length === 0 ? (
           <EmptyStateCard
             icon={Gift}
@@ -674,14 +740,18 @@ const Lists = () => {
           />
         ) : (
           <div className="grid gap-6">
-            {lists.map((list) => (
+            {getFilteredLists().length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                {language === 'es' ? 'No hay listas con este filtro' : 'No lists match this filter'}
+              </div>
+            ) : getFilteredLists().map((list) => (
               <Card key={list.id} className="shadow-medium">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle>{list.name}</CardTitle>
                       <CardDescription>
-                        {list.items?.length || 0} regalos en esta lista
+                        {list.items?.length || 0} {language === 'es' ? 'regalos en esta lista' : 'gifts in this list'}
                       </CardDescription>
                     </div>
                     <div className="flex gap-2">
@@ -694,6 +764,14 @@ const Lists = () => {
                       >
                         <Plus className="w-4 h-4 mr-2" />
                         {t('lists.addGift')}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleEditList(list)}
+                        title={language === 'es' ? 'Editar lista' : 'Edit list'}
+                      >
+                        <Pencil className="w-4 h-4" />
                       </Button>
                       <Button
                         size="sm"
@@ -1804,17 +1882,50 @@ const Lists = () => {
         </DialogContent>
       </Dialog>
 
+      <Dialog open={editListDialogOpen} onOpenChange={setEditListDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{language === 'es' ? 'Editar Lista' : 'Edit List'}</DialogTitle>
+            <DialogDescription>
+              {language === 'es' ? 'Modifica el nombre de tu lista' : 'Update your list name'}
+            </DialogDescription>
+          </DialogHeader>
+          {editingList && (
+            <form onSubmit={handleUpdateList} className="space-y-4">
+              <div>
+                <Label htmlFor="edit-list-name">{language === 'es' ? 'Nombre de la Lista' : 'List Name'}</Label>
+                <Input
+                  id="edit-list-name"
+                  value={editingList.name}
+                  onChange={(e) => setEditingList({ ...editingList, name: e.target.value })}
+                  placeholder={language === 'es' ? 'Ej: Navidad 2025' : 'Ex: Christmas 2025'}
+                  required
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button type="button" variant="outline" onClick={() => setEditListDialogOpen(false)} className="flex-1">
+                  {language === 'es' ? 'Cancelar' : 'Cancel'}
+                </Button>
+                <Button type="submit" className="flex-1">
+                  {language === 'es' ? 'Guardar' : 'Save'}
+                </Button>
+              </div>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <ConfirmDialog
         open={deleteConfirm.open}
         onOpenChange={(open) => setDeleteConfirm({ ...deleteConfirm, open })}
-        title={deleteConfirm.type === "list" ? "¿Eliminar lista?" : "¿Eliminar regalo?"}
+        title={deleteConfirm.type === "list" ? (language === 'es' ? "¿Eliminar lista?" : "Delete list?") : (language === 'es' ? "¿Eliminar regalo?" : "Delete gift?")}
         description={
           deleteConfirm.type === "list"
-            ? "Esta acción no se puede deshacer. Se eliminarán todos los regalos de esta lista."
-            : "Esta acción no se puede deshacer. El regalo será eliminado permanentemente."
+            ? (language === 'es' ? "Esta acción no se puede deshacer. Se eliminarán todos los regalos de esta lista." : "This action cannot be undone. All gifts in this list will be deleted.")
+            : (language === 'es' ? "Esta acción no se puede deshacer. El regalo será eliminado permanentemente." : "This action cannot be undone. The gift will be permanently deleted.")
         }
-        confirmText="Eliminar"
-        cancelText="Cancelar"
+        confirmText={language === 'es' ? "Eliminar" : "Delete"}
+        cancelText={language === 'es' ? "Cancelar" : "Cancel"}
         onConfirm={confirmDelete}
         variant="destructive"
       />
