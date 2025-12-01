@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { EVENT_TYPES } from "@/data/eventTypes";
 
 interface AccessType {
   id: string;
@@ -12,68 +13,94 @@ interface AccessType {
   nameEn: string;
   descEs: string;
   descEn: string;
+  descEsDynamic?: string;
+  descEnDynamic?: string;
   image: string;
+  color: string;
 }
 
 const accessTypes: AccessType[] = [
   { 
-    id: "personal", 
-    nameEs: "Modo Wishlist Personal", 
-    nameEn: "Personal Wishlist Mode", 
-    descEs: "Solo para ti. Úsala como tu catálogo de sueños.", 
-    descEn: "Just for you. Use it as your dream catalog.",
-    image: "/images/list-types/treasure_chest_wishlist_icon.png"
+    id: "private", 
+    nameEs: "Lista Personal", 
+    nameEn: "Personal List", 
+    descEs: "Para mí (Privada). Cosas que me quiero comprar o que añado a mi catálogo de sueños.", 
+    descEn: "For me (Private). Things I want to buy or add to my dream catalog.",
+    image: "/images/list-types/treasure_chest_wishlist_icon.png",
+    color: "#1ABC9C"
   },
   { 
-    id: "receive", 
-    nameEs: "🎁 Recibir Regalos (Tú Eres el Festejado)", 
-    nameEn: "🎁 Receive Gifts (You Are the Celebrant)", 
-    descEs: "Ideal para Cumpleaños, Boda o Baby Shower. Garantiza que recibes exactamente lo que deseas.", 
-    descEn: "Ideal for Birthdays, Weddings or Baby Showers. Guarantees you get exactly what you want.",
-    image: "/images/list-types/person_receiving_gift_icon.png"
+    id: "shared", 
+    nameEs: "Recibir Regalos (Wishlist Compartida)", 
+    nameEn: "Receive Gifts (Shared Wishlist)", 
+    descEs: "Para que otros compren regalos para mí.", 
+    descEn: "For others to buy gifts for me.",
+    descEsDynamic: "Ideal para tu {category}. Garantiza que recibes exactamente lo que deseas.",
+    descEnDynamic: "Ideal for your {category}. Guarantees you get exactly what you want.",
+    image: "/images/list-types/person_receiving_gift_icon.png",
+    color: "#FF9900"
   },
   { 
-    id: "group", 
-    nameEs: "🤝 Evento de Grupo (Amigo Secreto, Sorteo, Co-funding)", 
-    nameEn: "🤝 Group Event (Secret Santa, Raffle, Co-funding)", 
-    descEs: "Coordina sorteos o aportes para regalos costosos. Todos evitan el estrés de adivinar.", 
-    descEn: "Coordinate raffles or contributions for expensive gifts. Everyone avoids guessing stress.",
-    image: "/images/list-types/group_coordination_hands_icon.png"
+    id: "group_event", 
+    nameEs: "Evento de Grupo (Coordinada)", 
+    nameEn: "Group Event (Coordinated)", 
+    descEs: "Participo en un intercambio, sorteo o co-financiación. Todos dan y reciben.", 
+    descEn: "I participate in an exchange, raffle or co-funding. Everyone gives and receives.",
+    image: "/images/list-types/group_coordination_hands_icon.png",
+    color: "#8B5CF6"
   },
   { 
-    id: "third_party", 
-    nameEs: "Para un Tercero", 
-    nameEn: "For Someone Else", 
-    descEs: "Crea la lista para otra persona (bebé, pareja, etc).", 
-    descEn: "Create a list for someone else (baby, partner, etc).",
-    image: "/images/list-types/caretaker_with_child_icon.png"
+    id: "managed", 
+    nameEs: "Administrar Lista (Para un Tercero)", 
+    nameEn: "Manage List (For Someone Else)", 
+    descEs: "Soy el Curador. Organizo y gestiono la lista de un niño, un familiar o una persona ajena al evento.", 
+    descEn: "I am the Curator. I organize and manage the list for a child, family member or person outside the event.",
+    image: "/images/list-types/caretaker_with_child_icon.png",
+    color: "#3B82F6"
   },
 ];
 
 export default function CreateListStep2() {
   const navigate = useNavigate();
   const { language } = useLanguage();
-  const [selectedAccess, setSelectedAccess] = useState("personal");
+  const [selectedAccess, setSelectedAccess] = useState("shared");
+  const [categoryName, setCategoryName] = useState("");
 
   useEffect(() => {
     const saved = sessionStorage.getItem("createList");
     if (!saved) {
       navigate("/create-list/step-1");
+      return;
     }
-  }, [navigate]);
+    
+    const data = JSON.parse(saved);
+    if (data.event_type) {
+      const eventType = EVENT_TYPES.find(e => e.id === data.event_type);
+      if (eventType) {
+        setCategoryName(language === 'es' ? eventType.title : eventType.titleEn);
+      }
+    }
+  }, [navigate, language]);
+
+  const getDescription = (type: AccessType) => {
+    if (type.id === 'shared' && categoryName) {
+      const template = language === 'es' ? type.descEsDynamic : type.descEnDynamic;
+      if (template) {
+        const baseDesc = language === 'es' ? type.descEs : type.descEn;
+        const dynamicPart = template.replace('{category}', categoryName);
+        return `${baseDesc} ${dynamicPart}`;
+      }
+    }
+    return language === 'es' ? type.descEs : type.descEn;
+  };
 
   const handleNext = () => {
     const saved = sessionStorage.getItem("createList");
-    console.log('[Step2] Saved data before navigation:', saved);
     if (saved) {
       const data = JSON.parse(saved);
       const updatedData = { ...data, access_type: selectedAccess };
-      console.log('[Step2] Updated data:', updatedData);
       sessionStorage.setItem("createList", JSON.stringify(updatedData));
-      console.log('[Step2] Navigating to success page...');
       navigate("/create-list/success");
-    } else {
-      console.error('[Step2] No saved data found!');
     }
   };
 
@@ -104,10 +131,10 @@ export default function CreateListStep2() {
         </div>
 
         <h1 className="text-2xl font-bold text-[#1A3E5C] mb-2">
-          {language === 'es' ? '¡ASEGURA TUS REGALOS PERFECTOS!' : 'SECURE YOUR PERFECT GIFTS!'}
+          {language === 'es' ? '¿Cómo funcionará tu lista?' : 'How will your list work?'}
         </h1>
         <p className="text-gray-500 text-sm mb-6">
-          {language === 'es' ? 'Elige el tipo de lista que necesitas' : 'Choose the type of list you need'}
+          {language === 'es' ? 'Define tu rol y la mecánica de la lista' : 'Define your role and the list mechanics'}
         </p>
 
         <div className="space-y-3 mb-6">
@@ -120,19 +147,23 @@ export default function CreateListStep2() {
                 className={cn(
                   "w-full p-4 rounded-xl border-2 text-left transition-all",
                   isSelected
-                    ? "border-[#1ABC9C] bg-[#1ABC9C]/5 shadow-md"
+                    ? "shadow-md"
                     : "border-gray-100 bg-white hover:border-gray-200 hover:shadow-sm"
                 )}
+                style={{
+                  borderColor: isSelected ? type.color : undefined,
+                  backgroundColor: isSelected ? `${type.color}08` : undefined,
+                }}
               >
                 <div className="flex items-start gap-4">
                   <div className={cn(
-                    "w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden",
+                    "w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden",
                     isSelected ? "bg-white shadow-sm" : "bg-gray-50"
                   )}>
                     <img 
                       src={type.image} 
-                      alt={language === 'es' ? type.nameEs : type.nameEn}
-                      className="w-14 h-14 object-contain"
+                      alt=""
+                      className="w-12 h-12 object-contain"
                     />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -143,15 +174,24 @@ export default function CreateListStep2() {
                       )}>
                         {language === 'es' ? type.nameEs : type.nameEn}
                       </p>
-                      <div className={cn(
-                        "w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5",
-                        isSelected ? "border-[#1ABC9C]" : "border-gray-300"
-                      )}>
-                        {isSelected && <div className="w-3 h-3 rounded-full bg-[#1ABC9C]" />}
+                      <div 
+                        className={cn(
+                          "w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5"
+                        )}
+                        style={{
+                          borderColor: isSelected ? type.color : '#D1D5DB'
+                        }}
+                      >
+                        {isSelected && (
+                          <div 
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: type.color }}
+                          />
+                        )}
                       </div>
                     </div>
                     <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-                      {language === 'es' ? type.descEs : type.descEn}
+                      {getDescription(type)}
                     </p>
                   </div>
                 </div>

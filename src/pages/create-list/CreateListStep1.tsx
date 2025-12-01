@@ -166,7 +166,7 @@ export default function CreateListStep1() {
             disabled={!isValid}
             className="w-full py-6 text-base font-semibold bg-[#1ABC9C] hover:bg-[#1ABC9C]/90 disabled:bg-gray-200 disabled:text-gray-400 transition-all"
           >
-            {language === 'es' ? 'Siguiente: ¿Quién la Usará?' : 'Next: Who Will Use It?'}
+            {language === 'es' ? 'Siguiente: ¿Cómo funcionará?' : 'Next: How Will It Work?'}
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
           {!isValid && (

@@ -757,25 +757,25 @@ const Lists = () => {
                         <CardTitle>{list.name}</CardTitle>
                         <span className={cn(
                           "inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium",
-                          list.access_type === 'personal' ? "bg-[#1ABC9C]/10 text-[#1ABC9C]" : 
-                          (list.access_type === 'receive' || list.access_type === 'shared') ? "bg-[#FF9900]/10 text-[#FF9900]" :
-                          list.access_type === 'group' ? "bg-[#8B5CF6]/10 text-[#8B5CF6]" :
+                          (list.access_type === 'private' || list.access_type === 'personal') ? "bg-[#1ABC9C]/10 text-[#1ABC9C]" : 
+                          (list.access_type === 'shared' || list.access_type === 'receive') ? "bg-[#FF9900]/10 text-[#FF9900]" :
+                          (list.access_type === 'group_event' || list.access_type === 'group') ? "bg-[#8B5CF6]/10 text-[#8B5CF6]" :
                           "bg-[#3B82F6]/10 text-[#3B82F6]"
                         )}>
                           <img 
                             src={
-                              list.access_type === 'personal' ? "/images/list-types/treasure_chest_wishlist_icon.png" :
-                              (list.access_type === 'receive' || list.access_type === 'shared') ? "/images/list-types/person_receiving_gift_icon.png" :
-                              list.access_type === 'group' ? "/images/list-types/group_coordination_hands_icon.png" :
+                              (list.access_type === 'private' || list.access_type === 'personal') ? "/images/list-types/treasure_chest_wishlist_icon.png" :
+                              (list.access_type === 'shared' || list.access_type === 'receive') ? "/images/list-types/person_receiving_gift_icon.png" :
+                              (list.access_type === 'group_event' || list.access_type === 'group') ? "/images/list-types/group_coordination_hands_icon.png" :
                               "/images/list-types/caretaker_with_child_icon.png"
                             }
                             alt=""
                             className="w-4 h-4 object-contain"
                           />
-                          {list.access_type === 'personal' ? (language === 'es' ? 'Wishlist' : 'Wishlist') :
-                           (list.access_type === 'receive' || list.access_type === 'shared') ? (language === 'es' ? 'Festejado' : 'Celebrant') :
-                           list.access_type === 'group' ? (language === 'es' ? 'Grupo' : 'Group') :
-                           (language === 'es' ? 'Tercero' : 'Third Party')}
+                          {(list.access_type === 'private' || list.access_type === 'personal') ? (language === 'es' ? 'Personal' : 'Personal') :
+                           (list.access_type === 'shared' || list.access_type === 'receive') ? (language === 'es' ? 'Compartida' : 'Shared') :
+                           (list.access_type === 'group_event' || list.access_type === 'group') ? (language === 'es' ? 'Grupo' : 'Group') :
+                           (language === 'es' ? 'Administrada' : 'Managed')}
                         </span>
                       </div>
                       <CardDescription>
@@ -1937,69 +1937,69 @@ const Lists = () => {
                 <div className="grid grid-cols-1 gap-2 mt-2">
                   <button
                     type="button"
-                    onClick={() => setEditingList({ ...editingList, access_type: 'personal' })}
+                    onClick={() => setEditingList({ ...editingList, access_type: 'private' })}
                     className={cn(
                       "flex items-center gap-3 p-2.5 rounded-lg border-2 text-left transition-all",
-                      editingList.access_type === 'personal' 
+                      (editingList.access_type === 'private' || editingList.access_type === 'personal')
                         ? "border-[#1ABC9C] bg-[#1ABC9C]/10" 
                         : "border-gray-200 hover:border-gray-300"
                     )}
                   >
                     <img src="/images/list-types/treasure_chest_wishlist_icon.png" alt="" className="w-10 h-10 object-contain" />
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-xs">{language === 'es' ? 'Modo Wishlist Personal' : 'Personal Wishlist'}</p>
-                      <p className="text-[10px] text-gray-500 truncate">{language === 'es' ? 'Solo para ti' : 'Just for you'}</p>
+                      <p className="font-medium text-xs">{language === 'es' ? 'Lista Personal' : 'Personal List'}</p>
+                      <p className="text-[10px] text-gray-500 truncate">{language === 'es' ? 'Para mí (Privada)' : 'For me (Private)'}</p>
                     </div>
                   </button>
                   
                   <button
                     type="button"
-                    onClick={() => setEditingList({ ...editingList, access_type: 'receive' })}
+                    onClick={() => setEditingList({ ...editingList, access_type: 'shared' })}
                     className={cn(
                       "flex items-center gap-3 p-2.5 rounded-lg border-2 text-left transition-all",
-                      (editingList.access_type === 'receive' || editingList.access_type === 'shared')
+                      (editingList.access_type === 'shared' || editingList.access_type === 'receive')
                         ? "border-[#FF9900] bg-[#FF9900]/10" 
                         : "border-gray-200 hover:border-gray-300"
                     )}
                   >
                     <img src="/images/list-types/person_receiving_gift_icon.png" alt="" className="w-10 h-10 object-contain" />
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-xs">{language === 'es' ? '🎁 Recibir Regalos' : '🎁 Receive Gifts'}</p>
-                      <p className="text-[10px] text-gray-500 truncate">{language === 'es' ? 'Tú eres el festejado' : 'You are the celebrant'}</p>
+                      <p className="font-medium text-xs">{language === 'es' ? 'Recibir Regalos' : 'Receive Gifts'}</p>
+                      <p className="text-[10px] text-gray-500 truncate">{language === 'es' ? 'Wishlist Compartida' : 'Shared Wishlist'}</p>
                     </div>
                   </button>
                   
                   <button
                     type="button"
-                    onClick={() => setEditingList({ ...editingList, access_type: 'group' })}
+                    onClick={() => setEditingList({ ...editingList, access_type: 'group_event' })}
                     className={cn(
                       "flex items-center gap-3 p-2.5 rounded-lg border-2 text-left transition-all",
-                      editingList.access_type === 'group' 
+                      (editingList.access_type === 'group_event' || editingList.access_type === 'group')
                         ? "border-[#8B5CF6] bg-[#8B5CF6]/10" 
                         : "border-gray-200 hover:border-gray-300"
                     )}
                   >
                     <img src="/images/list-types/group_coordination_hands_icon.png" alt="" className="w-10 h-10 object-contain" />
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-xs">{language === 'es' ? '🤝 Evento de Grupo' : '🤝 Group Event'}</p>
-                      <p className="text-[10px] text-gray-500 truncate">{language === 'es' ? 'Amigo Secreto, Sorteo' : 'Secret Santa, Raffle'}</p>
+                      <p className="font-medium text-xs">{language === 'es' ? 'Evento de Grupo' : 'Group Event'}</p>
+                      <p className="text-[10px] text-gray-500 truncate">{language === 'es' ? 'Intercambio, Sorteo' : 'Exchange, Raffle'}</p>
                     </div>
                   </button>
                   
                   <button
                     type="button"
-                    onClick={() => setEditingList({ ...editingList, access_type: 'third_party' })}
+                    onClick={() => setEditingList({ ...editingList, access_type: 'managed' })}
                     className={cn(
                       "flex items-center gap-3 p-2.5 rounded-lg border-2 text-left transition-all",
-                      editingList.access_type === 'third_party' 
+                      (editingList.access_type === 'managed' || editingList.access_type === 'third_party')
                         ? "border-[#3B82F6] bg-[#3B82F6]/10" 
                         : "border-gray-200 hover:border-gray-300"
                     )}
                   >
                     <img src="/images/list-types/caretaker_with_child_icon.png" alt="" className="w-10 h-10 object-contain" />
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-xs">{language === 'es' ? 'Para un Tercero' : 'For Someone Else'}</p>
-                      <p className="text-[10px] text-gray-500 truncate">{language === 'es' ? 'Bebé, pareja, etc.' : 'Baby, partner, etc.'}</p>
+                      <p className="font-medium text-xs">{language === 'es' ? 'Administrar Lista' : 'Manage List'}</p>
+                      <p className="text-[10px] text-gray-500 truncate">{language === 'es' ? 'Para un Tercero' : 'For Someone Else'}</p>
                     </div>
                   </button>
                 </div>

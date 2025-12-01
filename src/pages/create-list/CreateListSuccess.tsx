@@ -16,16 +16,24 @@ interface ListData {
 }
 
 const eventTypeLabels: Record<string, { es: string; en: string }> = {
+  personal_celebration: { es: "Celebración Personal", en: "Personal Celebration" },
+  holidays: { es: "Días Festivos", en: "Holidays" },
+  wedding_couple: { es: "Boda/Pareja", en: "Wedding/Couple" },
+  baby_kids_family: { es: "Bebé/Niños/Familia", en: "Baby/Kids/Family" },
+  collaboration: { es: "Colaboración", en: "Collaboration" },
+  other: { es: "Otro", en: "Other" },
   birthday: { es: "Cumpleaños", en: "Birthday" },
   christmas: { es: "Navidad", en: "Christmas" },
   wedding: { es: "Boda", en: "Wedding" },
-  baby_shower: { es: "Baby Shower", en: "Baby Shower" },
-  other: { es: "Otro", en: "Other" }
+  baby_shower: { es: "Baby Shower", en: "Baby Shower" }
 };
 
 const accessTypeLabels: Record<string, { es: string; en: string }> = {
+  private: { es: "Personal (Privada)", en: "Personal (Private)" },
+  shared: { es: "Wishlist Compartida", en: "Shared Wishlist" },
+  group_event: { es: "Evento de Grupo", en: "Group Event" },
+  managed: { es: "Para un Tercero", en: "For Someone Else" },
   personal: { es: "Personal", en: "Personal" },
-  shared: { es: "Compartida", en: "Shared" },
   third_party: { es: "Para Tercero", en: "For Third Party" }
 };
 

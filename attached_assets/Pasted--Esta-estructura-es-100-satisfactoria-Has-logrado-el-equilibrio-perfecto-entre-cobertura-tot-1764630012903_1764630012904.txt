@@ -1,0 +1,55 @@
+¡Esta estructura es **100% satisfactoria**! Has logrado el equilibrio perfecto entre **cobertura total de eventos** y **máxima claridad de la mecánica**, que es el estándar de oro de UX a nivel mundial.
+
+La solución de **6 Categorías Visuales (Paso 1)** + **4 Mecánicas Claras (Paso 2)** elimina por completo la ambigüedad y la necesidad de adivinar, logrando el objetivo de **Cero Fricción**.
+
+He realizado una última revisión para inyectar un **mayor valor aspiracional** en las categorías y asegurar que los eventos más comunes estén explícitos, para que ningún usuario se sienta excluido.
+
+---
+
+## 📢 INSTRUCCIONES DEFINITIVAS AL EQUIPO DE DESARROLLO
+
+**ASUNTO: IMPLEMENTACIÓN FINAL DE ARQUITECTURA UX (Paso 1 Categorizado + Paso 2 Mecánica)**
+
+Equipo, la siguiente es la guía final y detallada para implementar el flujo de creación de lista, reemplazando la arquitectura anterior por la solución de **Categorización/Mecánica**.
+
+### 1. ⚙️ Paso 1: Fusión de Eventos en Categorías (Componente `ListCreationStep1.jsx`)
+
+*El objetivo es agrupar la infinidad de eventos en 6 tarjetas claras.*
+
+| Tipo de Tarjeta (Nuevo Título) | Micro-Copy de Valor (Ejemplos Explícitos) | Lógica Implícita |
+| :--- | :--- | :--- |
+| **1. Celebración Personal y Logros** | **Para ti.** Incluye: Cumpleaños, Graduación, Open House o cualquier gran hito personal. | Recepción de regalos (mayormente para uno mismo). |
+| **2. Días Festivos y Temporada** | Navidad, San Valentín, Día de la Madre/Padre/Niño, Día de Reyes. | Mecánica fija anual de *wishlist*. |
+| **3. Eventos Nupciales y Pareja** | Boda, Aniversario de Pareja, *Engagement Party*. | Alto valor, listas complejas. |
+| **4. Bebé, Niños y Familia** | Baby Shower, Bautizo, Primera Comunión, listas de **Regreso a Clases**. | Eventos centrados en los niños. |
+| **5. Colaboración y Aportes** | **CRÍTICO.** Amigo Secreto, Regalos Corporativos, Co-financiación, Intercambio de Oficinas. | Mecánica de grupo con coordinación y/o finanzas. |
+| **6. Otro Evento** | Cualquier evento que no encaje: Jubilación, Fiesta de Mascotas, o meta personal. | La opción de escape necesaria. |
+
+**REQUISITO DE UX:**
+* Asegurar que las **6 tarjetas** tengan un tamaño y espaciado optimizado para que el texto sea perfectamente legible (mínimo 14px en *micro-copy*).
+* La selección de **cualquiera** de estas 6 tarjetas debe activar el botón **"Siguiente: ¿Cómo funcionará? →"** de forma inmediata.
+
+### 2. ⚙️ Paso 2: Mecánica de la Lista (Componente `ListCreationStep2.jsx`)
+
+*El objetivo es definir el rol del usuario y la función de la lista sin ambigüedad. El Paso 2 se mantiene con 4 tarjetas.*
+
+| Tipo de Tarjeta | Micro-Copy de Valor (Cero Confusión) | Lógica de *Sharing* |
+| :--- | :--- | :--- |
+| **1. Lista Personal** | **Para mí (Privada).** Cosas que me quiero comprar o que añado a mi catálogo de sueños. | No compartida (Valor `private`). |
+| **2. Recibir Regalos (Wishlist Compartida)** | Para que otros compren regalos para mí. **Ideal para [CATEGORÍA DEL PASO 1].** Garantiza que recibes *exactamente* lo que deseas. | Compartida con invitación (Valor `shared`). |
+| **3. Evento de Grupo (Coordinada)** | Participo en un intercambio, sorteo o co-financiación. **Todos** dan y reciben. | Compartida con reglas de grupo (Valor `group_event`). |
+| **4. Administrar Lista (Para un Tercero)** | Soy el **Curador**. Organizo y gestiono la lista de un niño, un familiar o una persona ajena al evento. | Compartida con rol de admin (Valor `managed`). |
+
+**REQUISITO CRÍTICO DE LÓGICA:**
+* **Gancho de Contexto:** La Opción 2 debe implementar lógica dinámica: Reemplazar **`[CATEGORÍA DEL PASO 1]`** por el nombre de la tarjeta elegida en el paso anterior (Ej: "Ideal para tu **Celebración Personal**").
+* **Activación:** La selección de **cualquiera** de las 4 tarjetas debe activar el botón **"Siguiente: Finalizar →"** de forma inmediata.
+
+### 3. ✅ Limpieza y Coherencia (UX/CSS)
+
+* **FUENTES:** Asegurar que las fuentes de todos los textos de las tarjetas sean grandes y legibles (como mínimo 14px en micro-copy).
+* **LIMPIEZA:** **Eliminar permanentemente** la caja de sugerencia pasiva ("Puedes cambiar la privacidad después...") de la interfaz.
+* **FLUIDEZ:** Confirmar que no hay fallos de *backend* ni pérdidas de estado entre el Paso 1 y Paso 2, ni entre el Paso 2 y la llamada final (`POST /api/lists/create`).
+
+Con estas instrucciones, el equipo puede proceder a implementar la arquitectura de flujo más eficiente.
+
+Una vez que el flujo de creación de lista esté listo, el siguiente paso será revisar la pantalla de **Dashboard** y el botón **"Encontrar Regalo con IA"**.
