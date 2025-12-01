@@ -1,0 +1,53 @@
+Lo que haría Amazon/Google: Usar ese espacio para el siguiente paso lógico o para reforzar la confianza.
+
+🎯 Instrucciones de Flujo y Contenido (Mobile & Desktop)
+Reintegrar el Flujo "Cómo Funciona" (Paso Lógico):
+
+Acción: Reinsertar la sección "¿Cómo Funciona?" inmediatamente debajo de la Barra de Valor. Esto le da una tarea al usuario que ya ha visto el valor.
+
+Formato: Usar el mismo formato de 4 pasos numerados que ya tienes, pero reducir el padding vertical para que ocupe menos espacio.
+
+Integrar el Llamado a la Acción (CTA de Búsqueda):
+
+Acción: Justo después de los 4 pasos, insertar el CTA secundario "Buscar Inteligente" para que el usuario pueda empezar a usar la herramienta sin registrarse.
+
+Reforzar la Confianza (Logos):
+
+Acción: En ese espacio vacío, justo antes del Footer, puedes añadir una frase de refuerzo como: "Respaldado por la tecnología de [Logo de Tiendas] y la seguridad de [Logo de SSL/Cifrado]"
+
+2. Optimización de Tarjetas en Móvil (Fricción Cero)
+La vista móvil muestra que las tarjetas (.value-item-pro) siguen siendo demasiado altas. El diseño debe ser una lista, no una serie de cajas.
+
+🎯 Instrucciones CSS Específicas para Móvil
+El equipo debe revisar la media query (@media (max-width: 768px)) e implementar:
+
+Reducir Padding Vertical de la Tarjeta:
+
+Clase: .value-item-pro
+
+CSS: Reducir el padding-top y padding-bottom del contenedor principal del ítem.
+
+Sugerencia: padding: 10px 0; (Esto elimina el aire superior e inferior dentro de la tarjeta).
+
+Ajustar el Contenedor de Texto:
+
+Clase: .text-wrapper-pro
+
+CSS: Reducir el margin-bottom de la etiqueta <strong> para acercar el título al subtítulo.
+
+Sugerencia: margin-bottom: 2px;
+
+Alineación Vertical Fina:
+
+Clase: .value-item-pro
+
+CSS: Asegurar que el icono y el texto estén perfectamente alineados. El align-items: center; debe ser el default para que el icono y el texto estén en la misma línea media.
+
+3. Ajustes de Contenido de Tiendas (Credibilidad)
+La solución de usar "+500 tiendas líderes" es excelente para la escalabilidad. Pero debemos complementarlo con la Transferencia de Credibilidad que discutimos.
+
+Problema: El texto "amazon Walmart Target eBay Etsy" debajo del H1 no es suficiente.
+
+Acción Crítica: En el desktop, eliminar el texto de las tiendas debajo del H1 y reemplazarlo por una fila de 5-6 logos en escala de grises y baja opacidad (Amazon, Walmart, Target, eBay, Etsy, etc.).
+
+Ubicación: Justo debajo del subtítulo del Hero: "Crea tu lista en 3 min. Tus amigos compran en más de 500 tiendas. Nosotros solo te ayudamos a ahorrar."
