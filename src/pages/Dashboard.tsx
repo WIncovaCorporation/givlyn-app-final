@@ -51,6 +51,21 @@ const Dashboard = () => {
       }
 
       setUser(session.user);
+
+      const { data: lists } = await supabase
+        .from("gift_lists")
+        .select("id")
+        .eq("user_id", session.user.id)
+        .limit(1);
+
+      const hasLists = lists && lists.length > 0;
+      const onboardingCompleted = session.user.user_metadata?.onboarding_completed;
+
+      if (!hasLists && !onboardingCompleted) {
+        navigate("/onboarding/welcome");
+        return;
+      }
+
       await Promise.all([
         loadStats(session.user.id),
         loadMyLists(session.user.id),

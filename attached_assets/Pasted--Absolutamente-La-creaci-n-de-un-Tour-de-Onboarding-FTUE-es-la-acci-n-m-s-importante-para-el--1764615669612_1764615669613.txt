@@ -1,0 +1,52 @@
+¡Absolutamente! La creación de un **Tour de Onboarding (FTUE)** es la acción más importante para el usuario nuevo, ya que establece la conexión humana y el valor de la IA de inmediato.
+
+Esta instrucción reemplaza la visita inicial al Dashboard para los usuarios sin listas.
+
+Aquí están las instrucciones precisas para crear el flujo de **Experiencia de Primer Usuario (FTUE)** que refleja la filosofía de "Inteligencia Artificial con Propósito Humano" y el estándar de diseño de clase mundial.
+
+---
+
+## 💻 Instrucciones Técnicas: Implementación del Onboarding Tour (FTUE)
+
+**ASUNTO:** IMPLEMENTACIÓN DE RUTA `/onboarding/welcome` (Tour de 3 Pasos)
+
+Equipo,
+
+Debemos implementar una nueva ruta (`/onboarding/welcome`) y una lógica de redirección estricta. **Esta pantalla solo se mostrará una vez** al usuario que se registra por primera vez y tiene `User.lists.count == 0`.
+
+### 1. Lógica de Redirección (FTUE Gate)
+
+* **Verificación:** Si `User.lists.count == 0` después del inicio de sesión, redirigir a `/onboarding/welcome`.
+* **Compleción:** Al terminar el tour, la aplicación debe marcar un *flag* en el perfil del usuario (ej., `user.onboarding_completed: true`) y redirigir a `/dashboard`.
+
+### 2. Estructura del Tour (3 Pantallas - Mobile-First)
+
+El tour debe ser un carrusel deslizable con un indicador de progreso (`1/3`, `2/3`, `3/3`) y un botón `Saltar` (Skip) en la esquina superior derecha.
+
+#### **Pantalla 1: Propósito Humano (El Por Qué)**
+* **Título (H1):** **"¡Hola, [Nombre del Usuario]! Bienvenido a Givlyn."** (Personalización esencial)
+* **Cuerpo (Body):** "Somos Inteligencia Artificial, diseñada con un propósito humano: liberarte del estrés de regalar y asegurar que tu dinero rinda al máximo."
+* **Elemento Visual:** Un vector profesional (monolinea) que muestre un cerebro (IA) y un corazón (Emoción) conectados, o un regalo siendo envuelto.
+* **Botón:** **`Siguiente`**
+
+#### **Pantalla 2: El Valor de la IA (El Cómo)**
+* **Título (H1):** **"Encuentra el Regalo Perfecto, No el más Caro."** (Claridad Hormozi)
+* **Cuerpo (Body):** "Nuestra IA no solo busca productos. Analiza las tendencias, compara precios en tiempo real y te guía para que compres la mejor opción en el momento justo."
+* **Elemento Visual:** Un vector profesional que muestre una lupa buscando a través de muchos precios o una balanza equilibrando el valor y el costo.
+* **Botón:** **`Siguiente`**
+
+#### **Pantalla 3: La Acción Inmediata (El Qué Debes Hacer)**
+* **Título (H1):** **"Tu Primera Lista en 3 Minutos."**
+* **Cuerpo (Body):** "Comenzar es simple: crea una lista para tu próximo evento, añádele ideas, y la IA comenzará a trabajar para ti. ¡Comencemos!"
+* **Elemento Visual:** Un vector que muestre una lista de tareas completadas o un icono de regalo grande.
+* **Botón CTA (Único y Dominante):** **`+ CREAR MI PRIMERA LISTA GRATIS`**
+    * **Estilo:** Naranja corporativo (`#FF9900`), 100% de ancho en móvil.
+    * **Acción:** Dirigir a la ruta `/list/new`.
+
+### 3. Estándares de Diseño del Tour (Clase Mundial)
+
+* **Cleanliness:** Fondo blanco. Uso estricto de la tipografía Sans-Serif corporativa.
+* **Mobile:** Texto grande, botones de toque (44x44px min), navegación con puntos inferiores para indicar el progreso.
+* **Branding:** Logo y nombre de Givlyn discretamente visibles en el Header, pero el foco es el contenido.
+
+---
