@@ -159,7 +159,11 @@ const Footer = () => {
         </div>
 
         <div className="pt-4 border-t border-white/10 text-center text-xs text-gray-400">
-          <p>© 2025 Wincova Corporation. {language === 'es' ? 'Todos los derechos reservados.' : 'All rights reserved.'}</p>
+          <p>
+            © 2025 Givlyn. {language === 'es' 
+              ? 'Creado con la meta de ahorrarte tiempo y dinero.' 
+              : 'Built to save you time and money.'} | <Link to="/privacy" className="hover:text-white transition-colors">{language === 'es' ? 'Privacidad' : 'Privacy'}</Link>
+          </p>
         </div>
       </div>
     </footer>

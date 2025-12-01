@@ -153,32 +153,29 @@ const Dashboard = () => {
 
       <main id="main-content" className="container mx-auto px-4 md:px-6 py-6 max-w-3xl flex-1">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">
-            {language === 'es' ? '¡Hola' : 'Hello'}, {userName}! 👋
+          <h1 className="text-2xl font-semibold text-gray-900">
+            {language === 'es' ? `¡Hola, ${userName}! ¿Qué regalo encontramos hoy?` : `Hi ${userName}! What gift shall we find today?`}
           </h1>
-          <p className="text-gray-500">
-            {language === 'es' ? '¿Qué quieres hacer hoy?' : 'What do you want to do today?'}
-          </p>
         </div>
 
         <div className="grid gap-4 mb-8">
           <Button 
             onClick={() => navigate("/lists")}
             size="lg"
-            className="w-full py-8 text-lg font-bold bg-primary hover:bg-primary/90 shadow-lg"
+            className="w-full py-6 text-base font-semibold bg-[#FF9900] hover:bg-[#FF9900]/90 shadow-md btn-hover-glow transition-all"
           >
-            <Plus className="w-6 h-6 mr-3" />
-            {language === 'es' ? 'CREAR NUEVA LISTA' : 'CREATE NEW LIST'}
+            <Plus className="w-5 h-5 mr-2" />
+            {language === 'es' ? 'Crear Nueva Lista' : 'Create New List'}
           </Button>
 
           <Button 
             onClick={() => navigate("/marketplace")}
             size="lg"
             variant="outline"
-            className="w-full py-8 text-lg font-bold border-2 border-[#1ABC9C] text-[#1ABC9C] hover:bg-[#1ABC9C]/10 hover:text-[#1ABC9C]"
+            className="w-full py-6 text-base font-semibold border-2 border-[#1ABC9C] text-[#1ABC9C] hover:bg-[#1ABC9C]/10 hover:text-[#1ABC9C] transition-all"
           >
-            <Search className="w-6 h-6 mr-3" />
-            {language === 'es' ? 'BUSCAR REGALO INTELIGENTE' : 'SMART GIFT SEARCH'}
+            <Search className="w-5 h-5 mr-2" />
+            {language === 'es' ? 'Buscar Regalo Inteligente' : 'Smart Gift Search'}
           </Button>
         </div>
 
@@ -198,17 +195,22 @@ const Dashboard = () => {
           </div>
 
           {myLists.length === 0 ? (
-            <Card className="border-dashed border-2 border-gray-300">
+            <Card className="border-dashed border-2 border-gray-200 bg-gray-50/50">
               <CardContent className="py-8 text-center">
-                <div className="text-4xl mb-3">📝</div>
-                <p className="text-gray-500 mb-4">
+                <div className="text-3xl mb-3">🎁</div>
+                <p className="text-gray-600 mb-1 font-medium">
                   {language === 'es' 
-                    ? 'Tu dashboard está listo. ¡Crea tu primera lista!' 
-                    : 'Your dashboard is ready. Create your first list!'}
+                    ? 'Tu lista está vacía' 
+                    : 'Your list is empty'}
                 </p>
-                <Button onClick={() => navigate("/lists")} variant="outline">
+                <p className="text-gray-500 text-sm mb-4">
+                  {language === 'es' 
+                    ? 'Empecemos: ¿qué evento se acerca que requiera un regalo?' 
+                    : "Let's start: what upcoming event needs a gift?"}
+                </p>
+                <Button onClick={() => navigate("/lists")} className="bg-[#FF9900] hover:bg-[#FF9900]/90 text-white">
                   <Plus className="w-4 h-4 mr-2" />
-                  {language === 'es' ? 'Crear Lista' : 'Create List'}
+                  {language === 'es' ? 'Crear mi primera lista' : 'Create my first list'}
                 </Button>
               </CardContent>
             </Card>
@@ -217,7 +219,7 @@ const Dashboard = () => {
               {myLists.map((list) => (
                 <Card 
                   key={list.id}
-                  className="cursor-pointer hover:shadow-md transition-shadow"
+                  className="cursor-pointer card-hover-lift"
                   onClick={() => navigate(`/lists`)}
                 >
                   <CardContent className="py-4 flex items-center justify-between">
@@ -249,7 +251,7 @@ const Dashboard = () => {
               <div 
                 key={category.id}
                 onClick={() => navigate("/marketplace")}
-                className="flex-shrink-0 w-24 bg-white rounded-lg p-3 text-center cursor-pointer hover:shadow-md transition-all shadow-sm border border-gray-100"
+                className="flex-shrink-0 w-24 bg-white rounded-lg p-3 text-center cursor-pointer card-hover-lift shadow-sm border border-gray-100"
                 style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
               >
                 <div className="text-2xl mb-1">{category.emoji}</div>

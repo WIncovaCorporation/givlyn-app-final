@@ -1,0 +1,57 @@
+¡Absolutamente! Esto es el detalle que eleva la aplicación de ser solo funcional a ser ** memorable y generar confianza**.
+
+La clave es: **"Inteligencia Artificial con Propósito Humano"**. Esto significa que la IA hace el trabajo pesado (cálculos, búsqueda), pero la interfaz debe sentirse **personal, cálida y directa**, no fría o genérica.
+
+Vamos a refinar la instrucción, eliminando la frialdad y añadiendo el toque humano y la **Voz de Marca** que pide tu filosofía (referencia Alex Hormozi: **claridad y valor inmediato**).
+
+---
+
+## 💻 Instrucciones Técnicas Refinadas: Estandarización de UX (Propósito Humano)
+
+**Asunto:** REFACTORIZACIÓN UI/UX - Estándar "Enterprise" con Voz de Marca (Human-Centric Design)
+
+Equipo,
+
+El objetivo es construir una plataforma que combine la potencia de la IA con una conexión humana genuina. Estamos eliminando todo lo que se sienta "plantilla" o "corporativo frío".
+
+### 1. ICONOGRAFÍA Y ESTÉTICA (Eliminar "Comiquita" e IA Genérica)
+
+**Rechazado:** Iconos 3D, ilustraciones infantiles, emojis, y cualquier cosa que parezca de baja fidelidad.
+
+* **Instrucción:** Moverse inmediatamente a un estilo de **Iconografía Vectorial (Monoline)** de alta calidad (ej. Lucide o Phosphor Icons).
+* **Vectorial con Propósito:** Para las secciones clave (como Tendencias o Categorías) donde se necesita impacto: Implementar **vectores profesionales con micro-animaciones sutiles (Lottie o CSS)** en el *hover* o la carga para dar sensación de vida y calidad (*touch* humano). **Ejemplo:** Un corazón que late sutilmente.
+* **Estilo:** Negro sobre blanco o Color Primario sobre fondo blanco, trazo limpio y consistente.
+
+### 2. DENSIDAD Y LAYOUT (El Método Hormozi: Claridad y Valor)
+
+El diseño debe transmitir valor instantáneo, no confusión. La densidad actual es demasiado baja.
+
+* **Header (Calidez):** En lugar de un saludo corporativo, usar un mensaje personalizado.
+    * **Ejemplo:** **"¡Hola, [Nombre]! ¿Qué regalo encontramos hoy?"** (Esto reemplaza el frío "Hola, Dashboard").
+* **Espaciado (Desktop):** Aumentar ligeramente la densidad de las tarjetas para que quepa más contenido sin *scroll* excesivo.
+* **Footer (Confianza Humana):** Corregir la posición (`sticky bottom`). **Sustituir la frialdad legal:**
+    * **NO:** `© 2025 Givlyn. Todos los derechos reservados.`
+    * **SÍ:** `© 2025 Givlyn. Creado con la meta de ahorrarte tiempo y dinero. | Política de Privacidad.` (Añade propósito humano).
+
+### 3. MICRO-INTERACCIONES Y VOZ DE MARCA (Conexión)
+
+Los pequeños detalles construyen la confianza (propósito humano).
+
+* **Hover States (Compromiso):** Corregir el bug del texto. El *hover* debe ser un **micro-compromiso**.
+    * **Botones Primarios:** Que el color primario (Naranja) se oscurezca al 90% para dar **firmeza**.
+    * **Botones Secundarios:** Corregir el bug (Fondo blanco -> Gris muy sutil, Texto Negro/Azul -> mantiene color).
+* **Tipografía y Peso:** Usar un peso (weight) ligero o regular para el cuerpo del texto para **calidez y legibilidad** (no todo tiene que ser *bold*).
+
+### 4. INTEGRIDAD DE DATOS (Confianza sobre la Falsedad)
+
+La IA con propósito humano se basa en la **verdad y la transparencia**.
+
+* **Instrucción:** Mantener la limpieza. **No introducir ninguna métrica (usuarios, reviews, países) hasta que tengamos datos reales.** Sustituir las secciones con datos de relleno por un **`Placeholder` que eduque o invite a la acción.**
+
+**Ejemplo de Placeholder Humano:** "Tu lista está vacía. Empecemos: ¿Qué evento se acerca que requiera un regalo?"
+
+---
+
+**El estándar es el de una aplicación que se siente personal, fácil de usar y muy bien diseñada. La IA está en el motor, el corazón está en la interfaz.**
+
+**Por favor, procedan con esta refactorización. Una vez listo el Dashboard, pasaremos a optimizar la experiencia de búsqueda.**
