@@ -1,17 +1,9 @@
 import { useState, useRef } from 'react';
 import { EventType } from '@/data/eventTypes';
 import { GlitterEffect } from './GlitterEffect';
-import { Check, Lightbulb, Cake, TreePine, Heart, Baby, Sparkles } from 'lucide-react';
+import { Check, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import './animations.css';
-
-const iconMap: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
-  Cake,
-  TreePine,
-  Heart,
-  Baby,
-  Sparkles,
-};
 
 interface EventCardProps {
   event: EventType;
@@ -46,8 +38,6 @@ export function EventCard({ event, isSelected, onClick, language }: EventCardPro
   const microCopy = language === 'es' ? event.microCopy : event.microCopyEn;
   const gamification = language === 'es' ? event.gamification : event.gamificationEn;
 
-  const IconComponent = iconMap[event.icon] || Sparkles;
-
   return (
     <>
       <button
@@ -70,20 +60,20 @@ export function EventCard({ event, isSelected, onClick, language }: EventCardPro
         <div className="flex gap-4">
           <div
             className={cn(
-              "w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-300",
+              "w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-300 overflow-hidden",
               isSelected ? "shadow-lg scale-105" : "shadow-md"
             )}
             style={{ 
-              backgroundColor: event.iconBgColor,
-              boxShadow: isSelected ? `0 8px 20px -4px ${event.iconColor}50` : undefined
+              boxShadow: isSelected ? `0 8px 20px -4px ${event.primaryColor}50` : undefined
             }}
           >
-            <IconComponent 
+            <img 
+              src={event.image} 
+              alt={title}
               className={cn(
-                "w-8 h-8 transition-transform duration-300",
+                "w-full h-full object-cover transition-transform duration-300",
                 isSelected && "scale-110"
               )}
-              style={{ color: event.iconColor }}
             />
           </div>
 

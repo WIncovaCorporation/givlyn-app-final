@@ -62,8 +62,6 @@ export default function CreateListSuccess() {
           .from('gift_lists')
           .insert({
             name: data.name,
-            event_type: data.event_type,
-            is_public: data.access_type !== 'personal',
             user_id: user.id
           })
           .select('id')
@@ -81,9 +79,15 @@ export default function CreateListSuccess() {
           setTimeout(() => setShowConfetti(false), 4000);
         }, 800);
 
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error creating list:', error);
-        toast.error(language === 'es' ? 'Error al crear la lista' : 'Error creating list');
+        const errorMessage = error?.message || error?.code || 'Unknown error';
+        console.error('Error details:', JSON.stringify(error, null, 2));
+        toast.error(
+          language === 'es' 
+            ? `Error al crear la lista: ${errorMessage}` 
+            : `Error creating list: ${errorMessage}`
+        );
         navigate("/create-list/step-1");
       }
     };
