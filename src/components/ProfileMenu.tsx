@@ -82,6 +82,35 @@ export const ProfileMenu = ({ user }: ProfileMenuProps) => {
            null;
   };
 
+  const compressAndConvertToBase64 = (file: File, maxWidth: number = 200): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ratio = Math.min(maxWidth / img.width, maxWidth / img.height);
+          canvas.width = img.width * ratio;
+          canvas.height = img.height * ratio;
+          
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Could not get canvas context'));
+            return;
+          }
+          
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const base64 = canvas.toDataURL('image/jpeg', 0.8);
+          resolve(base64);
+        };
+        img.onerror = () => reject(new Error('Failed to load image'));
+        img.src = e.target?.result as string;
+      };
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
       setUploading(true);
@@ -92,9 +121,9 @@ export const ProfileMenu = ({ user }: ProfileMenuProps) => {
 
       const file = event.target.files[0];
       
-      // Validate file size (max 2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        toast.error("La imagen debe ser menor a 2MB");
+      // Validate file size (max 5MB before compression)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("La imagen debe ser menor a 5MB");
         return;
       }
 
@@ -104,53 +133,18 @@ export const ProfileMenu = ({ user }: ProfileMenuProps) => {
         return;
       }
 
-      const fileExt = file.name.split(".").pop()?.toLowerCase();
-      const filePath = `${user.id}/avatar.${fileExt}`;
+      // Compress and convert to base64 (200x200 max, stored directly in DB)
+      const base64Avatar = await compressAndConvertToBase64(file, 200);
 
-      // Check if bucket exists by trying to list files
-      const { error: bucketError } = await supabase.storage
-        .from("avatars")
-        .list(user.id, { limit: 1 });
-
-      if (bucketError && bucketError.message.includes("Bucket not found")) {
-        toast.error("El almacenamiento de fotos no está configurado. Contacta al administrador.");
-        console.error("Storage bucket 'avatars' not found. Create it in Supabase Dashboard > Storage.");
-        return;
-      }
-
-      // Delete old avatar if exists (only if it's a Supabase storage URL)
-      if (profile?.avatar_url && profile.avatar_url.includes('supabase')) {
-        const oldPath = profile.avatar_url.split("/").slice(-2).join("/");
-        await supabase.storage.from("avatars").remove([oldPath]);
-      }
-
-      // Upload new avatar
-      const { error: uploadError } = await supabase.storage
-        .from("avatars")
-        .upload(filePath, file, { upsert: true });
-
-      if (uploadError) {
-        if (uploadError.message.includes("Bucket not found")) {
-          toast.error("El almacenamiento de fotos no está configurado");
-          return;
-        }
-        throw uploadError;
-      }
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from("avatars")
-        .getPublicUrl(filePath);
-
-      // Update profile
+      // Update profile with base64 avatar
       const { error: updateError } = await supabase
         .from("profiles")
-        .update({ avatar_url: publicUrl })
+        .update({ avatar_url: base64Avatar })
         .eq("user_id", user.id);
 
       if (updateError) throw updateError;
 
-      setProfile((prev) => prev ? { ...prev, avatar_url: publicUrl } : null);
+      setProfile((prev) => prev ? { ...prev, avatar_url: base64Avatar } : null);
       toast.success("Foto de perfil actualizada");
     } catch (error: any) {
       console.error("Error uploading avatar:", error);
