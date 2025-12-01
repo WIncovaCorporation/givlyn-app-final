@@ -1,9 +1,3 @@
-import birthdayImage from '@assets/generated_images/birthday_celebration_cupcake_gift.png';
-import christmasImage from '@assets/generated_images/christmas_tree_ornament_gifts.png';
-import weddingImage from '@assets/generated_images/romantic_wedding_champagne_roses.png';
-import babyShowerImage from '@assets/generated_images/baby_shower_gifts_pastel.png';
-import otherImage from '@assets/generated_images/elegant_gift_box_collection.png';
-
 export interface EventType {
   id: string;
   title: string;
@@ -25,7 +19,7 @@ export const EVENT_TYPES: EventType[] = [
     id: 'birthday',
     title: 'Cumpleaños',
     titleEn: 'Birthday',
-    image: birthdayImage,
+    image: '/images/events/birthday_celebration_cupcake_gift.png',
     microCopy: '¡La fiesta es aquí! Consigue los regalos perfectos sin preguntar a nadie.',
     microCopyEn: 'The party is here! Get the perfect gifts without asking anyone.',
     gamification: '+12 Ideas de Regalo',
@@ -40,7 +34,7 @@ export const EVENT_TYPES: EventType[] = [
     id: 'christmas',
     title: 'Navidad',
     titleEn: 'Christmas',
-    image: christmasImage,
+    image: '/images/events/christmas_tree_ornament_gifts.png',
     microCopy: 'La magia de las fiestas, cero estrés. ¡Encuentra El Regalo antes que nadie!',
     microCopyEn: 'Holiday magic, zero stress. Find The Gift before anyone else!',
     gamification: '+18 Ideas Exclusivas',
@@ -55,7 +49,7 @@ export const EVENT_TYPES: EventType[] = [
     id: 'wedding',
     title: 'Boda',
     titleEn: 'Wedding',
-    image: weddingImage,
+    image: '/images/events/romantic_wedding_champagne_roses.png',
     microCopy: 'Construyan su futuro. Eviten duplicados y reciban solo lo que desean.',
     microCopyEn: 'Build your future. Avoid duplicates and receive only what you want.',
     gamification: '+24 Combinaciones Perfectas',
@@ -70,7 +64,7 @@ export const EVENT_TYPES: EventType[] = [
     id: 'baby_shower',
     title: 'Baby Shower',
     titleEn: 'Baby Shower',
-    image: babyShowerImage,
+    image: '/images/events/baby_shower_gifts_pastel.png',
     microCopy: 'Prepara la bienvenida. Haz que recibir regalos sea tan fácil como un paseo.',
     microCopyEn: 'Prepare the welcome. Make receiving gifts as easy as a walk.',
     gamification: '+20 Regalos para el Bebé',
@@ -85,7 +79,7 @@ export const EVENT_TYPES: EventType[] = [
     id: 'other',
     title: 'Otro',
     titleEn: 'Other',
-    image: otherImage,
+    image: '/images/events/elegant_gift_box_collection.png',
     microCopy: 'Tu evento, tus reglas. Define lo que importa.',
     microCopyEn: 'Your event, your rules. Define what matters.',
     gamification: '+15 Plantillas',
