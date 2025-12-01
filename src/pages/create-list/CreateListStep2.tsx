@@ -71,10 +71,16 @@ export default function CreateListStep2() {
 
   const handleNext = () => {
     const saved = sessionStorage.getItem("createList");
+    console.log('[Step2] Saved data before navigation:', saved);
     if (saved) {
       const data = JSON.parse(saved);
-      sessionStorage.setItem("createList", JSON.stringify({ ...data, access_type: selectedAccess }));
+      const updatedData = { ...data, access_type: selectedAccess };
+      console.log('[Step2] Updated data:', updatedData);
+      sessionStorage.setItem("createList", JSON.stringify(updatedData));
+      console.log('[Step2] Navigating to success page...');
       navigate("/create-list/success");
+    } else {
+      console.error('[Step2] No saved data found!');
     }
   };
 
