@@ -67,7 +67,10 @@ const Index = () => {
       step4: 'Compra directo',
       step4Sub: 'En la tienda oficial',
       tryNow: 'Probar Ahora',
-      trustedBy: 'Respaldado por tiendas líderes y seguridad certificada',
+      trustedBy: 'Compara precios en tiendas líderes',
+      securityBadge: 'Seguridad Certificada',
+      footerProduct: 'Givlyn es un producto de',
+      footerRights: 'Todos los derechos reservados.',
       login: 'Iniciar sesión',
       register: 'Registrarse',
     },
@@ -98,7 +101,10 @@ const Index = () => {
       step4: 'Buy direct',
       step4Sub: 'From the official store',
       tryNow: 'Try Now',
-      trustedBy: 'Backed by leading stores and certified security',
+      trustedBy: 'Compare prices across leading stores',
+      securityBadge: 'Certified Security',
+      footerProduct: 'Givlyn is a product of',
+      footerRights: 'All rights reserved.',
       login: 'Sign In',
       register: 'Sign Up',
     }
@@ -475,16 +481,16 @@ const Index = () => {
         </div>
       </section>
 
-      {/* TRUST REINFORCEMENT */}
+      {/* TRUST REINFORCEMENT - Store Logos */}
       <section style={{
         background: colors.bgLight,
-        padding: isMobile ? '20px 16px' : '24px 20px',
+        padding: isMobile ? '16px 16px 8px' : '20px 20px 10px',
         textAlign: 'center',
       }}>
         <p style={{
-          fontSize: isMobile ? '12px' : '13px',
+          fontSize: isMobile ? '11px' : '12px',
           color: colors.textGrey,
-          marginBottom: '12px',
+          marginBottom: '10px',
         }}>
           {t.trustedBy}
         </p>
@@ -499,19 +505,70 @@ const Index = () => {
           {['amazon', 'Walmart', 'Target', 'eBay', 'Etsy'].map((store, idx) => (
             <StoreLogo key={idx} name={store} />
           ))}
-          <span style={{
-            fontSize: isMobile ? '10px' : '11px',
-            fontWeight: 600,
-            color: colors.primaryBlue,
+        </div>
+      </section>
+
+      {/* SECURITY BADGE - Separated from store logos */}
+      <section style={{
+        background: colors.bgLight,
+        padding: isMobile ? '8px 16px 16px' : '10px 20px 20px',
+        textAlign: 'center',
+        borderBottom: `1px solid ${colors.border}`,
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '16px',
+        }}>
+          <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '4px',
+            gap: '6px',
+            padding: '6px 12px',
+            background: colors.bgWhite,
+            borderRadius: '20px',
+            border: `1px solid ${colors.border}`,
           }}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={colors.accentGreen} width="16" height="16">
               <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
             </svg>
-            SSL
-          </span>
+            <span style={{ fontSize: '11px', fontWeight: 600, color: colors.textDark }}>
+              SSL
+            </span>
+          </div>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '6px 12px',
+            background: colors.bgWhite,
+            borderRadius: '20px',
+            border: `1px solid ${colors.border}`,
+          }}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={colors.accentGreen} width="16" height="16">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+            </svg>
+            <span style={{ fontSize: '11px', fontWeight: 600, color: colors.textDark }}>
+              GDPR
+            </span>
+          </div>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '6px 12px',
+            background: colors.bgWhite,
+            borderRadius: '20px',
+            border: `1px solid ${colors.border}`,
+          }}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={colors.accentGreen} width="16" height="16">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+            </svg>
+            <span style={{ fontSize: '11px', fontWeight: 600, color: colors.textDark }}>
+              CCPA
+            </span>
+          </div>
         </div>
       </section>
 
@@ -535,10 +592,10 @@ const Index = () => {
             </a>
           </div>
           <p style={{ fontSize: '11px', margin: '4px 0', opacity: 0.9 }}>
-            Givlyn es un producto de <strong>WINCOVA CORPORATION</strong>.
+            {t.footerProduct} <strong>WINCOVA CORPORATION</strong>.
           </p>
           <p style={{ fontSize: '10px', margin: '4px 0', opacity: 0.7 }}>
-            © 2025 Todos los derechos reservados.
+            © 2025 {t.footerRights}
           </p>
         </div>
       </footer>
