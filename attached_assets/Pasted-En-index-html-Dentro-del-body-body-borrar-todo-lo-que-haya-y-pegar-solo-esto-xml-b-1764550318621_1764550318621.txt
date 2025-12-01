@@ -1,0 +1,155 @@
+En index.html:
+
+Dentro del <body>...</body>, borrar todo lo que haya y pegar solo esto:
+
+xml
+<body>
+
+<header class="main-header">
+    <div class="header-container">
+        <div class="brand-wrapper">
+            <img src="URL_DE_TU_LOGO_G_VECTORIZADO.jpg" alt="G" class="logo-img">
+            <span class="brand-name">Givlyn</span>
+        </div>
+
+        <nav class="user-nav">
+            <a href="/login" class="nav-link">Iniciar sesión</a>
+            <a href="/register" class="nav-btn-register">Registrarse</a>
+            <span class="lang-selector">🌐 ES ▾</span>
+        </nav>
+    </div>
+</header>
+
+<section class="hero-compact">
+    <div class="hero-content">
+        <h1>Organiza Regalos. Consigue <span class="text-orange">Mejor Precio</span>.<br>
+        <span class="text-blue">Garantía de Tienda Oficial.</span></h1>
+        
+        <p class="hero-sub">
+            Crea tu lista en 3 min. Tus amigos compran en Amazon, Walmart, etc.
+            <br><strong>Nosotros solo te ayudamos a ahorrar.</strong>
+        </p>
+
+        <div class="cta-group">
+            <a href="/create-list" class="btn-primary-orange">🎁 CREAR LISTA GRATIS</a>
+            <a href="/search" class="btn-secondary-blue">🔍 Buscar Regalo Inteligente</a>
+        </div>
+        
+        <p class="micro-copy">Sin tarjeta de crédito. 100% Seguro.</p>
+
+        <div class="value-bar">
+            <div class="value-item">
+                <i class="icon-check">✅</i>
+                <div>
+                    <strong>Compra Directa</strong>
+                    <span>Amazon, Walmart, Target</span>
+                </div>
+            </div>
+            <div class="value-item">
+                <i class="icon-money">💰</i>
+                <div>
+                    <strong>Mejor Precio</strong>
+                    <span>Comparamos por ti</span>
+                </div>
+            </div>
+            <div class="value-item">
+                <i class="icon-shield">🛡️</i>
+                <div>
+                    <strong>Protección Total</strong>
+                    <span>Garantía de la tienda</span>
+                </div>
+            </div>
+            <div class="value-item">
+                <i class="icon-lock">🔒</i>
+                <div>
+                    <strong>Datos Seguros</strong>
+                    <span>SSL | GDPR | CCPA</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="main-footer">
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="/privacy">Privacidad</a>
+            <a href="/terms">Términos</a>
+            <a href="mailto:support@givlyn.com">Soporte</a>
+        </div>
+        <div class="footer-legal">
+            <p>Givlyn es un producto de <strong>WINCOVA CORPORATION</strong>.</p>
+            <p>© 2025 Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+En la sección <style> (o en tu CSS principal):
+
+Añadir al principio el bloque de paleta y estilos que ya traes, completo, y asegurarse de no tener otro :root incompatible:
+
+css
+:root {
+    --color-primary-blue: #1A3E5C;
+    --color-action-orange: #FF9900;
+    --color-accent-green: #1ABC9C;
+    --color-text-dark: #333333;
+    --color-text-grey: #666666;
+    --bg-white: #FFFFFF;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--color-text-dark);
+    line-height: 1.4;
+}
+
+/* pega aquí TODO el CSS que incluiste: .main-header, .hero-compact, .cta-group,
+   .value-bar, .main-footer, media queries, etc., sin cambiar nada */
+Si ya tenían reglas para .main-header, .hero, .main-footer, etc., que las borren para no mezclar comportamientos.
+
+Con estos pasos, tu equipo de Replit solo tiene que:
+
+Reemplazar <body> por el HTML nuevo.
+
+Reemplazar/añadir el CSS tal como está.
+
+Y la página quedará con:
+
+Nombre Givlyn visible en el cintillo superior.
+
+Login y registro arriba a la derecha.
+
+Hero compacto, doble CTA, barra de valor bajo el botón.
+
+Todo visible en una sola pantalla en desktop, sin espacios de relleno.
+
+Todo esto te ha creado para que funcione perfectamente en el celular también?
+
+Sí, este diseño está preparado para funcionar bien en celular, pero hay dos matices importantes:
+
+Cómo responde en móvil
+El header es sticky, con altura de 60px, lo que está dentro de los rangos recomendados para móviles (56–60px) y mantiene marca + acciones visibles sin robar demasiado espacio.​
+
+La sección hero usa flex-direction: column y tipografías moderadas, lo que permite que el contenido se apile verticalmente y se lea bien en pantallas pequeñas.​
+
+En el @media (max-width: 768px):
+
+Se oculta el texto "Iniciar sesión" si falta espacio, reduciendo ruido en el header.
+
+Los botones CTA pasan a ocupar el 100% del ancho, uno debajo del otro, lo que sigue las buenas prácticas de “thumb-accessible buttons” en móvil.​
+
+La value-bar pasa de 4 columnas a 1 sola columna, cada beneficio en su fila, que es exactamente el patrón recomendado para grids responsivos.​
+
+Con esto, en móvil se ve: logo + menú arriba, titular más pequeño, CTAs grandes y fáciles de tocar, luego la lista de beneficios en una columna: usable y claro.
+
+Qué le sugeriría afinar al equipo
+Probar en dispositivos 360–414 px de ancho (iPhone SE, iPhone 13/14, Android típico) para ajustar:
+
+Tamaño del H1 en móvil (si hace falta, bajar a 22–24px).
+
+Margen inferior del hero para que el footer no se “pegue” demasiado.
+
+Ver si conviene mostrar también “Iniciar sesión” en móvil (quizá como link debajo del botón secundario) para quien ya es usuario.
