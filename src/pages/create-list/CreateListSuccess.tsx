@@ -42,21 +42,32 @@ export default function CreateListSuccess() {
   useEffect(() => {
     const createList = async () => {
       const saved = sessionStorage.getItem("createList");
+      console.log('[CreateList] Session data:', saved);
+      
       if (!saved) {
+        console.log('[CreateList] No session data, redirecting to step-1');
         navigate("/create-list/step-1");
         return;
       }
 
       const data: ListData = JSON.parse(saved);
+      console.log('[CreateList] Parsed data:', data);
       setListData(data);
 
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+        console.log('[CreateList] Session check:', { session: sessionData?.session?.user?.id, error: sessionError });
+        
+        if (sessionError || !sessionData?.session?.user) {
+          console.log('[CreateList] No valid session');
           toast.error(language === 'es' ? 'Debes iniciar sesión' : 'You must be logged in');
           navigate("/auth");
           return;
         }
+
+        const user = sessionData.session.user;
+        console.log('[CreateList] User ID:', user.id);
+        console.log('[CreateList] Inserting list with name:', data.name);
 
         const { data: newList, error } = await supabase
           .from('gift_lists')
@@ -67,8 +78,18 @@ export default function CreateListSuccess() {
           .select('id')
           .single();
 
-        if (error) throw error;
+        console.log('[CreateList] Insert result:', { newList, error });
 
+        if (error) {
+          console.error('[CreateList] Supabase error:', error);
+          throw error;
+        }
+
+        if (!newList) {
+          throw new Error('No list returned from insert');
+        }
+
+        console.log('[CreateList] Success! List ID:', newList.id);
         setListId(newList.id);
         sessionStorage.removeItem("createList");
         
@@ -80,13 +101,18 @@ export default function CreateListSuccess() {
         }, 800);
 
       } catch (error: any) {
-        console.error('Error creating list:', error);
-        const errorMessage = error?.message || error?.code || 'Unknown error';
-        console.error('Error details:', JSON.stringify(error, null, 2));
+        console.error('[CreateList] Error:', error);
+        console.error('[CreateList] Error type:', typeof error);
+        console.error('[CreateList] Error message:', error?.message);
+        console.error('[CreateList] Error code:', error?.code);
+        console.error('[CreateList] Error details:', error?.details);
+        console.error('[CreateList] Error hint:', error?.hint);
+        
+        const errorMessage = error?.message || error?.code || error?.details || 'Error desconocido';
         toast.error(
           language === 'es' 
-            ? `Error al crear la lista: ${errorMessage}` 
-            : `Error creating list: ${errorMessage}`
+            ? `Error: ${errorMessage}` 
+            : `Error: ${errorMessage}`
         );
         navigate("/create-list/step-1");
       }
