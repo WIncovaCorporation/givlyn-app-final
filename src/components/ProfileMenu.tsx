@@ -76,6 +76,12 @@ export const ProfileMenu = ({ user }: ProfileMenuProps) => {
     setProfile(data);
   };
 
+  const getGoogleAvatarUrl = (): string | null => {
+    return user.user_metadata?.avatar_url || 
+           user.user_metadata?.picture || 
+           null;
+  };
+
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
       setUploading(true);
@@ -85,11 +91,35 @@ export const ProfileMenu = ({ user }: ProfileMenuProps) => {
       }
 
       const file = event.target.files[0];
-      const fileExt = file.name.split(".").pop();
+      
+      // Validate file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error("La imagen debe ser menor a 2MB");
+        return;
+      }
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        toast.error("Solo se permiten archivos de imagen");
+        return;
+      }
+
+      const fileExt = file.name.split(".").pop()?.toLowerCase();
       const filePath = `${user.id}/avatar.${fileExt}`;
 
-      // Delete old avatar if exists
-      if (profile?.avatar_url) {
+      // Check if bucket exists by trying to list files
+      const { error: bucketError } = await supabase.storage
+        .from("avatars")
+        .list(user.id, { limit: 1 });
+
+      if (bucketError && bucketError.message.includes("Bucket not found")) {
+        toast.error("El almacenamiento de fotos no está configurado. Contacta al administrador.");
+        console.error("Storage bucket 'avatars' not found. Create it in Supabase Dashboard > Storage.");
+        return;
+      }
+
+      // Delete old avatar if exists (only if it's a Supabase storage URL)
+      if (profile?.avatar_url && profile.avatar_url.includes('supabase')) {
         const oldPath = profile.avatar_url.split("/").slice(-2).join("/");
         await supabase.storage.from("avatars").remove([oldPath]);
       }
@@ -99,7 +129,13 @@ export const ProfileMenu = ({ user }: ProfileMenuProps) => {
         .from("avatars")
         .upload(filePath, file, { upsert: true });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        if (uploadError.message.includes("Bucket not found")) {
+          toast.error("El almacenamiento de fotos no está configurado");
+          return;
+        }
+        throw uploadError;
+      }
 
       // Get public URL
       const { data: { publicUrl } } = supabase.storage
@@ -116,9 +152,9 @@ export const ProfileMenu = ({ user }: ProfileMenuProps) => {
 
       setProfile((prev) => prev ? { ...prev, avatar_url: publicUrl } : null);
       toast.success("Foto de perfil actualizada");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error uploading avatar:", error);
-      toast.error("Error al subir la foto");
+      toast.error(error?.message || "Error al subir la foto");
     } finally {
       setUploading(false);
     }
@@ -131,6 +167,9 @@ export const ProfileMenu = ({ user }: ProfileMenuProps) => {
 
   const displayName = profile?.display_name || user.email?.split("@")[0] || "Usuario";
   const initials = displayName.slice(0, 2).toUpperCase();
+  
+  // Use profile avatar, or fallback to Google OAuth avatar
+  const avatarUrl = profile?.avatar_url || getGoogleAvatarUrl();
 
   return (
     <>
@@ -138,7 +177,7 @@ export const ProfileMenu = ({ user }: ProfileMenuProps) => {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-10 w-10 rounded-full">
             <Avatar className="h-10 w-10 border-2 border-primary/20">
-              <AvatarImage src={profile?.avatar_url || undefined} alt={displayName} />
+              <AvatarImage src={avatarUrl || undefined} alt={displayName} />
               <AvatarFallback className="bg-primary text-primary-foreground">
                 {initials}
               </AvatarFallback>
@@ -150,7 +189,7 @@ export const ProfileMenu = ({ user }: ProfileMenuProps) => {
             <div className="flex flex-col space-y-2">
               <div className="flex items-center gap-3">
                 <Avatar className="h-12 w-12">
-                  <AvatarImage src={profile?.avatar_url || undefined} alt={displayName} />
+                  <AvatarImage src={avatarUrl || undefined} alt={displayName} />
                   <AvatarFallback className="bg-primary text-primary-foreground text-lg">
                     {initials}
                   </AvatarFallback>
