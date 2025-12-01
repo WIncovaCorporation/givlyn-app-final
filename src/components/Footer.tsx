@@ -6,7 +6,7 @@ const Footer = () => {
   const { language } = useLanguage();
 
   return (
-    <footer className="bg-gradient-to-br from-slate-800 to-slate-900 text-white mt-auto">
+    <footer className="bg-gradient-to-br from-slate-800 to-slate-900 text-white mt-auto" style={{ marginTop: 'auto' }}>
       <div className="container mx-auto px-4 py-8">
         {/* Modelo Transparente */}
         <div className="bg-white/5 rounded-xl p-5 mb-6 border border-white/10">
@@ -154,18 +154,7 @@ const Footer = () => {
             <span>|</span>
             <span>CCPA</span>
             <span>|</span>
-            <span>LFPDPPP</span>
-            <span>|</span>
             <span>2FA Enabled</span>
-          </div>
-          
-          <div className="text-center mb-4">
-            <div className="text-sm font-semibold text-white mb-1">
-              ⭐ 4.9/5 (2,450 reviews) | 50,000+ {language === 'es' ? 'usuarios' : 'users'} | $2.5M {language === 'es' ? 'transado' : 'transacted'}
-            </div>
-            <div className="text-xs text-gray-400">
-              {language === 'es' ? 'Confiado en:' : 'Trusted in:'} Argentina • México • Colombia • Uruguay • Chile
-            </div>
           </div>
         </div>
 

@@ -132,16 +132,17 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-6">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-6 flex flex-col">
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <SkipToContent />
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
+          <a href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
             <img 
-              src="/givlyn-logo.png" 
+              src="/logo-icon-only.png" 
               alt="Givlyn" 
-              className="w-12 h-12 sm:w-14 sm:h-14 object-contain"
+              className="w-10 h-10 object-contain"
             />
+            <span className="text-2xl font-bold text-[#1A3E5C] tracking-tight">Givlyn</span>
           </a>
           <div className="flex items-center gap-3">
             <LanguageSelector />
@@ -150,7 +151,7 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main id="main-content" className="container mx-auto px-4 py-6 max-w-3xl">
+      <main id="main-content" className="container mx-auto px-4 md:px-6 py-6 max-w-3xl flex-1">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">
             {language === 'es' ? '¡Hola' : 'Hello'}, {userName}! 👋
@@ -174,7 +175,7 @@ const Dashboard = () => {
             onClick={() => navigate("/marketplace")}
             size="lg"
             variant="outline"
-            className="w-full py-8 text-lg font-bold border-2 border-green-500 text-green-600 hover:bg-green-50"
+            className="w-full py-8 text-lg font-bold border-2 border-[#1ABC9C] text-[#1ABC9C] hover:bg-[#1ABC9C]/10 hover:text-[#1ABC9C]"
           >
             <Search className="w-6 h-6 mr-3" />
             {language === 'es' ? 'BUSCAR REGALO INTELIGENTE' : 'SMART GIFT SEARCH'}
@@ -240,7 +241,7 @@ const Dashboard = () => {
         </div>
 
         <div className="mb-8">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">
+          <h2 className="text-lg font-bold text-[#1A3E5C] mb-4">
             🔥 {language === 'es' ? 'Tendencias' : 'Trending'}
           </h2>
           <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
@@ -248,31 +249,32 @@ const Dashboard = () => {
               <div 
                 key={category.id}
                 onClick={() => navigate("/marketplace")}
-                className="flex-shrink-0 w-24 bg-white rounded-xl p-4 text-center cursor-pointer hover:shadow-md transition-shadow border"
+                className="flex-shrink-0 w-24 bg-white rounded-lg p-3 text-center cursor-pointer hover:shadow-md transition-all shadow-sm border border-gray-100"
+                style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
               >
-                <div className="text-3xl mb-2">{category.emoji}</div>
-                <div className="text-xs font-medium text-gray-800 truncate">{category.name}</div>
-                <div className="text-xs text-green-600 font-bold">-{category.discount}</div>
+                <div className="text-2xl mb-1">{category.emoji}</div>
+                <div className="text-xs font-medium text-[#1A3E5C] truncate">{category.name}</div>
+                <div className="text-xs text-[#1ABC9C] font-bold">-{category.discount}</div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-white rounded-xl p-4 text-center border">
-            <div className="text-2xl font-bold text-primary">{stats.myLists}</div>
+        <div className="grid grid-cols-3 gap-3 mb-8">
+          <div className="bg-white rounded-lg p-3 text-center shadow-sm" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+            <div className="text-xl font-bold text-[#1A3E5C]">{stats.myLists}</div>
             <div className="text-xs text-gray-500">
               {language === 'es' ? 'Listas' : 'Lists'}
             </div>
           </div>
-          <div className="bg-white rounded-xl p-4 text-center border">
-            <div className="text-2xl font-bold text-primary">{stats.myGroups}</div>
+          <div className="bg-white rounded-lg p-3 text-center shadow-sm" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+            <div className="text-xl font-bold text-[#1A3E5C]">{stats.myGroups}</div>
             <div className="text-xs text-gray-500">
               {language === 'es' ? 'Grupos' : 'Groups'}
             </div>
           </div>
-          <div className="bg-white rounded-xl p-4 text-center border">
-            <div className="text-2xl font-bold text-green-600">${stats.totalSaved}</div>
+          <div className="bg-white rounded-lg p-3 text-center shadow-sm" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+            <div className="text-xl font-bold text-[#1ABC9C]">${stats.totalSaved}</div>
             <div className="text-xs text-gray-500">
               {language === 'es' ? 'Ahorrado' : 'Saved'}
             </div>

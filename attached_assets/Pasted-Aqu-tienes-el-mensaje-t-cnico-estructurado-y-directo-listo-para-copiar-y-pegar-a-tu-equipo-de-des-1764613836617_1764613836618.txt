@@ -1,0 +1,60 @@
+Aquí tienes el mensaje técnico, estructurado y directo, listo para copiar y pegar a tu equipo de desarrollo.
+
+Está redactado con un tono profesional y exigente, enfocado en lograr un estándar de **"Clase Mundial" (Google/Amazon)** y prioridad absoluta **Mobile-First**.
+
+---
+
+**ASUNTO: URGENTE - Optimización UI/UX, Correcciones de Estilo y Mobile-First (Sprint de Calidad)**
+
+Equipo,
+
+Hemos avanzado con la funcionalidad, pero el **Frontend y la UX aún no están al nivel de un producto de talla mundial**. Necesitamos eliminar la sensación de "plantilla genérica" y lograr la solidez visual de Amazon o Google.
+
+A continuación, las instrucciones precisas para los cambios inmediatos. **La prioridad absoluta es que todo se vea y funcione perfecto en Móvil.**
+
+### 1. HEADER Y BRANDING (Identidad Visual)
+El encabezado actual se ve vacío y roto.
+* **Logo Integrado:** El logo NO debe tener fondo blanco pegado. Usar el archivo vectorizado (SVG/PNG Transparente) del isologo "G".
+* **Nombre de Marca:** El texto **"Givlyn"** debe aparecer escrito en la interfaz justo al lado del logo.
+    * *Tipografía:* Sans-serif, Bold (700).
+    * *Color:* Azul Corporativo (`#1A3E5C`).
+    * *Tamaño:* ~24px.
+* **Alineación:** El header no puede ser una línea blanca vacía. Debe contener el Logo+Nombre a la izquierda y los botones de acción (Ingresar/Registro) a la derecha, alineados verticalmente al centro.
+
+### 2. CORRECCIÓN DE MICRO-INTERACCIONES (Hover Bug)
+Hay un error crítico de usabilidad en los botones secundarios (fondo blanco con borde).
+* **El Error:** Al hacer *hover* (pasar el mouse), el texto se vuelve blanco sobre fondo blanco y desaparece.
+* **La Solución CSS:**
+    * Para botones con clase `.btn-secondary` (o similar):
+    * **Estado Hover:** `background-color: #F8F9FA;` (Gris muy claro) y `color: #1A3E5C;` (Mantener texto azul). **NO cambiar el texto a blanco.**
+
+### 3. DASHBOARD Y LAYOUT (Densidad y Profesionalismo)
+El diseño actual tiene demasiado "aire" y parece una caricatura.
+* **Espaciado (Padding):** Reducir drásticamente el *padding* horizontal del contenedor principal en móvil.
+    * *Mobile:* Máximo `16px` o `20px` a los lados. Queremos densidad de información, no espacios vacíos.
+* **Estilo de Tarjetas (Tendencias):** Eliminar el estilo de "caricatura/clipart".
+    * Usar tarjetas con fondo blanco limpio, sombra suave (`box-shadow: 0 2px 8px rgba(0,0,0,0.05)`) y bordes redondeados sutiles (`border-radius: 8px`).
+    * Usar imágenes de productos reales o iconos minimalistas de alta calidad.
+* **Footer (Pie de Página):**
+    * **Fix:** El footer NO puede flotar a mitad de pantalla si hay poco contenido. Debe estar siempre pegado al final (`sticky bottom` o `min-height: 100vh` en el contenedor padre).
+    * **Limpieza de Contenido:** **ELIMINAR** todas las referencias a:
+        * "Argentina, México, Colombia..." (Eliminar lista de países).
+        * "Review de usuarios" / Estrellas.
+        * "Montos ahorrados" / "5000+ usuarios".
+        * *Razón:* Somos nuevos, la transparencia es clave. Solo dejar Copyright, Enlaces legales y Redes Sociales.
+
+### 4. MOBILE-FIRST (Mandatorio)
+Todo debe ser probado primero en una pantalla de 360px de ancho.
+* **Apilado (Stacking):** En móvil, la "Barra de Valor" (iconos de check, seguridad, etc.) debe pasar de horizontal a vertical (lista).
+* **Ancho de Botones:** En móvil, los CTA principales ("Crear Lista", "Buscar") deben ocupar el **100% del ancho (width: 100%)** para facilitar el toque con el dedo.
+* **Tamaño de Fuente:** Ajustar los H1 para que no ocupen 4 líneas en el celular.
+
+### 5. PALETA DE COLORES (Estricta)
+Asegurar que solo estemos usando la paleta aprobada. Eliminar cualquier rojo de alerta o colores fuera de marca.
+* **Azul Confianza (Textos/Headers):** `#1A3E5C`
+* **Naranja Acción (CTA Principal):** `#FF9900`
+* **Verde Ahorro (Iconos/Éxito):** `#1ABC9C`
+
+**Quedo a la espera de la confirmación cuando estos cambios estén desplegados en el entorno de desarrollo para revisión final.**
+
+---
