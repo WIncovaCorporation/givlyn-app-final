@@ -641,6 +641,7 @@ export type Database = {
       }
       gift_lists: {
         Row: {
+          access_type: string
           created_at: string
           event_id: string | null
           id: string
@@ -649,6 +650,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          access_type?: string
           created_at?: string
           event_id?: string | null
           id?: string
@@ -657,6 +659,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          access_type?: string
           created_at?: string
           event_id?: string | null
           id?: string

@@ -69,7 +69,8 @@ export default function CreateListSuccess() {
           .from('gift_lists')
           .insert({
             name: data.name,
-            user_id: user.id
+            user_id: user.id,
+            access_type: data.access_type || 'personal'
           })
           .select('id')
           .single();

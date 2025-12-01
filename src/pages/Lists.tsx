@@ -29,6 +29,7 @@ interface GiftList {
   id: string;
   name: string;
   event_id: string | null;
+  access_type: string;
   created_at: string;
   items?: GiftItem[];
 }
@@ -100,7 +101,7 @@ const Lists = () => {
   const [editingItem, setEditingItem] = useState<any>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [listFilter, setListFilter] = useState<'all' | 'with_items' | 'empty'>('all');
-  const [editingList, setEditingList] = useState<{ id: string; name: string } | null>(null);
+  const [editingList, setEditingList] = useState<{ id: string; name: string; access_type: string } | null>(null);
   const [editListDialogOpen, setEditListDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -196,7 +197,7 @@ const Lists = () => {
   };
 
   const handleEditList = (list: GiftList) => {
-    setEditingList({ id: list.id, name: list.name });
+    setEditingList({ id: list.id, name: list.name, access_type: list.access_type || 'personal' });
     setEditListDialogOpen(true);
   };
 
@@ -207,7 +208,10 @@ const Lists = () => {
     try {
       const { error } = await supabase
         .from("gift_lists")
-        .update({ name: editingList.name })
+        .update({ 
+          name: editingList.name,
+          access_type: editingList.access_type
+        })
         .eq("id", editingList.id);
 
       if (error) throw error;
@@ -1883,15 +1887,15 @@ const Lists = () => {
       </Dialog>
 
       <Dialog open={editListDialogOpen} onOpenChange={setEditListDialogOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{language === 'es' ? 'Editar Lista' : 'Edit List'}</DialogTitle>
             <DialogDescription>
-              {language === 'es' ? 'Modifica el nombre de tu lista' : 'Update your list name'}
+              {language === 'es' ? 'Modifica los datos de tu lista' : 'Update your list details'}
             </DialogDescription>
           </DialogHeader>
           {editingList && (
-            <form onSubmit={handleUpdateList} className="space-y-4">
+            <form onSubmit={handleUpdateList} className="space-y-5">
               <div>
                 <Label htmlFor="edit-list-name">{language === 'es' ? 'Nombre de la Lista' : 'List Name'}</Label>
                 <Input
@@ -1900,14 +1904,93 @@ const Lists = () => {
                   onChange={(e) => setEditingList({ ...editingList, name: e.target.value })}
                   placeholder={language === 'es' ? 'Ej: Navidad 2025' : 'Ex: Christmas 2025'}
                   required
+                  className="mt-1"
                 />
               </div>
-              <div className="flex gap-2">
+              
+              <div>
+                <Label>{language === 'es' ? 'Tipo de Acceso' : 'Access Type'}</Label>
+                <div className="grid grid-cols-1 gap-2 mt-2">
+                  <button
+                    type="button"
+                    onClick={() => setEditingList({ ...editingList, access_type: 'personal' })}
+                    className={cn(
+                      "flex items-center gap-3 p-3 rounded-lg border-2 text-left transition-all",
+                      editingList.access_type === 'personal' 
+                        ? "border-[#1ABC9C] bg-[#1ABC9C]/10" 
+                        : "border-gray-200 hover:border-gray-300"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-10 h-10 rounded-full flex items-center justify-center",
+                      editingList.access_type === 'personal' ? "bg-[#1ABC9C]" : "bg-gray-100"
+                    )}>
+                      <svg xmlns="http://www.w3.org/2000/svg" className={cn("w-5 h-5", editingList.access_type === 'personal' ? "text-white" : "text-gray-500")} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">{language === 'es' ? 'Lista Personal' : 'Personal List'}</p>
+                      <p className="text-xs text-gray-500">{language === 'es' ? 'Solo tú puedes verla' : 'Only you can see it'}</p>
+                    </div>
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={() => setEditingList({ ...editingList, access_type: 'shared' })}
+                    className={cn(
+                      "flex items-center gap-3 p-3 rounded-lg border-2 text-left transition-all",
+                      editingList.access_type === 'shared' 
+                        ? "border-[#FF9900] bg-[#FF9900]/10" 
+                        : "border-gray-200 hover:border-gray-300"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-10 h-10 rounded-full flex items-center justify-center",
+                      editingList.access_type === 'shared' ? "bg-[#FF9900]" : "bg-gray-100"
+                    )}>
+                      <svg xmlns="http://www.w3.org/2000/svg" className={cn("w-5 h-5", editingList.access_type === 'shared' ? "text-white" : "text-gray-500")} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">{language === 'es' ? 'Lista Compartida' : 'Shared List'}</p>
+                      <p className="text-xs text-gray-500">{language === 'es' ? 'Invita a familiares y amigos' : 'Invite family and friends'}</p>
+                    </div>
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={() => setEditingList({ ...editingList, access_type: 'third_party' })}
+                    className={cn(
+                      "flex items-center gap-3 p-3 rounded-lg border-2 text-left transition-all",
+                      editingList.access_type === 'third_party' 
+                        ? "border-[#3B82F6] bg-[#3B82F6]/10" 
+                        : "border-gray-200 hover:border-gray-300"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-10 h-10 rounded-full flex items-center justify-center",
+                      editingList.access_type === 'third_party' ? "bg-[#3B82F6]" : "bg-gray-100"
+                    )}>
+                      <svg xmlns="http://www.w3.org/2000/svg" className={cn("w-5 h-5", editingList.access_type === 'third_party' ? "text-white" : "text-gray-500")} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">{language === 'es' ? 'Para un Tercero' : 'For Someone Else'}</p>
+                      <p className="text-xs text-gray-500">{language === 'es' ? 'Crea una lista para otra persona' : 'Create a list for another person'}</p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+              
+              <div className="flex gap-2 pt-2">
                 <Button type="button" variant="outline" onClick={() => setEditListDialogOpen(false)} className="flex-1">
                   {language === 'es' ? 'Cancelar' : 'Cancel'}
                 </Button>
                 <Button type="submit" className="flex-1">
-                  {language === 'es' ? 'Guardar' : 'Save'}
+                  {language === 'es' ? 'Guardar Cambios' : 'Save Changes'}
                 </Button>
               </div>
             </form>
