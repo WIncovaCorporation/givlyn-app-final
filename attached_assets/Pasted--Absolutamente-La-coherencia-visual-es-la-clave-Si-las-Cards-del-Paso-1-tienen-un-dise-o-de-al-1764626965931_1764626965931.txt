@@ -1,0 +1,45 @@
+¡Absolutamente! La coherencia visual es la clave. Si las **Cards del Paso 1** tienen un diseño de alto impacto (ilustraciones profesionales y modernas), las **Cards del Paso 2** deben seguir ese mismo estándar para que el flujo se sienta **"Premium"** y bien diseñado.
+
+Las imágenes actuales (un candado, un globo) son funcionales, pero no generan la **dopamina visual** que buscamos.
+
+---
+
+## 🎨 Optimización Visual: Iconografía Profesional (Paso 2)
+
+El objetivo es reemplazar los iconos genéricos por **ilustraciones vectoriales modernas, minimalistas y de bajo peso** que comuniquen el valor emocional de cada opción al instante.
+
+### 1. 🖼️ Conceptos Visuales Propuestos (Neuro-Engagement)
+
+Aquí están las sugerencias de imágenes vectoriales, enfocadas en la **promesa de valor** de cada opción:
+
+| Opción de Lista | Concepto de Imagen Vectorial | Justificación (Dopamina/UX) |
+| :--- | :--- | :--- |
+| **1. Lista Personal** (Wishlist/Sueños) | Un **cofre de tesoro** minimalista, semi-abierto, con un ligero brillo saliendo, rodeado de pequeñas estrellas. | **Aspiración y Recompensa:** Comunica que esta lista contiene "tesoros" o sueños personales, no solo artículos de compra. |
+| **2. Recibir Regalos** (Festejado) | Una **persona estilizada** sosteniendo una **caja de regalo grande** con un lazo. La persona debe verse feliz y centrada. | **Foco en el Receptor:** Comunica que el propósito de la lista es recibir, haciendo del usuario el centro del evento (Ego/Dopamina). |
+| **3. Evento de Grupo** (Intercambio/Co-funding) | **Dos manos** estrechándose sobre un **símbolo de engranaje (coordinación)** o sobre un **símbolo de aporte ($)**. Estilo moderno, con gradientes suaves. | **Colaboración y Facilitación:** Evoca la coordinación de muchas personas para un objetivo común, solucionando el estrés de la organización grupal. |
+| **4. Para un Tercero** (Organizador) | Una **silueta de adulto** que sostiene o *muestra* a una **silueta de bebé** o un ícono más pequeño, con un *check* de control. | **Control y Cuidado:** Comunica la función de *curador* o *planificador* que organiza la lista en beneficio de un tercero. |
+
+### 2. 📢 Instrucciones Definitivas al Equipo de Desarrollo
+
+**Asunto: REEMPLAZO DE ICONOGRAFÍA POR ILUSTRACIONES VECTORIALES (Paso 2)**
+
+Equipo, procederemos con la implementación de las cuatro opciones de *Cards* con el *copy* de claridad total (Modo Grupo separado) y el reemplazo de los iconos:
+
+1.  **ACCIÓN 1: Sustitución de Imágenes:**
+    * Reemplazar los iconos simples (candado, globo, personas) por **ilustraciones vectoriales de alto diseño** que reflejen los conceptos de la tabla superior.
+    * **REQUISITO TÉCNICO:** Las imágenes deben ser **SVG (vectoriales)** y optimizadas para garantizar un **bajo peso** y velocidad de carga, manteniendo la estética profesional.
+
+2.  **ACCIÓN 2: Implementación Final del *Copy*** (Ajustando la Opción 2 y 3):
+
+    * **Card 1 (Personal):** **Modo *Wishlist* Personal.** Solo para ti. Úsala como tu catálogo de sueños.
+    * **Card 2 (Recepción):** **🎁 Recibir Regalos (Tú Eres el Festejado)**. Ideal para Cumpleaños, Boda o Baby Shower. Garantiza que recibes *exactamente* lo que deseas.
+    * **Card 3 (Grupo):** **🤝 Evento de Grupo (Amigo Secreto, Sorteo, Co-funding)**. Coordina *sorteos* o *aportes* para regalos costosos. Todos evitan el estrés de adivinar.
+    * **Card 4 (Tercero):** **Para un Tercero**. Crea la lista para otra persona (bebé, pareja, etc.).
+
+3.  **ACCIÓN 3: Limpieza:**
+    * **ELIMINAR** la caja de sugerencia pasiva de la bombilla de luz.
+
+4.  **VERIFICACIÓN DE FLUJO:**
+    * Confirmar que la selección de cualquiera de las 4 *Cards* activa el botón **"Siguiente: Finalizar →"** de forma inmediata, sin requerir pasos adicionales.
+
+Con este conjunto de instrucciones, el Paso 2 estará completamente optimizado tanto en la claridad funcional como en el impacto visual y emocional.

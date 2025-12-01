@@ -756,33 +756,26 @@ const Lists = () => {
                       <div className="flex items-center gap-2 mb-1">
                         <CardTitle>{list.name}</CardTitle>
                         <span className={cn(
-                          "inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium",
+                          "inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium",
                           list.access_type === 'personal' ? "bg-[#1ABC9C]/10 text-[#1ABC9C]" : 
-                          list.access_type === 'shared' ? "bg-[#FF9900]/10 text-[#FF9900]" :
+                          (list.access_type === 'receive' || list.access_type === 'shared') ? "bg-[#FF9900]/10 text-[#FF9900]" :
+                          list.access_type === 'group' ? "bg-[#8B5CF6]/10 text-[#8B5CF6]" :
                           "bg-[#3B82F6]/10 text-[#3B82F6]"
                         )}>
-                          {list.access_type === 'personal' ? (
-                            <>
-                              <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                              </svg>
-                              {language === 'es' ? 'Personal' : 'Personal'}
-                            </>
-                          ) : list.access_type === 'shared' ? (
-                            <>
-                              <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                              {language === 'es' ? 'Compartida' : 'Shared'}
-                            </>
-                          ) : (
-                            <>
-                              <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                              </svg>
-                              {language === 'es' ? 'Tercero' : 'For Third'}
-                            </>
-                          )}
+                          <img 
+                            src={
+                              list.access_type === 'personal' ? "/images/list-types/treasure_chest_wishlist_icon.png" :
+                              (list.access_type === 'receive' || list.access_type === 'shared') ? "/images/list-types/person_receiving_gift_icon.png" :
+                              list.access_type === 'group' ? "/images/list-types/group_coordination_hands_icon.png" :
+                              "/images/list-types/caretaker_with_child_icon.png"
+                            }
+                            alt=""
+                            className="w-4 h-4 object-contain"
+                          />
+                          {list.access_type === 'personal' ? (language === 'es' ? 'Wishlist' : 'Wishlist') :
+                           (list.access_type === 'receive' || list.access_type === 'shared') ? (language === 'es' ? 'Festejado' : 'Celebrant') :
+                           list.access_type === 'group' ? (language === 'es' ? 'Grupo' : 'Group') :
+                           (language === 'es' ? 'Tercero' : 'Third Party')}
                         </span>
                       </div>
                       <CardDescription>
@@ -1918,7 +1911,7 @@ const Lists = () => {
       </Dialog>
 
       <Dialog open={editListDialogOpen} onOpenChange={setEditListDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{language === 'es' ? 'Editar Lista' : 'Edit List'}</DialogTitle>
             <DialogDescription>
@@ -1926,7 +1919,7 @@ const Lists = () => {
             </DialogDescription>
           </DialogHeader>
           {editingList && (
-            <form onSubmit={handleUpdateList} className="space-y-5">
+            <form onSubmit={handleUpdateList} className="space-y-4">
               <div>
                 <Label htmlFor="edit-list-name">{language === 'es' ? 'Nombre de la Lista' : 'List Name'}</Label>
                 <Input
@@ -1940,53 +1933,56 @@ const Lists = () => {
               </div>
               
               <div>
-                <Label>{language === 'es' ? 'Tipo de Acceso' : 'Access Type'}</Label>
+                <Label>{language === 'es' ? 'Tipo de Lista' : 'List Type'}</Label>
                 <div className="grid grid-cols-1 gap-2 mt-2">
                   <button
                     type="button"
                     onClick={() => setEditingList({ ...editingList, access_type: 'personal' })}
                     className={cn(
-                      "flex items-center gap-3 p-3 rounded-lg border-2 text-left transition-all",
+                      "flex items-center gap-3 p-2.5 rounded-lg border-2 text-left transition-all",
                       editingList.access_type === 'personal' 
                         ? "border-[#1ABC9C] bg-[#1ABC9C]/10" 
                         : "border-gray-200 hover:border-gray-300"
                     )}
                   >
-                    <div className={cn(
-                      "w-10 h-10 rounded-full flex items-center justify-center",
-                      editingList.access_type === 'personal' ? "bg-[#1ABC9C]" : "bg-gray-100"
-                    )}>
-                      <svg xmlns="http://www.w3.org/2000/svg" className={cn("w-5 h-5", editingList.access_type === 'personal' ? "text-white" : "text-gray-500")} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">{language === 'es' ? 'Lista Personal' : 'Personal List'}</p>
-                      <p className="text-xs text-gray-500">{language === 'es' ? 'Solo tú puedes verla' : 'Only you can see it'}</p>
+                    <img src="/images/list-types/treasure_chest_wishlist_icon.png" alt="" className="w-10 h-10 object-contain" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-xs">{language === 'es' ? 'Modo Wishlist Personal' : 'Personal Wishlist'}</p>
+                      <p className="text-[10px] text-gray-500 truncate">{language === 'es' ? 'Solo para ti' : 'Just for you'}</p>
                     </div>
                   </button>
                   
                   <button
                     type="button"
-                    onClick={() => setEditingList({ ...editingList, access_type: 'shared' })}
+                    onClick={() => setEditingList({ ...editingList, access_type: 'receive' })}
                     className={cn(
-                      "flex items-center gap-3 p-3 rounded-lg border-2 text-left transition-all",
-                      editingList.access_type === 'shared' 
+                      "flex items-center gap-3 p-2.5 rounded-lg border-2 text-left transition-all",
+                      (editingList.access_type === 'receive' || editingList.access_type === 'shared')
                         ? "border-[#FF9900] bg-[#FF9900]/10" 
                         : "border-gray-200 hover:border-gray-300"
                     )}
                   >
-                    <div className={cn(
-                      "w-10 h-10 rounded-full flex items-center justify-center",
-                      editingList.access_type === 'shared' ? "bg-[#FF9900]" : "bg-gray-100"
-                    )}>
-                      <svg xmlns="http://www.w3.org/2000/svg" className={cn("w-5 h-5", editingList.access_type === 'shared' ? "text-white" : "text-gray-500")} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
+                    <img src="/images/list-types/person_receiving_gift_icon.png" alt="" className="w-10 h-10 object-contain" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-xs">{language === 'es' ? '🎁 Recibir Regalos' : '🎁 Receive Gifts'}</p>
+                      <p className="text-[10px] text-gray-500 truncate">{language === 'es' ? 'Tú eres el festejado' : 'You are the celebrant'}</p>
                     </div>
-                    <div>
-                      <p className="font-medium text-sm">{language === 'es' ? 'Lista Compartida' : 'Shared List'}</p>
-                      <p className="text-xs text-gray-500">{language === 'es' ? 'Invita a familiares y amigos' : 'Invite family and friends'}</p>
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={() => setEditingList({ ...editingList, access_type: 'group' })}
+                    className={cn(
+                      "flex items-center gap-3 p-2.5 rounded-lg border-2 text-left transition-all",
+                      editingList.access_type === 'group' 
+                        ? "border-[#8B5CF6] bg-[#8B5CF6]/10" 
+                        : "border-gray-200 hover:border-gray-300"
+                    )}
+                  >
+                    <img src="/images/list-types/group_coordination_hands_icon.png" alt="" className="w-10 h-10 object-contain" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-xs">{language === 'es' ? '🤝 Evento de Grupo' : '🤝 Group Event'}</p>
+                      <p className="text-[10px] text-gray-500 truncate">{language === 'es' ? 'Amigo Secreto, Sorteo' : 'Secret Santa, Raffle'}</p>
                     </div>
                   </button>
                   
@@ -1994,23 +1990,16 @@ const Lists = () => {
                     type="button"
                     onClick={() => setEditingList({ ...editingList, access_type: 'third_party' })}
                     className={cn(
-                      "flex items-center gap-3 p-3 rounded-lg border-2 text-left transition-all",
+                      "flex items-center gap-3 p-2.5 rounded-lg border-2 text-left transition-all",
                       editingList.access_type === 'third_party' 
                         ? "border-[#3B82F6] bg-[#3B82F6]/10" 
                         : "border-gray-200 hover:border-gray-300"
                     )}
                   >
-                    <div className={cn(
-                      "w-10 h-10 rounded-full flex items-center justify-center",
-                      editingList.access_type === 'third_party' ? "bg-[#3B82F6]" : "bg-gray-100"
-                    )}>
-                      <svg xmlns="http://www.w3.org/2000/svg" className={cn("w-5 h-5", editingList.access_type === 'third_party' ? "text-white" : "text-gray-500")} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">{language === 'es' ? 'Para un Tercero' : 'For Someone Else'}</p>
-                      <p className="text-xs text-gray-500">{language === 'es' ? 'Crea una lista para otra persona' : 'Create a list for another person'}</p>
+                    <img src="/images/list-types/caretaker_with_child_icon.png" alt="" className="w-10 h-10 object-contain" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-xs">{language === 'es' ? 'Para un Tercero' : 'For Someone Else'}</p>
+                      <p className="text-[10px] text-gray-500 truncate">{language === 'es' ? 'Bebé, pareja, etc.' : 'Baby, partner, etc.'}</p>
                     </div>
                   </button>
                 </div>
@@ -2021,7 +2010,7 @@ const Lists = () => {
                   {language === 'es' ? 'Cancelar' : 'Cancel'}
                 </Button>
                 <Button type="submit" className="flex-1">
-                  {language === 'es' ? 'Guardar Cambios' : 'Save Changes'}
+                  {language === 'es' ? 'Guardar' : 'Save'}
                 </Button>
               </div>
             </form>

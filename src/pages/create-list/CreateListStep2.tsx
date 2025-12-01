@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, Lock, Globe, Users, Lightbulb } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface AccessType {
@@ -12,50 +12,43 @@ interface AccessType {
   nameEn: string;
   descEs: string;
   descEn: string;
-  icon: React.ElementType;
+  image: string;
 }
 
 const accessTypes: AccessType[] = [
   { 
     id: "personal", 
-    nameEs: "Lista Personal", 
-    nameEn: "Personal List", 
-    descEs: "Solo tú puedes verla y editarla. Perfecta si es privada.", 
-    descEn: "Only you can view and edit. Perfect if it's private.",
-    icon: Lock 
+    nameEs: "Modo Wishlist Personal", 
+    nameEn: "Personal Wishlist Mode", 
+    descEs: "Solo para ti. Úsala como tu catálogo de sueños.", 
+    descEn: "Just for you. Use it as your dream catalog.",
+    image: "/images/list-types/treasure_chest_wishlist_icon.png"
   },
   { 
-    id: "shared", 
-    nameEs: "🎁 MODO VIRAL (El Regalo Perfecto)", 
-    nameEn: "🎁 VIRAL MODE (Perfect Gift)", 
-    descEs: "Tú recibes lo que deseas. Ellos evitan el estrés de adivinar.", 
-    descEn: "You get what you want. They avoid the stress of guessing.",
-    icon: Globe 
+    id: "receive", 
+    nameEs: "🎁 Recibir Regalos (Tú Eres el Festejado)", 
+    nameEn: "🎁 Receive Gifts (You Are the Celebrant)", 
+    descEs: "Ideal para Cumpleaños, Boda o Baby Shower. Garantiza que recibes exactamente lo que deseas.", 
+    descEn: "Ideal for Birthdays, Weddings or Baby Showers. Guarantees you get exactly what you want.",
+    image: "/images/list-types/person_receiving_gift_icon.png"
+  },
+  { 
+    id: "group", 
+    nameEs: "🤝 Evento de Grupo (Amigo Secreto, Sorteo, Co-funding)", 
+    nameEn: "🤝 Group Event (Secret Santa, Raffle, Co-funding)", 
+    descEs: "Coordina sorteos o aportes para regalos costosos. Todos evitan el estrés de adivinar.", 
+    descEn: "Coordinate raffles or contributions for expensive gifts. Everyone avoids guessing stress.",
+    image: "/images/list-types/group_coordination_hands_icon.png"
   },
   { 
     id: "third_party", 
     nameEs: "Para un Tercero", 
     nameEn: "For Someone Else", 
-    descEs: "Crea una lista para otra persona (bebé, pareja, etc).", 
+    descEs: "Crea la lista para otra persona (bebé, pareja, etc).", 
     descEn: "Create a list for someone else (baby, partner, etc).",
-    icon: Users 
+    image: "/images/list-types/caretaker_with_child_icon.png"
   },
 ];
-
-const tips: Record<string, { es: string; en: string }> = {
-  personal: {
-    es: "Puedes cambiar la privacidad después si decides compartirla.",
-    en: "You can change the privacy settings later if you decide to share."
-  },
-  shared: {
-    es: "Garantiza 0 devoluciones. Compartir es la forma más fácil de hacer feliz a todos.",
-    en: "Guarantees 0 returns. Sharing is the easiest way to make everyone happy."
-  },
-  third_party: {
-    es: "Ideal para organizar regalos en grupo sin que el festejado lo sepa.",
-    en: "Ideal for organizing group gifts without the recipient knowing."
-  }
-};
 
 export default function CreateListStep2() {
   const navigate = useNavigate();
@@ -88,8 +81,6 @@ export default function CreateListStep2() {
     navigate("/create-list/step-1");
   };
 
-  const currentTip = tips[selectedAccess];
-
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
       <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-3">
@@ -116,12 +107,11 @@ export default function CreateListStep2() {
           {language === 'es' ? '¡ASEGURA TUS REGALOS PERFECTOS!' : 'SECURE YOUR PERFECT GIFTS!'}
         </h1>
         <p className="text-gray-500 text-sm mb-6">
-          {language === 'es' ? 'Elige cómo compartir tu lista' : 'Choose how to share your list'}
+          {language === 'es' ? 'Elige el tipo de lista que necesitas' : 'Choose the type of list you need'}
         </p>
 
         <div className="space-y-3 mb-6">
           {accessTypes.map((type) => {
-            const Icon = type.icon;
             const isSelected = selectedAccess === type.id;
             return (
               <button
@@ -130,36 +120,37 @@ export default function CreateListStep2() {
                 className={cn(
                   "w-full p-4 rounded-xl border-2 text-left transition-all",
                   isSelected
-                    ? "border-[#1ABC9C] bg-[#1ABC9C]/5"
-                    : "border-gray-100 bg-white hover:border-gray-200"
+                    ? "border-[#1ABC9C] bg-[#1ABC9C]/5 shadow-md"
+                    : "border-gray-100 bg-white hover:border-gray-200 hover:shadow-sm"
                 )}
               >
-                <div className="flex items-start gap-3">
+                <div className="flex items-start gap-4">
                   <div className={cn(
-                    "w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0",
-                    isSelected ? "bg-[#1ABC9C]/20" : "bg-gray-100"
+                    "w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden",
+                    isSelected ? "bg-white shadow-sm" : "bg-gray-50"
                   )}>
-                    <Icon className={cn(
-                      "w-5 h-5",
-                      isSelected ? "text-[#1ABC9C]" : "text-gray-500"
-                    )} />
+                    <img 
+                      src={type.image} 
+                      alt={language === 'es' ? type.nameEs : type.nameEn}
+                      className="w-14 h-14 object-contain"
+                    />
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
                       <p className={cn(
-                        "font-semibold",
+                        "font-semibold text-sm leading-tight",
                         isSelected ? "text-[#1A3E5C]" : "text-gray-700"
                       )}>
                         {language === 'es' ? type.nameEs : type.nameEn}
                       </p>
                       <div className={cn(
-                        "w-5 h-5 rounded-full border-2 flex items-center justify-center",
+                        "w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5",
                         isSelected ? "border-[#1ABC9C]" : "border-gray-300"
                       )}>
                         {isSelected && <div className="w-3 h-3 rounded-full bg-[#1ABC9C]" />}
                       </div>
                     </div>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">
                       {language === 'es' ? type.descEs : type.descEn}
                     </p>
                   </div>
@@ -167,13 +158,6 @@ export default function CreateListStep2() {
               </button>
             );
           })}
-        </div>
-
-        <div className="bg-[#1A3E5C]/5 rounded-xl p-4 flex gap-3">
-          <Lightbulb className="w-5 h-5 text-[#FF9900] flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-[#1A3E5C]">
-            {language === 'es' ? currentTip.es : currentTip.en}
-          </p>
         </div>
       </div>
 
