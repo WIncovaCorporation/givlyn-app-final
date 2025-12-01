@@ -4,7 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
-import { CheckCircle, Gift, Share2, ArrowLeft, Lightbulb, Loader2, PartyPopper, TrendingUp } from "lucide-react";
+import { Gift, Share2, ArrowLeft, Loader2, Sparkles, Users } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import Confetti from 'react-confetti';
@@ -37,37 +37,33 @@ export default function CreateListSuccess() {
   const [isCreating, setIsCreating] = useState(true);
   const [showContent, setShowContent] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [userName, setUserName] = useState<string>("");
   const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
 
   useEffect(() => {
     const createList = async () => {
       const saved = sessionStorage.getItem("createList");
-      console.log('[CreateList] Session data:', saved);
       
       if (!saved) {
-        console.log('[CreateList] No session data, redirecting to step-1');
         navigate("/create-list/step-1");
         return;
       }
 
       const data: ListData = JSON.parse(saved);
-      console.log('[CreateList] Parsed data:', data);
       setListData(data);
 
       try {
         const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-        console.log('[CreateList] Session check:', { session: sessionData?.session?.user?.id, error: sessionError });
         
         if (sessionError || !sessionData?.session?.user) {
-          console.log('[CreateList] No valid session');
           toast.error(language === 'es' ? 'Debes iniciar sesión' : 'You must be logged in');
           navigate("/auth");
           return;
         }
 
         const user = sessionData.session.user;
-        console.log('[CreateList] User ID:', user.id);
-        console.log('[CreateList] Inserting list with name:', data.name);
+        const displayName = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || '';
+        setUserName(displayName.split(' ')[0]);
 
         const { data: newList, error } = await supabase
           .from('gift_lists')
@@ -78,18 +74,9 @@ export default function CreateListSuccess() {
           .select('id')
           .single();
 
-        console.log('[CreateList] Insert result:', { newList, error });
+        if (error) throw error;
+        if (!newList) throw new Error('No list returned');
 
-        if (error) {
-          console.error('[CreateList] Supabase error:', error);
-          throw error;
-        }
-
-        if (!newList) {
-          throw new Error('No list returned from insert');
-        }
-
-        console.log('[CreateList] Success! List ID:', newList.id);
         setListId(newList.id);
         sessionStorage.removeItem("createList");
         
@@ -97,23 +84,12 @@ export default function CreateListSuccess() {
           setIsCreating(false);
           setShowConfetti(true);
           setTimeout(() => setShowContent(true), 100);
-          setTimeout(() => setShowConfetti(false), 4000);
-        }, 800);
+          setTimeout(() => setShowConfetti(false), 6000);
+        }, 600);
 
       } catch (error: any) {
-        console.error('[CreateList] Error:', error);
-        console.error('[CreateList] Error type:', typeof error);
-        console.error('[CreateList] Error message:', error?.message);
-        console.error('[CreateList] Error code:', error?.code);
-        console.error('[CreateList] Error details:', error?.details);
-        console.error('[CreateList] Error hint:', error?.hint);
-        
-        const errorMessage = error?.message || error?.code || error?.details || 'Error desconocido';
-        toast.error(
-          language === 'es' 
-            ? `Error: ${errorMessage}` 
-            : `Error: ${errorMessage}`
-        );
+        const errorMessage = error?.message || error?.code || 'Error desconocido';
+        toast.error(language === 'es' ? `Error: ${errorMessage}` : `Error: ${errorMessage}`);
         navigate("/create-list/step-1");
       }
     };
@@ -175,9 +151,10 @@ export default function CreateListSuccess() {
           width={windowSize.width}
           height={windowSize.height}
           recycle={false}
-          numberOfPieces={200}
-          gravity={0.3}
-          colors={['#FF9900', '#1ABC9C', '#EC4899', '#3B82F6', '#22C55E', '#FFB800']}
+          numberOfPieces={400}
+          gravity={0.25}
+          initialVelocityY={20}
+          colors={['#FF9900', '#1ABC9C', '#EC4899', '#3B82F6', '#22C55E', '#FFB800', '#FFD700', '#FF6B6B']}
         />
       )}
       
@@ -193,15 +170,20 @@ export default function CreateListSuccess() {
           "text-center mb-6 transition-all duration-500",
           showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         )}>
-          <div className="w-20 h-20 bg-gradient-to-br from-[#FF9900] to-[#FFB800] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg animate-bounce">
-            <PartyPopper className="w-10 h-10 text-white" />
+          <div className="w-24 h-24 bg-gradient-to-br from-[#FF9900] via-[#FFB800] to-[#FFD700] rounded-full flex items-center justify-center mx-auto mb-5 shadow-xl animate-bounce">
+            <Sparkles className="w-12 h-12 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-[#1A3E5C] mb-2">
-            {language === 'es' ? '¡LISTA CREADA!' : 'LIST CREATED!'}
+          
+          <h1 className="text-3xl font-bold text-[#1A3E5C] mb-3">
+            {language === 'es' 
+              ? `¡LO LOGRASTE${userName ? `, ${userName}` : ''}!` 
+              : `YOU DID IT${userName ? `, ${userName}` : ''}!`}
           </h1>
-          <p className="text-[#FF9900] font-semibold flex items-center justify-center gap-2">
-            <TrendingUp className="w-5 h-5" />
-            {language === 'es' ? '¡El ahorro comienza ahora!' : 'The savings start now!'}
+          
+          <p className="text-lg font-semibold text-[#FF9900]">
+            {language === 'es' 
+              ? `¡FELICITACIONES! El ahorro de "${listData?.name}" comienza AHORA.`
+              : `CONGRATULATIONS! Savings for "${listData?.name}" start NOW.`}
           </p>
         </div>
 
@@ -238,19 +220,19 @@ export default function CreateListSuccess() {
         )}>
           <Button
             onClick={handleAddGift}
-            className="w-full py-6 text-base font-semibold bg-[#FF9900] hover:bg-[#FF9900]/90"
+            className="w-full py-7 text-lg font-bold bg-gradient-to-r from-[#FF9900] to-[#FFB800] hover:from-[#FF9900]/90 hover:to-[#FFB800]/90 shadow-lg"
           >
-            <Gift className="w-5 h-5 mr-2" />
-            {language === 'es' ? 'Agregar Primer Regalo' : 'Add First Gift'}
+            <Gift className="w-6 h-6 mr-2" />
+            {language === 'es' ? '¡ENCONTRAR EL PRIMER REGALO AHORA!' : 'FIND THE FIRST GIFT NOW!'}
           </Button>
 
           <Button
             onClick={handleShare}
             variant="outline"
-            className="w-full py-6 text-base font-semibold border-2 border-[#1ABC9C] text-[#1ABC9C] hover:bg-[#1ABC9C]/10"
+            className="w-full py-6 text-base font-semibold border-2 border-[#1ABC9C] text-[#1ABC9C] hover:bg-[#1ABC9C] hover:text-white transition-all"
           >
-            <Share2 className="w-5 h-5 mr-2" />
-            {language === 'es' ? 'Compartir e Invitar' : 'Share & Invite'}
+            <Users className="w-5 h-5 mr-2" />
+            {language === 'es' ? 'COMPARTIR Y AHORRAR MÁS' : 'SHARE & SAVE MORE'}
           </Button>
 
           <button
@@ -263,14 +245,13 @@ export default function CreateListSuccess() {
         </div>
 
         <div className={cn(
-          "bg-[#1A3E5C]/5 rounded-xl p-4 mt-6 flex gap-3 transition-all duration-500 delay-300",
+          "bg-gradient-to-r from-[#1ABC9C]/10 to-[#22C55E]/10 rounded-xl p-4 mt-6 text-center transition-all duration-500 delay-300",
           showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         )}>
-          <Lightbulb className="w-5 h-5 text-[#FF9900] flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-[#1A3E5C]">
+          <p className="text-sm font-medium text-[#1A3E5C]">
             {language === 'es' 
-              ? 'Cuando tengas 5+ regalos, comparte tu lista para que otros entiendan bien tus gustos.'
-              : 'When you have 5+ gifts, share your list so others understand your preferences.'}
+              ? 'Invita a 3 personas y maximiza los beneficios de tu lista.'
+              : 'Invite 3 people and maximize your list benefits.'}
           </p>
         </div>
       </div>
