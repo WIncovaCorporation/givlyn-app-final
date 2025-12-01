@@ -177,6 +177,12 @@ const Dashboard = () => {
             <Search className="w-5 h-5 mr-2" />
             {language === 'es' ? 'Buscar Regalo Inteligente' : 'Smart Gift Search'}
           </Button>
+          
+          <p className="text-center text-sm text-gray-500 mt-2">
+            {language === 'es' 
+              ? 'Creado con la meta de ahorrarte tiempo y dinero.' 
+              : 'Built to save you time and money.'}
+          </p>
         </div>
 
         <div className="mb-8">
