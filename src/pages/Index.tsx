@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
-import { CheckCircle, DollarSign, Shield, Lock, Search, Gift, Globe } from "lucide-react";
+import { Search, Gift, Globe } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -95,13 +95,6 @@ const Index = () => {
     bgLight: '#F7F9FB',
     border: '#E5E7EB',
   };
-
-  const valueItems = [
-    { Icon: CheckCircle, title: t.val1Title, sub: t.val1Sub, color: colors.accentGreen },
-    { Icon: DollarSign, title: t.val2Title, sub: t.val2Sub, color: colors.accentGreen },
-    { Icon: Shield, title: t.val3Title, sub: t.val3Sub, color: colors.primaryBlue },
-    { Icon: Lock, title: t.val4Title, sub: t.val4Sub, color: colors.primaryBlue },
-  ];
 
   return (
     <div style={{
@@ -389,47 +382,109 @@ const Index = () => {
             {t.microcopy}
           </p>
 
-          {/* VALUE BAR */}
+          {/* VALUE BAR PRO */}
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)',
-            gap: isMobile ? '12px' : '16px',
-            background: colors.bgWhite,
-            border: '1px solid #e0e0e0',
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            justifyContent: 'space-between',
+            background: '#ffffff',
+            padding: isMobile ? '20px' : '25px 30px',
             borderRadius: '12px',
-            padding: isMobile ? '16px' : '20px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+            border: '1px solid #e5e7eb',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+            maxWidth: '950px',
+            margin: '0 auto',
+            gap: isMobile ? '20px' : '0',
           }}>
-            {valueItems.map((item, idx) => (
-              <div key={idx} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                textAlign: 'left',
-              }}>
-                <item.Icon 
-                  size={28} 
-                  color={item.color}
-                  strokeWidth={2}
-                />
-                <div>
-                  <strong style={{
-                    display: 'block',
-                    fontSize: '14px',
-                    color: colors.primaryBlue,
-                    marginBottom: '2px',
-                  }}>
-                    {item.title}
-                  </strong>
-                  <span style={{
-                    fontSize: '12px',
-                    color: colors.textGrey,
-                  }}>
-                    {item.sub}
-                  </span>
-                </div>
+            {/* Compra Directa */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '15px',
+              flex: '1 1 200px',
+              padding: '5px',
+              borderBottom: isMobile ? '1px solid #eee' : 'none',
+              paddingBottom: isMobile ? '15px' : '5px',
+            }}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1ABC9C" width="28" height="28">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+              <div>
+                <strong style={{ display: 'block', fontSize: '15px', fontWeight: 700, color: '#1A3E5C', marginBottom: '4px' }}>
+                  {t.val1Title}
+                </strong>
+                <span style={{ fontSize: '13px', color: '#666666', lineHeight: 1.4, display: 'block' }}>
+                  {t.val1Sub}
+                </span>
               </div>
-            ))}
+            </div>
+
+            {/* Mejor Precio */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '15px',
+              flex: '1 1 200px',
+              padding: '5px',
+              borderBottom: isMobile ? '1px solid #eee' : 'none',
+              paddingBottom: isMobile ? '15px' : '5px',
+            }}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1ABC9C" width="28" height="28">
+                <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-2.03.6-3.54 2.21-3.54 4.04 0 2.58 2.11 3.91 4.54 4.49 2.54.61 3.2 1.33 3.2 2.24 0 1.19-1.16 2.05-2.95 2.05-2.11 0-2.9-.98-2.99-2.23H8.19c.11 2.11 1.78 3.65 3.81 4.15V21h3v-2.15c2.3-.64 3.8-2.29 3.8-4.32 0-2.65-1.97-4.09-4.8-4.63z"/>
+              </svg>
+              <div>
+                <strong style={{ display: 'block', fontSize: '15px', fontWeight: 700, color: '#1A3E5C', marginBottom: '4px' }}>
+                  {t.val2Title}
+                </strong>
+                <span style={{ fontSize: '13px', color: '#666666', lineHeight: 1.4, display: 'block' }}>
+                  {t.val2Sub}
+                </span>
+              </div>
+            </div>
+
+            {/* Protección Total */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '15px',
+              flex: '1 1 200px',
+              padding: '5px',
+              borderBottom: isMobile ? '1px solid #eee' : 'none',
+              paddingBottom: isMobile ? '15px' : '5px',
+            }}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1ABC9C" width="28" height="28">
+                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+              </svg>
+              <div>
+                <strong style={{ display: 'block', fontSize: '15px', fontWeight: 700, color: '#1A3E5C', marginBottom: '4px' }}>
+                  {t.val3Title}
+                </strong>
+                <span style={{ fontSize: '13px', color: '#666666', lineHeight: 1.4, display: 'block' }}>
+                  {t.val3Sub}
+                </span>
+              </div>
+            </div>
+
+            {/* Datos Seguros */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '15px',
+              flex: '1 1 200px',
+              padding: '5px',
+            }}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1ABC9C" width="28" height="28">
+                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+              </svg>
+              <div>
+                <strong style={{ display: 'block', fontSize: '15px', fontWeight: 700, color: '#1A3E5C', marginBottom: '4px' }}>
+                  {t.val4Title}
+                </strong>
+                <span style={{ fontSize: '13px', color: '#666666', lineHeight: 1.4, display: 'block' }}>
+                  {t.val4Sub}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
