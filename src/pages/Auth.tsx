@@ -349,15 +349,14 @@ const Auth = () => {
 
               {/* Email Option Button */}
               {!showEmailForm ? (
-                <Button
+                <button
                   type="button"
-                  variant="outline"
-                  className="w-full h-12 border-gray-300 font-medium transition-all hover:bg-[#f7f7f7] hover:border-[#e5e5e5]"
+                  className="w-full h-12 border border-gray-300 rounded-lg font-medium transition-all bg-white hover:bg-[#f7f7f7] hover:border-gray-400 flex items-center justify-center gap-2 text-gray-700"
                   onClick={() => setShowEmailForm(true)}
                 >
-                  <Mail className="w-4 h-4 mr-2" />
+                  <Mail className="w-4 h-4" />
                   {language === 'es' ? 'Continuar con Correo' : 'Continue with Email'}
-                </Button>
+                </button>
               ) : (
                 <>
                   {/* Toggle Login/Signup */}
