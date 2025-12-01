@@ -17,7 +17,6 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSelector from "@/components/LanguageSelector";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
-import Footer from "@/components/Footer";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { HelpTooltip } from "@/components/HelpTooltip";
@@ -1163,7 +1162,6 @@ const Groups = () => {
         onComplete={() => setShowConfetti(false)}
       />
 
-      <Footer />
     </div>
   );
 };

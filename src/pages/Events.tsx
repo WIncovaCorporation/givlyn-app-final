@@ -13,7 +13,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSelector from "@/components/LanguageSelector";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
-import Footer from "@/components/Footer";
+
 import { HelpTooltip } from "@/components/HelpTooltip";
 import { EmptyStateCard } from "@/components/EmptyStateCard";
 import type { User } from "@supabase/supabase-js";
@@ -305,7 +305,7 @@ const Events = () => {
         variant="destructive"
       />
 
-      <Footer />
+      
     </div>
   );
 };

@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Lock, Eye, EyeOff } from "lucide-react";
-import Footer from "@/components/Footer";
+
 
 const UpdatePassword = () => {
   const navigate = useNavigate();
@@ -214,7 +214,7 @@ const UpdatePassword = () => {
         </div>
       </div>
 
-      <Footer />
+      
     </div>
   );
 };

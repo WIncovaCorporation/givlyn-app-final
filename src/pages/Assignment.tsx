@@ -8,7 +8,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { Badge } from "@/components/ui/badge";
-import Footer from "@/components/Footer";
+
 import LanguageSelector from "@/components/LanguageSelector";
 import { AnonymousChat } from "@/components/AnonymousChat";
 import { toast } from "sonner";
@@ -237,7 +237,7 @@ const Assignment = () => {
           </Card>
         </main>
 
-        <Footer />
+        
       </div>
     );
   }
@@ -310,7 +310,7 @@ const Assignment = () => {
           </Card>
         </main>
 
-        <Footer />
+        
       </div>
     );
   }
@@ -574,7 +574,7 @@ const Assignment = () => {
         </div>
       </main>
 
-      <Footer />
+      
     </div>
   );
 };

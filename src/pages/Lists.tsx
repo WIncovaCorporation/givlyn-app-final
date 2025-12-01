@@ -15,11 +15,9 @@ import { Gift, Plus, Trash2, ExternalLink, Sparkles, Loader2, Search, X, Shoppin
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
-import LanguageSelector from "@/components/LanguageSelector";
 import { GIFT_CATEGORIES, COMMON_COLORS, CLOTHING_SIZES, SHOE_SIZES, POPULAR_BRANDS, getSmartOptions } from "@/lib/giftOptions";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
-import Footer from "@/components/Footer";
 import { HelpTooltip } from "@/components/HelpTooltip";
 import { EmptyStateCard } from "@/components/EmptyStateCard";
 import { AIProductExtractor } from "@/components/AIProductExtractor";
@@ -618,37 +616,15 @@ const Lists = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Button 
-              variant="outline" 
-              onClick={() => navigate("/")}
-              className="gap-2"
-            >
-              <Gift className="h-4 w-4" />
-              Inicio
-            </Button>
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate("/dashboard")}
-              className="gap-2"
-            >
-              Dashboard
-            </Button>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-              Mis Listas de Regalos
-              <HelpTooltip content="Tu lista de deseos personal. Añade lo que quieres recibir como regalo y compártela con amigos/familia. Perfecta para grupos de intercambio donde otros puedan ver qué te gustaría recibir." />
-            </h1>
-          </div>
-          <LanguageSelector />
-        </div>
-      </header>
-
+    <div>
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center gap-2 mb-6">
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            Mis Listas de Regalos
+            <HelpTooltip content="Tu lista de deseos personal. Añade lo que quieres recibir como regalo y compártela con amigos/familia. Perfecta para grupos de intercambio donde otros puedan ver qué te gustaría recibir." />
+          </h1>
+        </div>
         {showUpgradePrompt && (
           <div className="mb-6">
             <UpgradePrompt
@@ -1681,7 +1657,7 @@ const Lists = () => {
             </div>
           </DialogContent>
         </Dialog>
-      </main>
+      </div>
 
       {/* Edit Item Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
@@ -1831,7 +1807,6 @@ const Lists = () => {
         variant="destructive"
       />
 
-      <Footer />
     </div>
   );
 };

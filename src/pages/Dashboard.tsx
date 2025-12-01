@@ -5,11 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Gift, Users, Calendar, Plus, Search, List, User, Home, Settings, Smartphone, HomeIcon, Shirt, Gamepad2, Trophy, Sparkles, ClipboardList, TrendingUp } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import LanguageSelector from "@/components/LanguageSelector";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { SkipToContent } from "@/components/SkipToContent";
-import { ProfileMenu } from "@/components/ProfileMenu";
-import Footer from "@/components/Footer";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 interface GiftList {
@@ -147,26 +143,8 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-6 flex flex-col">
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <SkipToContent />
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
-            <img 
-              src="/logo-icon-only.png" 
-              alt="Givlyn" 
-              className="w-10 h-10 object-contain"
-            />
-            <span className="text-2xl font-bold text-[#1A3E5C] tracking-tight">Givlyn</span>
-          </a>
-          <div className="flex items-center gap-3">
-            <LanguageSelector />
-            {user && <ProfileMenu user={user} />}
-          </div>
-        </div>
-      </header>
-
-      <main id="main-content" className="container mx-auto px-4 md:px-6 py-6 max-w-3xl flex-1">
+    <div className="pb-20 md:pb-6">
+      <div className="container mx-auto px-4 md:px-6 py-6 max-w-3xl">
         <div className="mb-6">
           <h1 className="text-2xl font-semibold text-gray-900">
             {language === 'es' ? `¡Hola, ${userName}! ¿Qué regalo encontramos hoy?` : `Hi ${userName}! What gift shall we find today?`}
@@ -310,10 +288,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-      </main>
-
-      <div className="hidden md:block mt-auto">
-        <Footer />
       </div>
 
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg md:hidden z-50">

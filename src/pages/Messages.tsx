@@ -7,8 +7,6 @@ import { ArrowLeft, MessageCircle, Gift, Calendar, DollarSign, Bell } from "luci
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { Badge } from "@/components/ui/badge";
-import Footer from "@/components/Footer";
-import LanguageSelector from "@/components/LanguageSelector";
 import { AnonymousChat } from "@/components/AnonymousChat";
 
 interface ReceiverAssignment {
@@ -100,34 +98,8 @@ const Messages = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 flex flex-col">
-      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Button 
-              variant="outline" 
-              onClick={() => navigate("/")}
-              className="gap-2"
-              size="sm"
-            >
-              <Gift className="h-4 w-4" />
-              Inicio
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/dashboard")}
-              className="gap-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Dashboard
-            </Button>
-          </div>
-          <LanguageSelector />
-        </div>
-      </header>
-
-      <main className="flex-1 container mx-auto px-4 py-8">
+    <div>
+      <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center space-y-2 mb-6">
@@ -265,9 +237,7 @@ const Messages = () => {
             </div>
           )}
         </div>
-      </main>
-
-      <Footer />
+      </div>
     </div>
   );
 };

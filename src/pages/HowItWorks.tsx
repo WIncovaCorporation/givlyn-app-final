@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, CheckCircle, XCircle, Gift } from "lucide-react";
-import Footer from "@/components/Footer";
+
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSelector from "@/components/LanguageSelector";
 
@@ -214,7 +214,7 @@ const HowItWorks = () => {
         </div>
       </section>
 
-      <Footer />
+      
     </div>
   );
 };

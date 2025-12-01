@@ -10,6 +10,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { AuthenticatedAIAssistant } from "@/components/AuthenticatedAIAssistant";
 import { InstallPWA } from "@/components/InstallPWA";
 import { CookieConsent } from "@/components/CookieConsent";
+import { AppLayout } from "@/components/layouts/AppLayout";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
@@ -63,35 +64,45 @@ const App = () => (
               )}
               <CookieConsent />
               <Routes>
+                {/* PUBLIC ROUTES - No AppLayout */}
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path="/update-password" element={<UpdatePassword />} />
-                <Route path="/delete-account" element={<DeleteAccount />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/lists" element={<Lists />} />
-                <Route path="/groups" element={<Groups />} />
-                <Route path="/groups/:groupId/assignment" element={<Assignment />} />
-                <Route path="/assignment/:groupId" element={<Assignment />} />
-                <Route path="/groups/:groupId/admin" element={<GroupAssignments />} />
-                <Route path="/messages" element={<Messages />} />
-                <Route path="/events" element={<Events />} />
-                <Route path="/terms" element={<Terms />} />
-                <Route path="/privacy" element={<Privacy />} />
-                <Route path="/dmca" element={<DMCA />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/how-it-works" element={<HowItWorks />} />
-          <Route path="/roles-test" element={<RolesTest />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/marketplace" element={<Marketplace />} />
-          <Route path="/my-products" element={<MyProducts />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/audit-logs" element={<AdminAuditLogs />} />
-          <Route path="/admin/corrections" element={<AdminCorrections />} />
-          <Route path="/admin/stats" element={<AdminStats />} />
-          <Route path="/onboarding/welcome" element={<OnboardingWelcome />} />
-          <Route path="/search" element={<Search />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="/onboarding/welcome" element={<OnboardingWelcome />} />
+                
+                {/* AUTHENTICATED ROUTES - With AppLayout (Header + Footer) */}
+                <Route element={<AppLayout />}>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/lists" element={<Lists />} />
+                  <Route path="/groups" element={<Groups />} />
+                  <Route path="/groups/:groupId/assignment" element={<Assignment />} />
+                  <Route path="/assignment/:groupId" element={<Assignment />} />
+                  <Route path="/groups/:groupId/admin" element={<GroupAssignments />} />
+                  <Route path="/messages" element={<Messages />} />
+                  <Route path="/events" element={<Events />} />
+                  <Route path="/search" element={<Search />} />
+                  <Route path="/marketplace" element={<Marketplace />} />
+                  <Route path="/my-products" element={<MyProducts />} />
+                  <Route path="/pricing" element={<Pricing />} />
+                  <Route path="/delete-account" element={<DeleteAccount />} />
+                  <Route path="/roles-test" element={<RolesTest />} />
+                  
+                  {/* ADMIN ROUTES */}
+                  <Route path="/admin" element={<AdminDashboard />} />
+                  <Route path="/admin/audit-logs" element={<AdminAuditLogs />} />
+                  <Route path="/admin/corrections" element={<AdminCorrections />} />
+                  <Route path="/admin/stats" element={<AdminStats />} />
+                  
+                  {/* LEGAL/INFO PAGES */}
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/dmca" element={<DMCA />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/how-it-works" element={<HowItWorks />} />
+                </Route>
+
+                {/* CATCH-ALL */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </AnalyticsProvider>

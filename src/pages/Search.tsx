@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { GlobalHeader } from "@/components/GlobalHeader";
-import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -65,10 +63,7 @@ const Search = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 flex flex-col">
-      <GlobalHeader />
-      
-      <main className="flex-1 container px-4 py-8 max-w-2xl mx-auto">
+    <div className="container px-4 py-8 max-w-2xl mx-auto">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-[#1ABC9C]/10 rounded-full mb-4">
             <Sparkles className="w-8 h-8 text-[#1ABC9C]" />
@@ -137,9 +132,6 @@ const Search = () => {
             ? 'Comparamos precios en 500+ tiendas para encontrar la mejor oferta' 
             : 'We compare prices across 500+ stores to find the best deal'}
         </p>
-      </main>
-
-      <Footer />
     </div>
   );
 };

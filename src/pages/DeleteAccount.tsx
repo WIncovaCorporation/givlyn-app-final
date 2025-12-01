@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { toast } from "sonner";
 import { AlertTriangle, Trash2 } from "lucide-react";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
-import Footer from "@/components/Footer";
+
 
 const DeleteAccount = () => {
   const navigate = useNavigate();
@@ -175,7 +175,7 @@ const DeleteAccount = () => {
         />
       </div>
 
-      <Footer />
+      
     </div>
   );
 };

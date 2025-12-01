@@ -7,7 +7,7 @@ import { ArrowLeft, Shield, Users, AlertTriangle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { Badge } from "@/components/ui/badge";
-import Footer from "@/components/Footer";
+
 import LanguageSelector from "@/components/LanguageSelector";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -254,7 +254,7 @@ const GroupAssignments = () => {
         </div>
       </main>
 
-      <Footer />
+      
     </div>
   );
 };
