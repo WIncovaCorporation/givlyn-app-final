@@ -145,7 +145,7 @@ const Dashboard = () => {
 
         <div className="grid gap-4 mb-8">
           <Button 
-            onClick={() => navigate("/lists")}
+            onClick={() => navigate("/create-list/step-1")}
             size="lg"
             className="w-full py-6 text-base font-semibold bg-[#FF9900] hover:bg-[#FF9900]/90 shadow-md btn-hover-glow transition-all"
           >

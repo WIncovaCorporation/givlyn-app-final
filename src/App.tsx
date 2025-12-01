@@ -39,6 +39,9 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminStats from "./pages/AdminStats";
 import OnboardingWelcome from "./pages/OnboardingWelcome";
 import Search from "./pages/Search";
+import CreateListStep1 from "./pages/create-list/CreateListStep1";
+import CreateListStep2 from "./pages/create-list/CreateListStep2";
+import CreateListSuccess from "./pages/create-list/CreateListSuccess";
 import { lazy, Suspense } from "react";
 
 const DebugPanel = lazy(() => import("@/components/DebugPanel").then(m => ({ default: m.DebugPanel })));
@@ -70,6 +73,11 @@ const App = () => (
                 <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path="/update-password" element={<UpdatePassword />} />
                 <Route path="/onboarding/welcome" element={<OnboardingWelcome />} />
+                
+                {/* CREATE LIST WIZARD - No AppLayout (custom wizard UI) */}
+                <Route path="/create-list/step-1" element={<CreateListStep1 />} />
+                <Route path="/create-list/step-2" element={<CreateListStep2 />} />
+                <Route path="/create-list/success" element={<CreateListSuccess />} />
                 
                 {/* AUTHENTICATED ROUTES - With AppLayout (Header + Footer) */}
                 <Route element={<AppLayout />}>
