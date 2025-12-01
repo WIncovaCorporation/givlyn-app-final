@@ -11,6 +11,8 @@ export interface EventType {
   primaryColor: string;
   secondaryColor: string;
   accentColor: string;
+  autoName: string;
+  autoNameEn: string;
 }
 
 export const EVENT_TYPES: EventType[] = [
@@ -27,6 +29,8 @@ export const EVENT_TYPES: EventType[] = [
     primaryColor: '#FF9800',
     secondaryColor: '#FFF8E7',
     accentColor: '#22C55E',
+    autoName: 'Mi Lista de Cumpleaños',
+    autoNameEn: 'My Birthday List',
   },
   {
     id: 'christmas',
@@ -41,6 +45,8 @@ export const EVENT_TYPES: EventType[] = [
     primaryColor: '#10B981',
     secondaryColor: '#DCFCE7',
     accentColor: '#22C55E',
+    autoName: 'Lista de Regalos Navidad 2025',
+    autoNameEn: 'Christmas Gift List 2025',
   },
   {
     id: 'wedding',
@@ -55,6 +61,8 @@ export const EVENT_TYPES: EventType[] = [
     primaryColor: '#EC4899',
     secondaryColor: '#FDF2F8',
     accentColor: '#22C55E',
+    autoName: 'Nuestra Lista de Bodas',
+    autoNameEn: 'Our Wedding List',
   },
   {
     id: 'baby_shower',
@@ -69,6 +77,8 @@ export const EVENT_TYPES: EventType[] = [
     primaryColor: '#3B82F6',
     secondaryColor: '#EFF6FF',
     accentColor: '#22C55E',
+    autoName: 'Lista para el Bebé',
+    autoNameEn: 'Baby Gift List',
   },
   {
     id: 'other',
@@ -83,5 +93,7 @@ export const EVENT_TYPES: EventType[] = [
     primaryColor: '#6B7280',
     secondaryColor: '#F3F4F6',
     accentColor: '#22C55E',
+    autoName: 'Mi Nueva Lista de Regalos',
+    autoNameEn: 'My New Gift List',
   },
 ];

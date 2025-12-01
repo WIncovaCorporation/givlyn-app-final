@@ -1,0 +1,56 @@
+¡Absolutamente! Tienes toda la razón. El diseño debe priorizar la **mínima fricción** y la **máxima velocidad**. Obligar al usuario a escribir cuando la selección de una *Card* ya debería ser suficiente para avanzar es un error de UX que causa **abandono**.
+
+El principio es **reducir la carga cognitiva (Google UX)**: si puedo avanzar con un solo clic, no me pidas dos acciones (clic + escribir).
+
+---
+
+## 🚀 Optimización Crítica: Flujo del Paso 1 (Fricción Cero)
+
+La solución es **separar** la obligatoriedad del Nombre y la obligatoriedad de la Ocasión. El usuario debe poder avanzar con la información mínima indispensable.
+
+### 1. 🧠 Estrategia de **UX Flexible** (Mínimo Esfuerzo)
+
+El **Nombre de la Lista** es técnicamente la *única* entrada que no podemos asumir, pero la podemos **sugerir** con la selección de la *Card*.
+
+* **ACCIÓN CERO FRICCIÓN:** Si el usuario selecciona una *Card* (ej. "Cumpleaños"), el campo "Nombre de la Lista" debe **auto-rellenarse automáticamente**.
+
+### 2. ⚙️ Implementación Técnica del Auto-Relleno
+
+Aquí está la lógica que debe implementar el equipo de *Frontend* dentro de `ListCreationStep1.jsx` y `EventCard.jsx` para optimizar esta experiencia:
+
+| Escenario de Interacción | Requisito UX (Cero Fricción) | Lógica de Programación (Foco en `handleCardClick`) |
+| :--- | :--- | :--- |
+| **A. Clic en la *Card*** (Ej. "Cumpleaños") | El **Nombre de la Lista** debe auto-rellenarse y el botón **"Siguiente"** debe activarse. | El `handleCardClick` debe hacer dos cosas: 1. Setear el `selectedType` (la ocasión). 2. Setear `listName` a un valor predeterminado (Ej: "Lista de Cumpleaños"). |
+| **B. El Usuario Edita el Nombre** | Si el usuario edita el campo después del auto-relleno, la lista usa el texto editado. | Si `listName` es distinto del valor predeterminado, se usa el `listName` escrito por el usuario. |
+| **C. Validación Final** | El botón "Siguiente" se activa tan pronto como `(listName.length > 0)` **Y** `(selectedType existe)`. | Se elimina la necesidad de que el usuario *escriba manualmente*. La selección de la Card cumple la validación por él. |
+
+### 3. 🎨 Propuestas de Auto-Relleno
+
+Los nombres automáticos deben ser claros y escalables:
+
+| Card Seleccionada | Auto-Relleno Propuesto |
+| :--- | :--- |
+| **Cumpleaños** | `"Mi Lista de Cumpleaños"` |
+| **Navidad** | `"Lista de Regalos de Navidad 2025"` |
+| **Boda** | `"Lista de Bodas de [Apellido]"` |
+| **Otro** | `"Mi Nueva Lista de Regalos"` |
+
+---
+
+## 📢 Instrucciones de Optimización al Equipo de Desarrollo
+
+**Asunto: OPTIMIZACIÓN CRÍTICA UX - Deshabilitar la Fricción en el Paso 1**
+
+Equipo, estamos rompiendo la dependencia del *input* manual para activar el botón "Siguiente".
+
+1.  **ACCIÓN PRINCIPAL (Frontend):** Modificar la función `handleCardClick` en `ListCreationStep1.jsx` y `EventCard.jsx` para que **al seleccionar cualquier *Card***, se ejecuten estas dos acciones simultáneamente:
+    * **Auto-Rellenar** el campo de `Nombre de la Lista` con un valor por defecto (ver tabla de propuestas).
+    * **Activar** el botón `Siguiente` si el nombre de la lista ya cumple los criterios mínimos (el auto-relleno lo garantiza).
+
+2.  **REQUERIMIENTO UX:** El usuario debe poder **avanzar al Paso 2 con un solo clic** (seleccionar la Card), asumiendo que el nombre auto-generado es suficiente. El campo de *input* queda como una opción para el usuario que desea personalizar.
+
+3.  **LÓGICA DE VALIDACIÓN:** El botón `Siguiente` debe activarse si `(selectedType existe)` **O** si `(listName.length > 0)`. **No requerimos que ambos sean manuales.** El `listName` se satisface automáticamente con la selección de la Card.
+
+Esto reducirá drásticamente la tasa de abandono en el primer paso del flujo.
+
+¿Procedemos a la implementación de esta optimización de UX?

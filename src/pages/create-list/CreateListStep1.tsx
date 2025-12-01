@@ -18,6 +18,7 @@ export default function CreateListStep1() {
   const [name, setName] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [nameError, setNameError] = useState("");
+  const [isNameManuallyEdited, setIsNameManuallyEdited] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -41,11 +42,22 @@ export default function CreateListStep1() {
     if (value.length <= 50) {
       setName(value);
       setNameError("");
+      setIsNameManuallyEdited(true);
     }
   };
 
   const handleCardClick = (typeId: string) => {
     setSelectedType(typeId);
+    
+    if (!isNameManuallyEdited || name.trim() === "") {
+      const eventType = EVENT_TYPES.find(e => e.id === typeId);
+      if (eventType) {
+        const autoName = language === 'es' ? eventType.autoName : eventType.autoNameEn;
+        setName(autoName);
+        setNameError("");
+      }
+    }
+    
     trackEvent('step1_card_selected', { event_type: typeId });
   };
 
