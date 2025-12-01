@@ -260,7 +260,21 @@ const translations = {
     // Affiliate Disclosure
     "disclosure.smartBuying": "Smart Buying:",
     "disclosure.message": "We earn a small commission when you purchase through our links, at no extra cost to you. This helps us keep the service free.",
-    "disclosure.learnMore": "Learn how it works"
+    "disclosure.learnMore": "Learn how it works",
+    
+    // Common
+    "common.back": "Back",
+    
+    // Lists Page
+    "lists.title": "My Gift Lists",
+    "lists.helpTooltip": "Your personal wishlist. Add what you want to receive as a gift and share it with friends/family. Perfect for group exchanges where others can see what you'd like to receive.",
+    "lists.newList": "New List",
+    "lists.emptyTitle": "Create your first wishlist!",
+    "lists.emptyDescription": "Lists are your personal space to save gift ideas you'd like to receive. Create lists for different occasions (Christmas, birthdays, weddings) and share them with friends and family.",
+    "lists.createFirst": "Create My First List",
+    "lists.addGift": "Add Gift",
+    "lists.share": "Share",
+    "lists.delete": "Delete"
   },
   es: {
     // Landing Page
@@ -511,7 +525,21 @@ const translations = {
     // Affiliate Disclosure
     "disclosure.smartBuying": "Compra Inteligente:",
     "disclosure.message": "Ganamos una pequeña comisión cuando compras a través de nuestros enlaces, sin costo extra para ti. Esto nos ayuda a mantener el servicio gratuito.",
-    "disclosure.learnMore": "Cómo funciona"
+    "disclosure.learnMore": "Cómo funciona",
+    
+    // Common
+    "common.back": "Volver",
+    
+    // Lists Page
+    "lists.title": "Mis Listas de Regalos",
+    "lists.helpTooltip": "Tu lista de deseos personal. Añade lo que quieres recibir como regalo y compártela con amigos/familia. Perfecta para grupos de intercambio donde otros puedan ver qué te gustaría recibir.",
+    "lists.newList": "Nueva Lista",
+    "lists.emptyTitle": "¡Crea tu primera lista de deseos!",
+    "lists.emptyDescription": "Las listas son tu espacio personal para guardar ideas de regalos que te gustaría recibir. Crea listas para diferentes ocasiones (Navidad, cumpleaños, bodas) y compártelas con amigos y familia.",
+    "lists.createFirst": "Crear Mi Primera Lista",
+    "lists.addGift": "Agregar Regalo",
+    "lists.share": "Compartir",
+    "lists.delete": "Eliminar"
   },
 };
 

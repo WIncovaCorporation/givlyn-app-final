@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select";
-import { Gift, Plus, Trash2, ExternalLink, Sparkles, Loader2, Search, X, ShoppingBag, Store, RefreshCw, Edit, Lightbulb } from "lucide-react";
+import { Gift, Plus, Trash2, ExternalLink, Sparkles, Loader2, Search, X, ShoppingBag, Store, RefreshCw, Edit, Lightbulb, ArrowLeft, Share2, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -49,7 +49,7 @@ interface GiftItem {
 
 const Lists = () => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { isFree } = useUserRole();
   const { features, getLimit } = useSubscription();
   const { shouldShowTooltip, markTooltipAsSeen } = useTooltips();
@@ -619,10 +619,18 @@ const Lists = () => {
     <div>
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
+        <button
+          onClick={() => navigate("/dashboard")}
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-4"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span className="text-sm">{t('common.back')}</span>
+        </button>
+
         <div className="flex items-center gap-2 mb-6">
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            Mis Listas de Regalos
-            <HelpTooltip content="Tu lista de deseos personal. Añade lo que quieres recibir como regalo y compártela con amigos/familia. Perfecta para grupos de intercambio donde otros puedan ver qué te gustaría recibir." />
+            {t('lists.title')}
+            <HelpTooltip content={t('lists.helpTooltip')} />
           </h1>
         </div>
         {showUpgradePrompt && (
@@ -647,42 +655,22 @@ const Lists = () => {
               Marca como "Comprado" cuando ya tengas el artículo o ya no lo quieras.
             </p>
           </div>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="gap-2">
-                <Plus className="w-4 h-4" />
-                Nueva Lista
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Crear Nueva Lista</DialogTitle>
-                <DialogDescription>Dale un nombre a tu lista de regalos</DialogDescription>
-              </DialogHeader>
-              <form onSubmit={handleCreateList} className="space-y-4">
-                <div>
-                  <Label htmlFor="list-name">Nombre de la Lista</Label>
-                  <Input
-                    id="list-name"
-                    value={newList.name}
-                    onChange={(e) => setNewList({ name: e.target.value })}
-                    placeholder="Ej: Navidad 2024, Mi Cumpleaños"
-                    required
-                  />
-                </div>
-                <Button type="submit" className="w-full">Crear Lista</Button>
-              </form>
-            </DialogContent>
-          </Dialog>
+          <Button 
+            className="gap-2"
+            onClick={() => navigate("/create-list/step-1")}
+          >
+            <Plus className="w-4 h-4" />
+            {t('lists.newList')}
+          </Button>
         </div>
 
         {lists.length === 0 ? (
           <EmptyStateCard
             icon={Gift}
-            title="¡Crea tu primera lista de deseos!"
-            description="Las listas son tu espacio personal para guardar ideas de regalos que te gustaría recibir. Puedes crear listas para diferentes ocasiones (Navidad, cumpleaños, bodas) y compartirlas con amigos y familia. Cuando estés en un grupo de intercambio, la persona que te toque regalar podrá ver tu lista para saber exactamente qué te gustaría recibir. Añade productos con todos los detalles: color, talla, marca, enlaces, y usa nuestra IA para obtener sugerencias personalizadas."
-            actionLabel="Crear Mi Primera Lista"
-            onAction={() => setDialogOpen(true)}
+            title={t('lists.emptyTitle')}
+            description={t('lists.emptyDescription')}
+            actionLabel={t('lists.createFirst')}
+            onAction={() => navigate("/create-list/step-1")}
           />
         ) : (
           <div className="grid gap-6">
@@ -705,12 +693,36 @@ const Lists = () => {
                         }}
                       >
                         <Plus className="w-4 h-4 mr-2" />
-                        Agregar Regalo
+                        {t('lists.addGift')}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          const shareUrl = `${window.location.origin}/lists/${list.id}`;
+                          if (navigator.share) {
+                            navigator.share({
+                              title: list.name,
+                              text: language === 'es' ? '¡Mira mi lista de regalos!' : 'Check out my gift list!',
+                              url: shareUrl
+                            }).catch(() => {
+                              navigator.clipboard.writeText(shareUrl);
+                              toast.success(language === 'es' ? 'Enlace copiado' : 'Link copied');
+                            });
+                          } else {
+                            navigator.clipboard.writeText(shareUrl);
+                            toast.success(language === 'es' ? 'Enlace copiado al portapapeles' : 'Link copied to clipboard');
+                          }
+                        }}
+                        title={t('lists.share')}
+                      >
+                        <Share2 className="w-4 h-4" />
                       </Button>
                       <Button
                         size="sm"
                         variant="destructive"
                         onClick={() => handleDeleteList(list.id)}
+                        title={t('lists.delete')}
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
