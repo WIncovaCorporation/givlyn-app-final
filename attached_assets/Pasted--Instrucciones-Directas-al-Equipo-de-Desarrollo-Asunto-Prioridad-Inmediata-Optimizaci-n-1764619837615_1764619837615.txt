@@ -1,0 +1,35 @@
+## 📢 Instrucciones Directas al Equipo de Desarrollo
+
+**Asunto: Prioridad Inmediata - Optimización del Dashboard (MVP-V1.1) - Foco en Conversión y Honestidad Radical**
+
+Equipo, estamos adoptando una mentalidad de **máxima eficiencia (Google/Amazon)** y **transparencia total (Alex Hormozi)**. Todo lo que no contribuya directamente a la creación de una lista o al uso del asistente IA es ruido y será eliminado.
+
+El objetivo es lanzar un Dashboard limpio, rápido y de alta confianza.
+
+---
+
+### 1. 🎯 Máxima Prioridad: Refactoring del Dashboard
+
+**A) Optimización del Botón Secundario (CTA)**
+
+* **ACCIÓN:** Modificar el texto del botón secundario.
+* **DE:** `"Buscar Regalo Inteligente"`
+* **A:** `"Encontrar Regalo con IA"`
+* **REQUERIMIENTO UX:** Debajo de este botón, añadir una línea de micro-copy que comunique el valor y las fuentes:
+    > "Asistente transparente que te ayuda a descubrir regalos en Amazon, Walmart, eBay"
+
+**B) Eliminación de la Fricción y la Ficción**
+
+* **ACCIÓN:** **Eliminar completamente** la sección **"Tendencias"**.
+* **RAZÓN:** No tenemos datos reales para alimentar esta sección en fase MVP. No vamos a inventar números. Priorizamos la honestidad radical y la eficiencia técnica. Esto reduce la carga del *frontend* y la necesidad de lógica de *backend* innecesaria.
+
+### 2. ⚙️ Tareas Técnicas Clave
+
+1.  **Backend/API:** Asegurar que el flujo de **"Encontrar Regalo con IA"** se ejecute con **baja latencia**. La página de resultados debe cargar en menos de 1 segundo (Google Page Speed priority).
+2.  **Frontend/UX:** Validar que, al eliminar la sección "Tendencias", el *layout* se mantenga limpio y que las secciones **"Mis Listas"** y el *widget* de estadísticas (2 Listas | 0 Grupos | $0 Ahorrado) se reubiquen correctamente para mantener la consistencia visual.
+
+---
+
+**Prioridad:** Esta tarea es la **número 1** y debe completarse para la próxima revisión. **Cero ruido, máximo valor.**
+
+¿Hay alguna restricción técnica o duda sobre la eliminación de la sección "Tendencias"?

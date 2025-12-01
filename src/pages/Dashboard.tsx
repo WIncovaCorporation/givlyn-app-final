@@ -1,9 +1,9 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Gift, Users, Calendar, Plus, Search, List, User, Home, Settings, Smartphone, HomeIcon, Shirt, Gamepad2, Trophy, Sparkles, ClipboardList, TrendingUp } from "lucide-react";
+import { Gift, Users, Plus, Search, List, Home, ClipboardList } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -28,14 +28,6 @@ const Dashboard = () => {
 
   const userName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'Usuario';
 
-  const trendingCategories = useMemo(() => [
-    { id: 1, name: language === 'es' ? 'Electrónica' : 'Electronics', icon: Smartphone, discount: '25%' },
-    { id: 2, name: language === 'es' ? 'Hogar' : 'Home', icon: HomeIcon, discount: '30%' },
-    { id: 3, name: language === 'es' ? 'Moda' : 'Fashion', icon: Shirt, discount: '40%' },
-    { id: 4, name: language === 'es' ? 'Juguetes' : 'Toys', icon: Gamepad2, discount: '35%' },
-    { id: 5, name: language === 'es' ? 'Deportes' : 'Sports', icon: Trophy, discount: '20%' },
-    { id: 6, name: language === 'es' ? 'Belleza' : 'Beauty', icon: Sparkles, discount: '45%' },
-  ], [language]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -162,19 +154,19 @@ const Dashboard = () => {
           </Button>
 
           <Button 
-            onClick={() => navigate("/marketplace")}
+            onClick={() => navigate("/search")}
             size="lg"
             variant="outline"
             className="w-full py-6 text-base font-semibold border-2 border-[#1ABC9C] text-[#1ABC9C] hover:bg-[#1ABC9C]/10 hover:text-[#1ABC9C] transition-all"
           >
             <Search className="w-5 h-5 mr-2" />
-            {language === 'es' ? 'Buscar Regalo Inteligente' : 'Smart Gift Search'}
+            {language === 'es' ? 'Encontrar Regalo con IA' : 'Find Gift with AI'}
           </Button>
           
-          <p className="text-center text-sm text-gray-500 mt-2">
+          <p className="text-center text-sm text-gray-500 mt-1">
             {language === 'es' 
-              ? 'Creado con la meta de ahorrarte tiempo y dinero.' 
-              : 'Built to save you time and money.'}
+              ? 'Asistente transparente que te ayuda a descubrir regalos en Amazon, Walmart, eBay' 
+              : 'Transparent assistant helping you discover gifts on Amazon, Walmart, eBay'}
           </p>
         </div>
 
@@ -242,29 +234,6 @@ const Dashboard = () => {
               ))}
             </div>
           )}
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold text-[#1A3E5C] mb-4 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-[#FF9900]" />
-            {language === 'es' ? 'Tendencias' : 'Trending'}
-          </h2>
-          <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
-            {trendingCategories.map((category) => (
-              <div 
-                key={category.id}
-                onClick={() => navigate("/marketplace")}
-                className="flex-shrink-0 w-24 bg-white rounded-lg p-3 text-center cursor-pointer card-hover-lift shadow-sm border border-gray-100"
-                style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
-              >
-                <div className="w-8 h-8 mx-auto mb-2 bg-[#1A3E5C]/10 rounded-lg flex items-center justify-center">
-                  <category.icon className="w-4 h-4 text-[#1A3E5C] icon-hover-lift" />
-                </div>
-                <div className="text-xs font-medium text-[#1A3E5C] truncate">{category.name}</div>
-                <div className="text-xs text-[#1ABC9C] font-semibold">-{category.discount}</div>
-              </div>
-            ))}
-          </div>
         </div>
 
         <div className="grid grid-cols-3 gap-3 mb-8">
