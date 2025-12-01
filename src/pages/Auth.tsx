@@ -9,6 +9,22 @@ import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Check, Shield, Lock as LockI
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSelector from "@/components/LanguageSelector";
 
+const getBaseUrl = (): string => {
+  if (typeof window === 'undefined') return '';
+  
+  const hostname = window.location.hostname;
+  
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return 'https://6b9c1a69-6237-418b-98d9-5a01b8293082-00-3dqe4a6gwn7z9.worf.replit.dev';
+  }
+  
+  if (hostname.includes('givlyn.com')) {
+    return 'https://www.givlyn.com';
+  }
+  
+  return window.location.origin;
+};
+
 const Auth = () => {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
@@ -59,6 +75,7 @@ const Auth = () => {
     setLoading(true);
 
     try {
+      const baseUrl = getBaseUrl();
       const { data, error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
@@ -66,7 +83,7 @@ const Auth = () => {
           data: {
             display_name: displayName.trim(),
           },
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          emailRedirectTo: `${baseUrl}/dashboard`,
         },
       });
 
@@ -135,10 +152,11 @@ const Auth = () => {
 
   const handleGoogleSignIn = async () => {
     try {
+      const baseUrl = getBaseUrl();
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${baseUrl}/dashboard`,
         },
       });
 
@@ -161,8 +179,9 @@ const Auth = () => {
     setLoading(true);
 
     try {
+      const baseUrl = getBaseUrl();
       const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
-        redirectTo: `${window.location.origin}/update-password`,
+        redirectTo: `${baseUrl}/update-password`,
       });
 
       if (error) throw error;

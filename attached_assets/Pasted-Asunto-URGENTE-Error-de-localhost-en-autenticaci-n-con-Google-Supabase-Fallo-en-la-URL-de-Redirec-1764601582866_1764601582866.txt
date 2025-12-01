@@ -1,0 +1,55 @@
+Asunto: URGENTE: Error de localhost en autenticación con Google/Supabase (Fallo en la URL de Redirección Post-Auth)
+
+Hola equipo,
+
+Hemos configurado correctamente la autenticación social con Google y Supabase, pero estamos enfrentando un error crítico de redirección en el entorno de desarrollo de Replit.
+
+Contexto de la Configuración
+Objetivo: Permitir el inicio de sesión con el botón "Continuar con Google".
+
+Arquitectura: Frontend: Replit/Vercel. Backend/Auth: Supabase.
+
+Configuración de Google Cloud (COMPLETADA): El Client ID y Client Secret están generados, y las URIs autorizadas de Google son las siguientes (lo que significa que Google SÍ acepta las URLs):
+
+Orígenes Autorizados de JS: https://[ID_de_replit].replit.dev y https://www.givlyn.com
+
+URI de Redireccionamiento: https://[ID_de_supabase].supabase.co/auth/v1/callback
+
+Configuración de Supabase (COMPLETADA): Las claves (Client ID y Secret) están cargadas en el proveedor de Google de Supabase.
+
+🛑 Error Actual (Lo que el Usuario Ve)
+Al hacer clic en "Continuar con Google", el usuario selecciona su cuenta, pero luego el navegador intenta conectarse a una URL incorrecta y muestra un error de ERR_CONNECTION_REFUSED o localhost rechazó la conexión.
+
+🕵️‍♂️ Verificación Requerida (Acción del Desarrollador)
+El problema es que Supabase o el código de Replit no está especificando la URL final correcta de retorno.
+
+El desarrollador debe verificar DOS cosas CRÍTICAS:
+
+1. Verificar la URL del Sitio en Supabase
+Debe asegurarse de que Supabase sepa a dónde enviar al usuario después de una autenticación exitosa.
+
+Ruta en Supabase: Navegar a Authentication > URL Configuration.
+
+Verificar: El campo Site URL (URL del sitio) debe estar configurado con la URL de desarrollo de Replit:
+
+Valor Requerido: https://[ID_de_replit].replit.dev (sin la barra diagonal / al final).
+
+2. Verificar la Opción redirectTo en el Código de Replit
+Si la configuración global de Supabase es correcta, el problema está en cómo se está llamando a la función de inicio de sesión en el código de Replit.
+
+Ruta en el Código: Localizar la función de JavaScript que llama a supabase.auth.signInWithOAuth('google').
+
+Verificar: Esta función debe incluir la opción redirectTo para forzar el retorno a la URL de Replit:
+
+JavaScript
+
+await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+        // DEBE USAR ESTA URL DE REPLIT (con o sin ruta, pero no localhost):
+        redirectTo: 'https://[ID_de_replit].replit.dev/ruta-deseada' 
+    }
+})
+Una vez que el Site URL de Supabase o el redirectTo en el código apunten a la URL de Replit ([ID_de_replit].replit.dev) y no a localhost, el error se solucionará.
+
+Favor de confirmar qué corrección fue necesaria.
