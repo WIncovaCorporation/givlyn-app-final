@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Gift, Users, Calendar, Plus, Search, List, User, Home, Settings } from "lucide-react";
+import { Gift, Users, Calendar, Plus, Search, List, User, Home, Settings, Smartphone, HomeIcon, Shirt, Gamepad2, Trophy, Sparkles, ClipboardList, TrendingUp } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSelector from "@/components/LanguageSelector";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
@@ -33,12 +33,12 @@ const Dashboard = () => {
   const userName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'Usuario';
 
   const trendingCategories = useMemo(() => [
-    { id: 1, name: language === 'es' ? 'Electrónica' : 'Electronics', emoji: '📱', discount: '25%' },
-    { id: 2, name: language === 'es' ? 'Hogar' : 'Home', emoji: '🏠', discount: '30%' },
-    { id: 3, name: language === 'es' ? 'Moda' : 'Fashion', emoji: '👗', discount: '40%' },
-    { id: 4, name: language === 'es' ? 'Juguetes' : 'Toys', emoji: '🧸', discount: '35%' },
-    { id: 5, name: language === 'es' ? 'Deportes' : 'Sports', emoji: '⚽', discount: '20%' },
-    { id: 6, name: language === 'es' ? 'Belleza' : 'Beauty', emoji: '💄', discount: '45%' },
+    { id: 1, name: language === 'es' ? 'Electrónica' : 'Electronics', icon: Smartphone, discount: '25%' },
+    { id: 2, name: language === 'es' ? 'Hogar' : 'Home', icon: HomeIcon, discount: '30%' },
+    { id: 3, name: language === 'es' ? 'Moda' : 'Fashion', icon: Shirt, discount: '40%' },
+    { id: 4, name: language === 'es' ? 'Juguetes' : 'Toys', icon: Gamepad2, discount: '35%' },
+    { id: 5, name: language === 'es' ? 'Deportes' : 'Sports', icon: Trophy, discount: '20%' },
+    { id: 6, name: language === 'es' ? 'Belleza' : 'Beauty', icon: Sparkles, discount: '45%' },
   ], [language]);
 
   useEffect(() => {
@@ -181,8 +181,9 @@ const Dashboard = () => {
 
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-gray-900">
-              📋 {language === 'es' ? 'Mis Listas' : 'My Lists'}
+            <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <ClipboardList className="w-5 h-5 text-[#1A3E5C]" />
+              {language === 'es' ? 'Mis Listas' : 'My Lists'}
             </h2>
             {myLists.length > 0 && (
               <button 
@@ -197,7 +198,9 @@ const Dashboard = () => {
           {myLists.length === 0 ? (
             <Card className="border-dashed border-2 border-gray-200 bg-gray-50/50">
               <CardContent className="py-8 text-center">
-                <div className="text-3xl mb-3">🎁</div>
+                <div className="w-12 h-12 mx-auto mb-3 bg-[#1ABC9C]/10 rounded-full flex items-center justify-center">
+                  <Gift className="w-6 h-6 text-[#1ABC9C] icon-hover-lift" />
+                </div>
                 <p className="text-gray-600 mb-1 font-medium">
                   {language === 'es' 
                     ? 'Tu lista está vacía' 
@@ -243,8 +246,9 @@ const Dashboard = () => {
         </div>
 
         <div className="mb-8">
-          <h2 className="text-lg font-bold text-[#1A3E5C] mb-4">
-            🔥 {language === 'es' ? 'Tendencias' : 'Trending'}
+          <h2 className="text-lg font-semibold text-[#1A3E5C] mb-4 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-[#FF9900]" />
+            {language === 'es' ? 'Tendencias' : 'Trending'}
           </h2>
           <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
             {trendingCategories.map((category) => (
@@ -254,9 +258,11 @@ const Dashboard = () => {
                 className="flex-shrink-0 w-24 bg-white rounded-lg p-3 text-center cursor-pointer card-hover-lift shadow-sm border border-gray-100"
                 style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
               >
-                <div className="text-2xl mb-1">{category.emoji}</div>
+                <div className="w-8 h-8 mx-auto mb-2 bg-[#1A3E5C]/10 rounded-lg flex items-center justify-center">
+                  <category.icon className="w-4 h-4 text-[#1A3E5C] icon-hover-lift" />
+                </div>
                 <div className="text-xs font-medium text-[#1A3E5C] truncate">{category.name}</div>
-                <div className="text-xs text-[#1ABC9C] font-bold">-{category.discount}</div>
+                <div className="text-xs text-[#1ABC9C] font-semibold">-{category.discount}</div>
               </div>
             ))}
           </div>
