@@ -26,10 +26,10 @@ const accessTypes: AccessType[] = [
   },
   { 
     id: "shared", 
-    nameEs: "Lista Compartida", 
-    nameEn: "Shared List", 
-    descEs: "Invita a familiares y amigos para que compren regalos.", 
-    descEn: "Invite family and friends to buy gifts.",
+    nameEs: "🎁 MODO VIRAL (El Regalo Perfecto)", 
+    nameEn: "🎁 VIRAL MODE (Perfect Gift)", 
+    descEs: "Tú recibes lo que deseas. Ellos evitan el estrés de adivinar.", 
+    descEn: "You get what you want. They avoid the stress of guessing.",
     icon: Globe 
   },
   { 
@@ -48,8 +48,8 @@ const tips: Record<string, { es: string; en: string }> = {
     en: "You can change the privacy settings later if you decide to share."
   },
   shared: {
-    es: "Las listas compartidas consiguen 3x más compras.",
-    en: "Shared lists get 3x more purchases."
+    es: "Garantiza 0 devoluciones. Compartir es la forma más fácil de hacer feliz a todos.",
+    en: "Guarantees 0 returns. Sharing is the easiest way to make everyone happy."
   },
   third_party: {
     es: "Ideal para organizar regalos en grupo sin que el festejado lo sepa.",
@@ -112,11 +112,11 @@ export default function CreateListStep2() {
           <Progress value={66} className="h-2" />
         </div>
 
-        <h1 className="text-xl font-bold text-[#1A3E5C] mb-2">
-          {language === 'es' ? '¿Quién tendrá acceso a esta lista?' : 'Who will have access to this list?'}
+        <h1 className="text-2xl font-bold text-[#1A3E5C] mb-2">
+          {language === 'es' ? '¡ASEGURA TUS REGALOS PERFECTOS!' : 'SECURE YOUR PERFECT GIFTS!'}
         </h1>
         <p className="text-gray-500 text-sm mb-6">
-          {language === 'es' ? 'Privacidad + Compartir' : 'Privacy + Sharing'}
+          {language === 'es' ? 'Elige cómo compartir tu lista' : 'Choose how to share your list'}
         </p>
 
         <div className="space-y-3 mb-6">
