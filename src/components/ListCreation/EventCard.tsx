@@ -1,9 +1,17 @@
 import { useState, useRef } from 'react';
 import { EventType } from '@/data/eventTypes';
 import { GlitterEffect } from './GlitterEffect';
-import { Check, Lightbulb } from 'lucide-react';
+import { Check, Lightbulb, Cake, TreePine, Heart, Baby, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import './animations.css';
+
+const iconMap: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
+  Cake,
+  TreePine,
+  Heart,
+  Baby,
+  Sparkles,
+};
 
 interface EventCardProps {
   event: EventType;
@@ -38,6 +46,8 @@ export function EventCard({ event, isSelected, onClick, language }: EventCardPro
   const microCopy = language === 'es' ? event.microCopy : event.microCopyEn;
   const gamification = language === 'es' ? event.gamification : event.gamificationEn;
 
+  const IconComponent = iconMap[event.icon] || Sparkles;
+
   return (
     <>
       <button
@@ -48,19 +58,33 @@ export function EventCard({ event, isSelected, onClick, language }: EventCardPro
           "hover:shadow-lg hover:-translate-y-0.5",
           isPulsing && "card-pulse",
           isSelected
-            ? "border-[#22C55E] shadow-md"
+            ? "shadow-lg"
             : "border-gray-100 bg-white hover:border-gray-200"
         )}
         style={{
           backgroundColor: isSelected ? event.secondaryColor : '#fcfcf9',
+          borderColor: isSelected ? event.primaryColor : undefined,
+          boxShadow: isSelected ? `0 8px 25px -5px ${event.primaryColor}40, 0 4px 10px -5px ${event.primaryColor}30` : undefined,
         }}
       >
         <div className="flex gap-4">
           <div
-            className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md"
-            style={{ backgroundColor: 'white' }}
+            className={cn(
+              "w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-300",
+              isSelected ? "shadow-lg scale-105" : "shadow-md"
+            )}
+            style={{ 
+              backgroundColor: event.iconBgColor,
+              boxShadow: isSelected ? `0 8px 20px -4px ${event.iconColor}50` : undefined
+            }}
           >
-            <span className="text-3xl">{event.emoji}</span>
+            <IconComponent 
+              className={cn(
+                "w-8 h-8 transition-transform duration-300",
+                isSelected && "scale-110"
+              )}
+              style={{ color: event.iconColor }}
+            />
           </div>
 
           <div className="flex-1 min-w-0">
@@ -70,9 +94,13 @@ export function EventCard({ event, isSelected, onClick, language }: EventCardPro
                 className={cn(
                   "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
                   isSelected
-                    ? "border-[#22C55E] bg-[#22C55E]"
+                    ? "border-transparent"
                     : "border-gray-300 bg-white"
                 )}
+                style={{
+                  backgroundColor: isSelected ? event.primaryColor : undefined,
+                  borderColor: isSelected ? event.primaryColor : undefined,
+                }}
               >
                 {isSelected && (
                   <Check className="w-4 h-4 text-white checkmark-pop" />
@@ -84,7 +112,10 @@ export function EventCard({ event, isSelected, onClick, language }: EventCardPro
               {microCopy}
             </p>
 
-            <div className="flex items-center gap-1.5 text-sm font-semibold text-[#22C55E]">
+            <div 
+              className="flex items-center gap-1.5 text-sm font-semibold"
+              style={{ color: event.primaryColor }}
+            >
               <Lightbulb className="w-4 h-4" />
               <span>{gamification}</span>
             </div>
@@ -93,9 +124,9 @@ export function EventCard({ event, isSelected, onClick, language }: EventCardPro
 
         {isSelected && (
           <div
-            className="absolute inset-0 pointer-events-none opacity-10"
+            className="absolute inset-0 pointer-events-none opacity-15"
             style={{
-              background: `radial-gradient(circle at 30% 50%, ${event.primaryColor} 0%, transparent 70%)`,
+              background: `radial-gradient(circle at 20% 40%, ${event.primaryColor} 0%, transparent 60%)`,
             }}
           />
         )}
@@ -105,7 +136,7 @@ export function EventCard({ event, isSelected, onClick, language }: EventCardPro
         trigger={showGlitter}
         originX={glitterOrigin.x}
         originY={glitterOrigin.y}
-        color={event.accentColor}
+        color={event.primaryColor}
         onComplete={() => setShowGlitter(false)}
       />
     </>

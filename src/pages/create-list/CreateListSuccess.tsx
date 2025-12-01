@@ -4,9 +4,10 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
-import { CheckCircle, Gift, Share2, ArrowLeft, Lightbulb, Loader2 } from "lucide-react";
+import { CheckCircle, Gift, Share2, ArrowLeft, Lightbulb, Loader2, PartyPopper, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import Confetti from 'react-confetti';
 
 interface ListData {
   name: string;
@@ -35,6 +36,8 @@ export default function CreateListSuccess() {
   const [listId, setListId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(true);
   const [showContent, setShowContent] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
 
   useEffect(() => {
     const createList = async () => {
@@ -73,7 +76,9 @@ export default function CreateListSuccess() {
         
         setTimeout(() => {
           setIsCreating(false);
+          setShowConfetti(true);
           setTimeout(() => setShowContent(true), 100);
+          setTimeout(() => setShowConfetti(false), 4000);
         }, 800);
 
       } catch (error) {
@@ -134,7 +139,18 @@ export default function CreateListSuccess() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-8">
+    <div className="min-h-screen bg-gray-50 pb-8 relative overflow-hidden">
+      {showConfetti && (
+        <Confetti
+          width={windowSize.width}
+          height={windowSize.height}
+          recycle={false}
+          numberOfPieces={200}
+          gravity={0.3}
+          colors={['#FF9900', '#1ABC9C', '#EC4899', '#3B82F6', '#22C55E', '#FFB800']}
+        />
+      )}
+      
       <div className="max-w-lg mx-auto px-4 py-6">
         <div className="mb-6">
           <p className="text-sm text-gray-500 mb-2">
@@ -147,12 +163,16 @@ export default function CreateListSuccess() {
           "text-center mb-6 transition-all duration-500",
           showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         )}>
-          <div className="w-16 h-16 bg-[#1ABC9C]/20 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
-            <CheckCircle className="w-8 h-8 text-[#1ABC9C]" />
+          <div className="w-20 h-20 bg-gradient-to-br from-[#FF9900] to-[#FFB800] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg animate-bounce">
+            <PartyPopper className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-xl font-bold text-[#1A3E5C]">
-            {language === 'es' ? '¡Tu lista ha sido creada!' : 'Your list has been created!'}
+          <h1 className="text-2xl font-bold text-[#1A3E5C] mb-2">
+            {language === 'es' ? '¡LISTA CREADA!' : 'LIST CREATED!'}
           </h1>
+          <p className="text-[#FF9900] font-semibold flex items-center justify-center gap-2">
+            <TrendingUp className="w-5 h-5" />
+            {language === 'es' ? '¡El ahorro comienza ahora!' : 'The savings start now!'}
+          </p>
         </div>
 
         {listData && (

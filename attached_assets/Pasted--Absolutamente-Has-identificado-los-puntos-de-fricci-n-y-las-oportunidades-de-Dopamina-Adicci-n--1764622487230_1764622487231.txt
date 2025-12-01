@@ -1,0 +1,53 @@
+¡Absolutamente! Has identificado los puntos de fricción y las oportunidades de **Dopamina/Adicción** para llevar la experiencia a un **nivel élite (Amazon/Hormozi)**.
+
+El problema es claro: la implementación actual del Paso 1 (que se ve en las imágenes `image_fc3a9a.png`, `image_fc3679.png`, `image_fc3d9e.png`) todavía **fuerza la escritura** y la **retroalimentación visual** no es suficientemente impactante.
+
+---
+
+## 📢 Instrucciones Definitivas al Equipo de Desarrollo
+
+**Asunto: OPTIMIZACIÓN DE FLUJO Y ADICCIÓN (Dopamina/UX/Fixes)**
+
+Equipo, estamos corrigiendo los errores de fricción y aumentando el impacto emocional en el *funnel* de creación de listas.
+
+### 1. 🎯 CORRECCIÓN CRÍTICA UX: Cero Fricción en el Paso 1
+
+El usuario no debe ser obligado a escribir cuando hay una opción de un solo clic.
+
+* **ACCIÓN PRINCIPAL (Frontend):** Al seleccionar cualquier *Card* de evento (ej. Navidad), el campo **"Nombre de la Lista" debe auto-rellenarse inmediatamente** (Ej: "Lista de Cumpleaños").
+* **VALIDACIÓN:** El botón **"Siguiente: ¿Quién la Usará? →"** debe **ACTIVARSE inmediatamente** tras el auto-relleno. La validación pasa automáticamente con la selección de la Card.
+* **CÓDIGO AFECTADO:** Modificar la lógica de `isCompleted` en `ListCreationStep1.jsx` y la función `handleCardClick` para garantizar que el `listName` se setee y el botón se active con un solo clic en la Card.
+
+---
+
+### 2. 🎨 NEURO-DISEÑO: Imagen Real vs. Emojis Tipo Cómic
+
+Tu percepción es correcta. Los emojis actuales son funcionales, pero no generan la credibilidad y el impacto de **"Amazon Shopping"**.
+
+* **ACCIÓN:** **Reemplazar los Emojis 3D** (ej. 🎂, 🎄) por **Imágenes de Alta Calidad o Iconografía Profesional con Efecto 3D/Sombra**.
+* **REQUISITO DE DISEÑO:** Las imágenes deben ser *custom* para la aplicación (no *stock photos* genéricas) y deben evocar **lujo y profesionalismo**.
+    * **Ejemplo para Cumpleaños:** Una foto de un *cupcake* gourmet o una caja de regalo con un lazo elegante, no el icono de pastel animado.
+* **PALETA DE COLORES (Selección):** La paleta de colores actual (fondo verde claro y borde de logro, como se ve en `image_fc3679.png`) es funcional, pero necesita más *pop*.
+    * **MEJORA:** Al seleccionar una Card, aplicar un **efecto de *deep shadow* (sombra de profundidad)** y utilizar el color **Acento de la Card** (ej. dorado/naranja vibrante para Cumpleaños) para el borde y el *check*.
+
+---
+
+### 3. 💥 DOPAMINA POST-ÉXITO (Pantalla de Finalización)
+
+La recompensa final debe ser explosiva. La pantalla de éxito (Paso 3) necesita un **pico emocional**.
+
+* **ACCIÓN:** Añadir animación de celebración a la pantalla final (`ListCreationSuccess.jsx`).
+* **REQUISITO DE ANIMACIÓN:** Implementar un **efecto de confeti (papelillo) vibrante** que se dispare al cargar la pantalla de éxito. Esto debe ser ligero para no ralentizar la aplicación, pero visualmente gratificante.
+* **MENSAJE DE REFUERZO:** El titular debe ser más emotivo: **"¡LISTA CREADA! ¡EL AHORRO COMIENZA AHORA!"** (Vinculando la emoción con el valor central).
+
+---
+
+### 4. 🛑 ESTABILIDAD TÉCNICA: Secuencia de 3 Pasos
+
+El error que reportas de **"Error al crear la lista" y regresando al Paso 1** después del Paso 2 indica un fallo en la persistencia del `state` o un error en la llamada `POST`.
+
+* **ACCIÓN CRÍTICA (Backend/Frontend):**
+    1.  **Backend:** Revisar el *endpoint* `POST /api/lists/create` y asegurar que todos los campos *non-nullable* del Paso 1 y Paso 2 (`name`, `event_type`, `audience`) se están recibiendo y validando correctamente.
+    2.  **Frontend:** Asegurar que el *Context/State Hook* (`useListCreation.js`) mantiene los datos de los Pasos 1 y 2 antes de la llamada final al *endpoint*. El error podría ser que se está perdiendo el `name` o el `event_type` antes de la llamada.
+
+**Prioridad:** Corregir los errores de flujo y de *backend* debe ser la máxima prioridad, seguido inmediatamente por la optimización del Neuro-Diseño.
