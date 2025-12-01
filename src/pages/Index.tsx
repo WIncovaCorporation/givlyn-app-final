@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
+import { CheckCircle, DollarSign, Shield, Lock, Search, Gift, Globe } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -45,8 +46,8 @@ const Index = () => {
       heroLine2: 'Garantía de Tienda Oficial.',
       heroSub: 'Crea tu lista en 3 min. Tus amigos compran en Amazon, Walmart, etc.',
       heroStrong: 'Nosotros solo te ayudamos a ahorrar.',
-      ctaPrimary: '🎁 CREAR LISTA GRATIS',
-      ctaSecondary: '🔍 Buscar Regalo Inteligente',
+      ctaPrimary: 'CREAR LISTA GRATIS',
+      ctaSecondary: 'Buscar Regalo Inteligente',
       microcopy: 'Sin tarjeta de crédito. 100% Seguro.',
       val1Title: 'Compra Directa',
       val1Sub: 'Amazon, Walmart, Target',
@@ -65,8 +66,8 @@ const Index = () => {
       heroLine2: 'Official Store Guarantee.',
       heroSub: 'Create your list in 3 min. Friends buy on Amazon, Walmart, etc.',
       heroStrong: 'We just help you save.',
-      ctaPrimary: '🎁 CREATE FREE LIST',
-      ctaSecondary: '🔍 Smart Gift Search',
+      ctaPrimary: 'CREATE FREE LIST',
+      ctaSecondary: 'Smart Gift Search',
       microcopy: 'No credit card. 100% Secure.',
       val1Title: 'Direct Purchase',
       val1Sub: 'Amazon, Walmart, Target',
@@ -94,6 +95,13 @@ const Index = () => {
     bgLight: '#F7F9FB',
     border: '#E5E7EB',
   };
+
+  const valueItems = [
+    { Icon: CheckCircle, title: t.val1Title, sub: t.val1Sub, color: colors.accentGreen },
+    { Icon: DollarSign, title: t.val2Title, sub: t.val2Sub, color: colors.accentGreen },
+    { Icon: Shield, title: t.val3Title, sub: t.val3Sub, color: colors.primaryBlue },
+    { Icon: Lock, title: t.val4Title, sub: t.val4Sub, color: colors.primaryBlue },
+  ];
 
   return (
     <div style={{
@@ -123,14 +131,34 @@ const Index = () => {
           alignItems: 'center',
           height: '100%',
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* LOGO + BRAND NAME */}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '10px',
+          }}>
             <img 
-              src="/logo-givlyn.png" 
+              src="/logo-icon-only.png" 
               alt="Givlyn"
               style={{ height: '40px', width: 'auto' }}
             />
+            <span style={{
+              fontSize: '24px',
+              fontWeight: 700,
+              color: colors.primaryBlue,
+              letterSpacing: '-0.5px',
+            }}>
+              Givlyn
+            </span>
           </div>
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+
+          {/* NAV */}
+          <nav style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '16px',
+            height: '100%',
+          }}>
             {!isMobile && !user && (
               <a
                 href="/auth?tab=login"
@@ -138,6 +166,9 @@ const Index = () => {
                   color: colors.textGrey,
                   textDecoration: 'none',
                   fontSize: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  height: '100%',
                 }}
               >
                 {t.login}
@@ -149,11 +180,13 @@ const Index = () => {
                 style={{
                   background: colors.primaryBlue,
                   color: 'white',
-                  padding: '8px 16px',
+                  padding: '10px 18px',
                   borderRadius: '6px',
                   fontSize: '14px',
                   fontWeight: 600,
                   textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
                 }}
               >
                 {t.register}
@@ -166,11 +199,13 @@ const Index = () => {
                   background: colors.actionOrange,
                   color: 'white',
                   border: 'none',
-                  padding: '8px 16px',
+                  padding: '10px 18px',
                   borderRadius: '6px',
                   fontSize: '14px',
                   fontWeight: 600,
                   cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
                 }}
               >
                 Dashboard
@@ -187,9 +222,11 @@ const Index = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '4px',
+                padding: '8px',
               }}
             >
-              🌐 {language.toUpperCase()} ▾
+              <Globe size={16} />
+              {language.toUpperCase()} ▾
             </button>
           </nav>
         </div>
@@ -199,9 +236,9 @@ const Index = () => {
       <section style={{
         flex: 1,
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
-        padding: isMobile ? '24px 16px' : '40px 20px',
+        padding: isMobile ? '20px 16px' : '24px 20px',
         background: colors.bgLight,
       }}>
         <div style={{
@@ -211,7 +248,7 @@ const Index = () => {
           <h1 style={{
             fontSize: isMobile ? '24px' : '32px',
             lineHeight: 1.3,
-            marginBottom: '16px',
+            marginBottom: '12px',
             color: colors.primaryBlue,
             fontWeight: 700,
           }}>
@@ -219,10 +256,57 @@ const Index = () => {
             <span style={{ color: colors.primaryBlue }}>{t.heroLine2}</span>
           </h1>
 
+          {/* STORE LOGOS */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '32px',
+            marginBottom: '16px',
+          }}>
+            <span style={{ 
+              fontFamily: "'Amazon Ember', Arial, sans-serif",
+              fontSize: '18px', 
+              fontWeight: 700, 
+              color: '#888',
+              opacity: 0.7,
+              letterSpacing: '-0.5px',
+            }}>
+              amazon
+            </span>
+            <span style={{ 
+              fontSize: '16px', 
+              fontWeight: 700, 
+              color: '#888',
+              opacity: 0.7,
+            }}>
+              Walmart
+            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', opacity: 0.7 }}>
+              <div style={{
+                width: '18px',
+                height: '18px',
+                borderRadius: '50%',
+                border: '3px solid #888',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <div style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background: '#888',
+                }}/>
+              </div>
+              <span style={{ fontSize: '16px', fontWeight: 700, color: '#888' }}>Target</span>
+            </div>
+          </div>
+
           <p style={{
             fontSize: isMobile ? '15px' : '16px',
             color: colors.textGrey,
-            marginBottom: '24px',
+            marginBottom: '20px',
             lineHeight: 1.5,
           }}>
             {t.heroSub}<br />
@@ -235,7 +319,7 @@ const Index = () => {
             flexDirection: isMobile ? 'column' : 'row',
             justifyContent: 'center',
             gap: '12px',
-            marginBottom: '12px',
+            marginBottom: '10px',
           }}>
             <button
               onClick={handleCreateList}
@@ -250,6 +334,10 @@ const Index = () => {
                 cursor: 'pointer',
                 transition: 'all 200ms ease',
                 width: isMobile ? '100%' : 'auto',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
               }}
               onMouseOver={(e) => {
                 e.currentTarget.style.background = colors.actionOrangeHover;
@@ -260,6 +348,7 @@ const Index = () => {
                 e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
+              <Gift size={18} />
               {t.ctaPrimary}
             </button>
             <button
@@ -271,10 +360,14 @@ const Index = () => {
                 borderRadius: '8px',
                 border: `2px solid ${colors.primaryBlue}`,
                 fontSize: '15px',
-                fontWeight: 600,
+                fontWeight: 700,
                 cursor: 'pointer',
                 transition: 'all 200ms ease',
                 width: isMobile ? '100%' : 'auto',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
               }}
               onMouseOver={(e) => {
                 e.currentTarget.style.background = '#EBF4FF';
@@ -283,6 +376,7 @@ const Index = () => {
                 e.currentTarget.style.background = colors.bgWhite;
               }}
             >
+              <Search size={18} />
               {t.ctaSecondary}
             </button>
           </div>
@@ -290,7 +384,7 @@ const Index = () => {
           <p style={{
             fontSize: '13px',
             color: colors.textGrey,
-            marginBottom: '32px',
+            marginBottom: '24px',
           }}>
             {t.microcopy}
           </p>
@@ -301,24 +395,23 @@ const Index = () => {
             gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)',
             gap: isMobile ? '12px' : '16px',
             background: colors.bgWhite,
-            border: `1px solid ${colors.border}`,
+            border: '1px solid #e0e0e0',
             borderRadius: '12px',
             padding: isMobile ? '16px' : '20px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
           }}>
-            {[
-              { icon: '✅', title: t.val1Title, sub: t.val1Sub },
-              { icon: '💰', title: t.val2Title, sub: t.val2Sub },
-              { icon: '🛡️', title: t.val3Title, sub: t.val3Sub },
-              { icon: '🔒', title: t.val4Title, sub: t.val4Sub },
-            ].map((item, idx) => (
+            {valueItems.map((item, idx) => (
               <div key={idx} style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '10px',
                 textAlign: 'left',
               }}>
-                <span style={{ fontSize: '24px' }}>{item.icon}</span>
+                <item.Icon 
+                  size={28} 
+                  color={item.color}
+                  strokeWidth={2}
+                />
                 <div>
                   <strong style={{
                     display: 'block',
@@ -345,7 +438,7 @@ const Index = () => {
       <footer style={{
         background: colors.primaryBlue,
         color: 'white',
-        padding: '24px 20px',
+        padding: '20px',
         textAlign: 'center',
       }}>
         <div style={{
@@ -356,7 +449,7 @@ const Index = () => {
             display: 'flex',
             justifyContent: 'center',
             gap: '24px',
-            marginBottom: '12px',
+            marginBottom: '10px',
             flexWrap: 'wrap',
           }}>
             <a href="/privacy" style={{ color: 'white', textDecoration: 'none', fontSize: '13px' }}>

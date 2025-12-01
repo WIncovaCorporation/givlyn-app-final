@@ -1,0 +1,119 @@
+Tarea: Reemplazar todo el bloque .value-bar actual (el que tiene las 4 cajas blancas con emojis) por el siguiente código HTML y su CSS correspondiente.
+
+Objetivo: Usar iconos profesionales monocolor (en el verde de la marca) y dar una estructura de tabla más limpia y sólida, estilo Amazon Prime.
+
+1. Nuevo HTML (Reemplazar el bloque .value-bar)
+HTML
+
+<div class="value-bar-pro">
+    
+    <div class="value-item-pro">
+        <div class="icon-wrapper-pro">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1ABC9C" width="28px" height="28px"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        </div>
+        <div class="text-wrapper-pro">
+            <strong>Compra Directa</strong>
+            <span class="value-subtext-pro">Amazon, Walmart, Target</span>
+            </div>
+    </div>
+
+    <div class="value-item-pro">
+        <div class="icon-wrapper-pro">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1ABC9C" width="28px" height="28px"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-2.03.6-3.54 2.21-3.54 4.04 0 2.58 2.11 3.91 4.54 4.49 2.54.61 3.2 1.33 3.2 2.24 0 1.19-1.16 2.05-2.95 2.05-2.11 0-2.9-.98-2.99-2.23H8.19c.11 2.11 1.78 3.65 3.81 4.15V21h3v-2.15c2.3-.64 3.8-2.29 3.8-4.32 0-2.65-1.97-4.09-4.8-4.63z"/></svg>
+        </div>
+        <div class="text-wrapper-pro">
+            <strong>Mejor Precio</strong>
+            <span>Comparamos por ti</span>
+        </div>
+    </div>
+
+    <div class="value-item-pro">
+        <div class="icon-wrapper-pro">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1ABC9C" width="28px" height="28px"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+        </div>
+        <div class="text-wrapper-pro">
+            <strong>Protección Total</strong>
+            <span>Garantía de la tienda</span>
+        </div>
+    </div>
+
+    <div class="value-item-pro">
+        <div class="icon-wrapper-pro">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1ABC9C" width="28px" height="28px"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+        </div>
+        <div class="text-wrapper-pro">
+            <strong>Datos Seguros</strong>
+            <span>SSL | GDPR | CCPA</span>
+        </div>
+    </div>
+</div>
+2. Nuevo CSS (Estilo Profesional y Solido)
+CSS
+
+/* BARRA PROFESIONAL (Sólida y Limpia) */
+.value-bar-pro {
+    display: flex;
+    justify-content: space-between; /* Distribuye los 4 ítems */
+    background: #ffffff; /* Fondo blanco limpio */
+    padding: 25px 30px; /* Más espacio interno para que respire */
+    border-radius: 12px; /* Bordes más suaves, estilo App moderna */
+    border: 1px solid #e5e7eb; /* Borde sutil gris claro */
+    /* Sombra suave para dar profundidad (Estilo Google Material) */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    max-width: 950px; /* Asegura que no se estire demasiado */
+    margin: 30px auto 0; /* Centrado y margen superior */
+    flex-wrap: wrap; /* Para que se adapte si falta espacio */
+}
+
+.value-item-pro {
+    display: flex;
+    align-items: flex-start; /* Alinea icono y texto arriba */
+    gap: 15px;
+    flex: 1 1 200px; /* Flexible, mínimo 200px de ancho */
+    padding: 5px; /* Pequeño padding interno */
+}
+
+/* Contenedor del Icono */
+.icon-wrapper-pro {
+    /* Opcional: Un fondo circular suave para el icono */
+    /* background: #E0F2F1; */ 
+    /* padding: 8px; */
+    /* border-radius: 50%; */
+    display: flex;
+    align-items: center;
+}
+
+/* Textos */
+.text-wrapper-pro strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1A3E5C; /* Azul corporativo para el título */
+    margin-bottom: 4px;
+}
+
+.text-wrapper-pro span {
+    font-size: 13px;
+    color: #666666; /* Gris para el subtítulo */
+    line-height: 1.4;
+    display: block;
+}
+
+/* RESPONSIVE (Móvil) */
+@media (max-width: 768px) {
+    .value-bar-pro {
+        flex-direction: column; /* Apilar verticalmente */
+        gap: 20px;
+        padding: 20px;
+        margin-top: 25px;
+    }
+
+    .value-item-pro {
+        border-bottom: 1px solid #eee; /* Línea separadora en móvil */
+        padding-bottom: 15px;
+    }
+
+    .value-item-pro:last-child {
+        border-bottom: none; /* Quitar línea del último */
+    }
+}
