@@ -238,11 +238,14 @@ const Auth = () => {
             <p className="text-xs text-white/70 mb-3">
               {language === 'es' ? 'Compara precios en:' : 'Compare prices at:'}
             </p>
-            <div className="flex items-center gap-4 flex-wrap opacity-80">
-              <span className="text-sm font-semibold">Amazon</span>
-              <span className="text-sm font-semibold">Walmart</span>
-              <span className="text-sm font-semibold">Target</span>
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="text-sm font-semibold">Amazon,</span>
+              <span className="text-sm font-semibold">Walmart,</span>
+              <span className="text-sm font-semibold">Target,</span>
               <span className="text-sm font-semibold">eBay</span>
+              <span className="text-sm italic text-white/70">
+                {language === 'es' ? 'y muchas tiendas más...' : 'and many more stores...'}
+              </span>
             </div>
           </div>
         </div>
@@ -316,7 +319,7 @@ const Auth = () => {
               {/* GOOGLE BUTTON - PRIORITY (Top Position) */}
               <Button
                 type="button"
-                className="w-full h-14 font-semibold text-base shadow-lg hover:shadow-xl transition-all"
+                className="w-full h-14 font-semibold text-base shadow-lg hover:shadow-xl transition-all hover:brightness-90"
                 style={{ 
                   backgroundColor: '#1A3E5C',
                   color: 'white',
@@ -349,7 +352,7 @@ const Auth = () => {
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full h-12 border-gray-300 hover:bg-gray-50 font-medium"
+                  className="w-full h-12 border-gray-300 font-medium transition-all hover:bg-[#f7f7f7] hover:border-[#e5e5e5]"
                   onClick={() => setShowEmailForm(true)}
                 >
                   <Mail className="w-4 h-4 mr-2" />
