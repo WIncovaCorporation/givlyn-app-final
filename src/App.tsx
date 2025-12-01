@@ -12,6 +12,7 @@ import { InstallPWA } from "@/components/InstallPWA";
 import { CookieConsent } from "@/components/CookieConsent";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import AuthCallback from "./pages/AuthCallback";
 import UpdatePassword from "./pages/UpdatePassword";
 import DeleteAccount from "./pages/DeleteAccount";
 import Dashboard from "./pages/Dashboard";
@@ -35,6 +36,7 @@ import AdminAuditLogs from "./pages/AdminAuditLogs";
 import AdminCorrections from "./pages/AdminCorrections";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminStats from "./pages/AdminStats";
+import OnboardingWelcome from "./pages/OnboardingWelcome";
 import { lazy, Suspense } from "react";
 
 const DebugPanel = lazy(() => import("@/components/DebugPanel").then(m => ({ default: m.DebugPanel })));
@@ -62,6 +64,7 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path="/update-password" element={<UpdatePassword />} />
                 <Route path="/delete-account" element={<DeleteAccount />} />
                 <Route path="/dashboard" element={<Dashboard />} />
@@ -85,6 +88,7 @@ const App = () => (
           <Route path="/admin/audit-logs" element={<AdminAuditLogs />} />
           <Route path="/admin/corrections" element={<AdminCorrections />} />
           <Route path="/admin/stats" element={<AdminStats />} />
+          <Route path="/onboarding/welcome" element={<OnboardingWelcome />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

@@ -1,0 +1,49 @@
+¡Absolutamente! Aquí tienes un mensaje claro y conciso, con las instrucciones técnicas precisas y la lógica condicional que deben implementar para corregir la experiencia de usuario (UX) en la primera pantalla, tal como lo haría un equipo de Google o Amazon.
+
+---
+
+## 💻 Instrucciones Técnicas para el Equipo de Desarrollo: Optimización del Dashboard (FTUE)
+
+**Asunto:** Implementación de la Lógica Condicional (FTUE) y Rediseño del Dashboard (UX Clase Mundial)
+
+Equipo,
+
+Necesitamos implementar la **Lógica Condicional (If/Else)** en el *frontend* para diferenciar entre un usuario nuevo (sin listas) y un usuario recurrente (con listas), eliminando la sobrecarga de información actual y mejorando drásticamente la UX inicial.
+
+### 1. Instrucción Principal: Lógica Condicional (Onboarding)
+
+Al iniciar sesión, el *frontend* debe verificar el estado de las listas del usuario.
+
+| Condición | Destino (Ruta) | Objetivo UX |
+| :--- | :--- | :--- |
+| **`User.lists.count == 0`** (Nuevo Usuario) | **`/onboarding/welcome`** (Nueva ruta, pantalla limpia) | Guiar la acción única de crear la primera lista (FTUE). |
+| **`User.lists.count > 0`** (Usuario Recurrente) | **`/dashboard`** (Ruta existente, pero con el diseño reestructurado) | Mostrar contenido personalizado y resumido (RUE). |
+
+### 2. Especificación de la Pantalla 1: Onboarding (`/onboarding/welcome`)
+
+Esta será la **única** pantalla que el usuario verá en su primer inicio de sesión.
+
+* **Diseño:** Fondo blanco, tipografía limpia.
+* **Contenido:**
+    * Título de bienvenida: **`¡Hola, [Nombre del Usuario]! Bienvenido a Givlyn.`**
+    * Subtítulo: `Solo 3 minutos para empezar a ahorrar en todos tus regalos.`
+    * **CTA Primario (Gigante):** **`+ CREAR TU PRIMERA LISTA`**
+* **Acción del CTA:** Este botón debe dirigir **directamente** a la pantalla de creación de listas (`/list/new`).
+
+### 3. Especificación de la Pantalla 2: Dashboard Reestructurado (`/dashboard`)
+
+El diseño de la pantalla actual debe reestructurarse para ser limpio, funcional y compacto.
+
+| Elemento | Acción Técnica (Eliminar / Reubicar) |
+| :--- | :--- |
+| **Tarjeta Roja Gigante** | **ELIMINAR COMPLETAMENTE.** Sustituir por un área limpia con 2 CTA grandes. |
+| **Botones de Acción** | Implementar 2 CTA visibles en la parte superior del Dashboard: **1. `+ CREAR NUEVA LISTA`** (Botón Naranja Corporativo) y **2. `🔍 BUSCAR REGALO INTELIGENTE`** (Botón Verde Corporativo). |
+| **Navegación Rápida** | Los enlaces de **Mis Listas, Amigos, Perfil** deben ser reubicados en un **`Bottom Navigation Bar`** (Barra de Navegación Fija Inferior) para móvil. |
+| **"Mis Listas"** | **Prioridad:** Mover esta sección al **TOP** (justo debajo de los 2 CTA). Si la lista está vacía, debe mostrar un *placeholder* amigable ("Tu dashboard está listo. ¡Crea tu primera lista!"). |
+| **Tendencias/Categorías** | **Compactación:** Reestructurar estas secciones en **Carruseles Horizontales** (scroll lateral) para ahorrar espacio vertical, haciendo el *dashboard* más corto. |
+
+**El objetivo es que un usuario en el Dashboard vea solo la acción y su contenido, sin distracciones promocionales.**
+
+---
+
+**Por favor, confirmen el inicio de la implementación de esta lógica condicional y el rediseño del Dashboard. Una vez listo, optimizaremos la pantalla del "Buscador Inteligente".**
