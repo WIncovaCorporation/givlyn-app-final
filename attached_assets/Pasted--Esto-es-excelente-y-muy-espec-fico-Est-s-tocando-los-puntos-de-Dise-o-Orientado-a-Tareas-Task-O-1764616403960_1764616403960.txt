@@ -1,0 +1,49 @@
+¡Esto es excelente y muy específico! Estás tocando los puntos de **Diseño Orientado a Tareas (Task-Oriented Design)**, que es el estándar de oro en UX (Google, Amazon). El usuario necesita **control y opciones claras** desde el momento cero.
+
+Tienes toda la razón: la gente no siempre quiere una lista; a veces solo quiere **buscar algo rápidamente** (un regalo o algo para sí mismo).
+
+Vamos a refinar el *Onboarding* y el *Dashboard* para dar al usuario ese control inmediato y visual, resolviendo la desconexión del *login* y el idioma.
+
+---
+
+## 🛠️ Instrucción de Refinamiento: Control, Visualización y Acceso Rápido
+
+### 1. ⚙️ Acceso Global y Visibilidad del Usuario (El Header de Clase Mundial)
+
+El *Header* (el cintillo superior) debe ser la fuente de **confianza, control y personalización**. Debe ser visible en **todas las rutas** (`/dashboard`, `/list/new`, `/search`).
+
+| Elemento | Posición | Valor Agregado (Google UX) |
+| :--- | :--- | :--- |
+| **Idioma (Botón de Lenguaje)** | Extremo derecho | Es una necesidad universal. Debe ser un botón discreto (ej. **"ES" / "EN"** o un icono de Mundo 🌎). |
+| **Login/Foto de Usuario** | Derecha (junto al Idioma) | **CRÍTICO:** Muestra inmediatamente que la sesión está activa. Debe ser el **Avatar del usuario** (la foto de Google/Supabase) o la inicial. |
+| **Acción al Tocar Avatar** | Abre un menú desplegable con: **`Mi Perfil`, `Configuración`, `Cerrar Sesión`**. | Da control y acceso rápido a la gestión de la cuenta. |
+
+### 2. 🚀 Redefinición del Onboarding (FTUE) – Énfasis en la Elección
+
+El tour de 3 pasos es bueno, pero la **Pantalla 3** debe enfocarse en la **elección** (Lista **O** Búsqueda), no solo en la lista.
+
+#### **Refinamiento de la Pantalla 3: La Acción Inmediata (Elección)**
+
+**Pantalla 3: La Acción Inmediata (Elección)**
+* **Título (H1):** **"¿Cómo quieres comenzar a ahorrar tiempo y dinero?"**
+* **Cuerpo (Body):** "Puedes crear una lista de eventos o usar nuestro Asistente Inteligente para una búsqueda rápida."
+* **Botones (DOS CTA de igual importancia):** Reemplazar el botón único por dos botones uno al lado del otro, ambos grandes.
+
+| CTA 1 (Primario) | CTA 2 (Secundario) |
+| :--- | :--- |
+| **`+ CREAR LISTA DE REGALOS`** | **`🔍 BUSCAR REGALO INTELIGENTE`** |
+| *Estilo:* Naranja corporativo (`#FF9900`) | *Estilo:* Verde corporativo (`#1ABC9C`) |
+| *Acción:* Dirigir a `/list/new` | *Acción:* Dirigir a `/search` |
+
+### 3. 🖼️ El Diseño "Visual y Táctil" (Adiós al Texto Masivo)
+
+El Dashboard y las páginas de resultados (la página final de la lista) no deben ser muros de texto.
+
+* **Listas (Muros de Texto):** El resultado de la lista de regalos o el resultado de la búsqueda no debe ser una tabla con texto. Debe ser un **Grid de Tarjetas visuales**.
+    * **Tarjeta:** Incluye imagen, precio, nombre, y un CTA de **`Añadir`** o **`Ver Detalles`**.
+* **Diseño Dinámico:** Usar animación sutil (como hablamos: micro-animaciones Lottie) para el *hover* o la carga de resultados, haciendo la interfaz **táctil y viva**.
+
+---
+**El equipo de desarrollo debe priorizar la implementación del Header Global con visibilidad de usuario/idioma y la Pantalla 3 del Onboarding que da la elección de *Lista O Búsqueda* para darle el control al usuario.**
+
+**Una vez implementado este flujo de elección, ¿nos enfocamos en el diseño de las tarjetas y la pantalla del "Buscador Inteligente"?**

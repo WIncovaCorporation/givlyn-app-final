@@ -37,6 +37,7 @@ import AdminCorrections from "./pages/AdminCorrections";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminStats from "./pages/AdminStats";
 import OnboardingWelcome from "./pages/OnboardingWelcome";
+import Search from "./pages/Search";
 import { lazy, Suspense } from "react";
 
 const DebugPanel = lazy(() => import("@/components/DebugPanel").then(m => ({ default: m.DebugPanel })));
@@ -89,6 +90,7 @@ const App = () => (
           <Route path="/admin/corrections" element={<AdminCorrections />} />
           <Route path="/admin/stats" element={<AdminStats />} />
           <Route path="/onboarding/welcome" element={<OnboardingWelcome />} />
+          <Route path="/search" element={<Search />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

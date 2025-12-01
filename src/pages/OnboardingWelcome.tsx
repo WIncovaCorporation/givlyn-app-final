@@ -64,6 +64,11 @@ const OnboardingWelcome = () => {
     navigate("/lists");
   };
 
+  const handleSmartSearch = async () => {
+    await markOnboardingComplete();
+    navigate("/search");
+  };
+
   const markOnboardingComplete = async () => {
     if (user) {
       try {
@@ -121,11 +126,11 @@ const OnboardingWelcome = () => {
     },
     {
       title: language === 'es'
-        ? 'Tu Primera Lista en 3 Minutos.'
-        : 'Your First List in 3 Minutes.',
+        ? '¿Cómo quieres comenzar a ahorrar?'
+        : 'How do you want to start saving?',
       body: language === 'es'
-        ? 'Comenzar es simple: crea una lista para tu próximo evento, añádele ideas, y la IA comenzará a trabajar para ti. ¡Comencemos!'
-        : "Getting started is simple: create a list for your next event, add ideas, and the AI will start working for you. Let's begin!",
+        ? 'Puedes crear una lista de eventos o usar nuestro Asistente Inteligente para una búsqueda rápida.'
+        : 'You can create an event list or use our Smart Assistant for a quick search.',
       icon: (
         <div className="relative w-32 h-32 mx-auto mb-8">
           <div className="absolute inset-0 bg-[#FF9900]/10 rounded-full"></div>
@@ -173,13 +178,22 @@ const OnboardingWelcome = () => {
           </p>
 
           {currentStepData.isFinal ? (
-            <Button 
-              onClick={handleCreateList}
-              className="w-full py-6 text-base font-semibold bg-[#FF9900] hover:bg-[#FF9900]/90 shadow-lg btn-hover-glow transition-all"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              {language === 'es' ? 'CREAR MI PRIMERA LISTA GRATIS' : 'CREATE MY FIRST FREE LIST'}
-            </Button>
+            <div className="space-y-3">
+              <Button 
+                onClick={handleCreateList}
+                className="w-full py-6 text-base font-semibold bg-[#FF9900] hover:bg-[#FF9900]/90 shadow-lg btn-hover-glow transition-all"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                {language === 'es' ? 'CREAR LISTA DE REGALOS' : 'CREATE GIFT LIST'}
+              </Button>
+              <Button 
+                onClick={handleSmartSearch}
+                className="w-full py-6 text-base font-semibold bg-[#1ABC9C] hover:bg-[#1ABC9C]/90 shadow-lg btn-hover-glow transition-all"
+              >
+                <Search className="w-5 h-5 mr-2" />
+                {language === 'es' ? 'BUSCAR REGALO INTELIGENTE' : 'SMART GIFT SEARCH'}
+              </Button>
+            </div>
           ) : (
             <Button 
               onClick={handleNext}
