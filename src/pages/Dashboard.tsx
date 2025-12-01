@@ -281,10 +281,11 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="hidden md:block">
-          <Footer />
-        </div>
       </main>
+
+      <div className="hidden md:block mt-auto">
+        <Footer />
+      </div>
 
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg md:hidden z-50">
         <div className="flex items-center justify-around py-2">
