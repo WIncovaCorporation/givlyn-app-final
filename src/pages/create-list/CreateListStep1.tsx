@@ -140,7 +140,7 @@ export default function CreateListStep1() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 py-8 pb-32">
+      <main className="max-w-6xl mx-auto px-4 py-8 pb-32">
         {/* Title Section */}
         <div className="text-center mb-10">
           <h1 className="text-3xl md:text-4xl font-bold text-[#1A3E5C] mb-3">
@@ -189,8 +189,8 @@ export default function CreateListStep1() {
             </span>
           </Label>
           
-          {/* GoWish-style Grid: 2 columns on all screens */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Full-width Grid: 3 columns desktop, 2 tablet, 1 mobile */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {EVENT_TYPES.map((eventType) => {
               const isSelected = selectedType === eventType.id;
               return (
@@ -198,51 +198,51 @@ export default function CreateListStep1() {
                   key={eventType.id}
                   onClick={() => handleCardClick(eventType.id)}
                   className={cn(
-                    "group relative p-6 rounded-2xl border-2 text-center transition-all duration-200",
-                    "hover:-translate-y-0.5",
+                    "group relative p-8 rounded-3xl border-2 text-center transition-all duration-200",
+                    "hover:-translate-y-1 hover:shadow-xl",
                     isSelected
-                      ? "border-[#1ABC9C] bg-[#1ABC9C]/5"
-                      : "border-gray-100 bg-white hover:border-[#1ABC9C]/40"
+                      ? "border-[#1ABC9C] bg-gradient-to-b from-[#1ABC9C]/10 to-[#1ABC9C]/5"
+                      : "border-gray-100 bg-white hover:border-[#1ABC9C]/50"
                   )}
                   style={{ 
-                    minHeight: '200px',
+                    minHeight: '260px',
                     boxShadow: isSelected 
-                      ? '0 15px 40px rgba(26, 188, 156, 0.15)' 
-                      : '0 15px 40px rgba(0, 0, 0, 0.06)'
+                      ? '0 20px 50px rgba(26, 188, 156, 0.2)' 
+                      : '0 10px 30px rgba(0, 0, 0, 0.05)'
                   }}
                 >
-                  <div className="flex flex-col items-center justify-center h-full gap-4">
-                    {/* Icon Container - 80x80px */}
+                  <div className="flex flex-col items-center justify-center h-full gap-5">
+                    {/* Icon Container - Larger */}
                     <div className={cn(
-                      "w-20 h-20 rounded-2xl flex items-center justify-center transition-all",
+                      "w-24 h-24 rounded-2xl flex items-center justify-center transition-all",
                       isSelected 
-                        ? "bg-white shadow-md" 
-                        : "bg-gray-50 group-hover:bg-white group-hover:shadow-sm"
+                        ? "bg-white shadow-lg" 
+                        : "bg-gray-50 group-hover:bg-white group-hover:shadow-md"
                     )}>
                       <img 
                         src={eventType.image} 
                         alt=""
-                        className="w-16 h-16 object-contain"
+                        className="w-20 h-20 object-contain"
                       />
                     </div>
                     
                     {/* Text Content */}
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       <h3 className={cn(
                         "text-xl font-bold leading-tight transition-colors",
                         isSelected ? "text-[#1A3E5C]" : "text-gray-800 group-hover:text-[#1A3E5C]"
                       )}>
                         {language === 'es' ? eventType.title : eventType.titleEn}
                       </h3>
-                      <p className="text-base text-gray-500 leading-relaxed">
+                      <p className="text-sm text-gray-500 leading-relaxed px-2">
                         {language === 'es' ? eventType.microCopy : eventType.microCopyEn}
                       </p>
                     </div>
                     
                     {/* Selection Indicator */}
                     {isSelected && (
-                      <div className="absolute top-4 right-4 w-7 h-7 rounded-full bg-[#1ABC9C] flex items-center justify-center">
-                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div className="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#1ABC9C] flex items-center justify-center shadow-lg">
+                        <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
