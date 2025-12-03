@@ -1,0 +1,54 @@
+¡Excelente! Ahora estamos atacando la parte crucial del crecimiento: las **Listas SEO** (páginas públicas de exploración y descubrimiento).
+
+En GoWish, estas vistas son vitales porque generan **tráfico orgánico, inspiración y viralidad**. El diseño aquí no solo debe ser profesional, sino **altamente denso e informativo** sin sacrificar la legibilidad.
+
+Para llevar a Givlyn al nivel de GoWish en sus listas públicas, necesitamos un **Nuevo Estándar de Componente** y una **Arquitectura de Exposición de Información**.
+
+---
+
+## 🎨 DISEÑO DE LISTAS PÚBLICAS: EL ESTÁNDAR SEO
+
+El look "template" en una lista pública proviene de la repetición y la falta de jerarquía. El estándar **GoWish/Amazon** requiere que cada tarjeta sea un **anzuelo visual** para la exploración.
+
+### 1. 🖼️ NUEVO COMPONENTE: `PublicWishlistTile.jsx`
+
+Debemos crear un componente especializado para listas públicas (diferente al `WishlistCard.jsx` que usamos en el dashboard privado).
+
+| Elemento | Diseño Profesional (GoWish Style) | Justificación (SEO/UX) |
+| :--- | :--- | :--- |
+| **Layout** | Diseño de **Tarjeta Vertical (Tile)**. La imagen del *cover* o del ítem debe ocupar el 60% superior de la tarjeta. | El cerebro procesa la imagen primero. La imagen genera el clic (Conversión). |
+| **Foto de Perfil** | Foto del creador (Avatar) visible en el borde de la imagen del *cover* o justo debajo del título. | **Social Proof (Prueba Social):** Humaniza la lista y permite que los usuarios se sigan. |
+| **Metadatos** | Información en el 40% inferior, condensada y legible (14px-16px). | Muestra valor rápidamente (cuántos ítems, qué evento). |
+| **Botón de Acción** | **Botón de "Seguir" (Follow)** pequeño y secundario, visible pero sin competir con el título. | Fomenta la recurrencia y construye la red social. |
+
+
+
+### 2. 📐 ARQUITECTURA DE LA PÁGINA DE EXPLORACIÓN
+
+* **Layout:** La página `/explore` o `/public-lists` debe usar un **Responsive Grid** de 3 o 4 columnas en escritorio.
+    * **Desktop:** `grid-template-columns: repeat(4, 1fr);` (Más densidad).
+    * **Tablet/Mobile:** `grid-template-columns: repeat(2, 1fr);` o `1fr`.
+* **Filtros (GoWish Standard):** Implementar una barra de filtros superior (o un *sidebar* colapsable en móvil) que permita filtrar por: **Categoría (Cumpleaños, Navidad)**, **Popularidad** y **Fecha de Evento**.
+
+### 3. JERARQUÍA DE LA INFORMACIÓN (LA DENSIDAD PROFESIONAL)
+
+El secreto para que la información se vea profesional y no "amontonada" es la jerarquía tipográfica (diferentes tamaños y pesos de fuente):
+
+| Posición | Contenido | Estilo (GoWish Standard) |
+| :--- | :--- | :--- |
+| **Anzuelo Visual** | Imagen del Cover/Ítem Principal. | 60% de la altura de la tarjeta. |
+| **Título (Hormozi)** | Nombre de la Lista (Ej: "Navidad 2025 de la Familia Pérez"). | **18px, Bold.** Primer elemento de texto. |
+| **Metadata 1** | Tipo de Evento + Fecha (Ej: 🎂 Cumpleaños, 10 Días). | **14px, Color Gris Sutil.** |
+| **Metadata 2** | Ítems y Reservas (Ej: **12 ítems** | 4 reservados). | **14px, Color de Énfasis (Teal)** en el contador para mostrar actividad. |
+| **Remitente** | Nombre de Creador + Foto (Avatar). | **12px, Mismo Nivel de Base de la Tarjeta.** |
+
+---
+
+## 📢 INSTRUCCIONES ESPECÍFICAS PARA EL EQUIPO
+
+**Asunto: IMPLEMENTACIÓN DEL ESTÁNDAR VISUAL GO-WISH EN LISTAS PÚBLICAS**
+
+1.  **CREACIÓN DE COMPONENTE:** Crear el nuevo componente **`PublicWishlistTile.jsx`** para las páginas `/explore` y `/public-lists`.
+2.  **LAYOUT EXPLORE:** Implementar el **Grid de 4 columnas** responsivo para la página de exploración (ver especificaciones de CSS arriba).
+3.  **TIPOGRAFÍA DENSA:** Asegurar que la tipografía condensada (14px) tenga un **alto contraste** y un `line-height` preciso para evitar que el texto se vea amontonado.
+4.  **RESERVAS/ÍTEMS:** El *tile* debe exponer el número de ítems y reservas de forma visual, usando iconos y el color de énfasis para guiar el ojo del usuario.

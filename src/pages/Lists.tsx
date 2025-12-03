@@ -11,7 +11,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select";
-import { Gift, Plus, Trash2, ExternalLink, Sparkles, Loader2, Search, X, ShoppingBag, Store, RefreshCw, Edit, Lightbulb, ArrowLeft, Share2, Pencil } from "lucide-react";
+import { Gift, Plus, Trash2, ExternalLink, Sparkles, Loader2, Search, X, ShoppingBag, Store, RefreshCw, Edit, Lightbulb, ArrowLeft, Share2, Pencil, ChevronRight } from "lucide-react";
+import { WishlistTile, AddWishlistTile } from "@/components/WishlistTile";
+import { UserProfileHeader } from "@/components/UserProfileHeader";
+import { InspirationSection } from "@/components/InspirationSection";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -688,340 +691,291 @@ const Lists = () => {
     }
   };
 
+  const totalWishCount = lists.reduce((acc, list) => acc + (list.items?.length || 0), 0);
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <LoadingSpinner message="Cargando tus listas..." />
       </div>
     );
   }
 
   return (
-    <div>
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
-        <button
-          onClick={() => navigate("/dashboard")}
-          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-4"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span className="text-sm">{t('common.back')}</span>
-        </button>
-
-        <div className="flex items-center gap-2 mb-6">
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            {t('lists.title')}
-            <HelpTooltip content={t('lists.helpTooltip')} />
-          </h1>
-        </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-6 max-w-6xl">
         {showUpgradePrompt && (
           <div className="mb-6">
             <UpgradePrompt
-              title="¡Alcanzaste el límite de listas!"
-              description={`Tu plan Free permite hasta ${getLimit('wishlists')} listas. Actualiza a Premium para listas ilimitadas.`}
+              title={language === 'es' ? "Alcanzaste el limite de listas" : "You've reached the list limit"}
+              description={language === 'es' 
+                ? `Tu plan Free permite hasta ${getLimit('wishlists')} listas. Actualiza a Premium para listas ilimitadas.`
+                : `Your Free plan allows up to ${getLimit('wishlists')} lists. Upgrade to Premium for unlimited lists.`
+              }
               feature="unlimited_wishlists"
               onDismiss={() => setShowUpgradePrompt(false)}
             />
           </div>
         )}
 
-        <div className="flex justify-between items-center mb-6">
-          <div className="max-w-2xl">
-            <p className="text-muted-foreground text-base font-medium">
-              💝 Tu Lista de Deseos Personal
-            </p>
-            <p className="text-sm text-muted-foreground/80 mt-2 leading-relaxed">
-              Aquí guardas <strong>lo que TÚ quieres recibir</strong> como regalo. Añade productos con todos sus detalles (color, talla, marca). 
-              Cuando estés en un grupo, la persona que te toque regalar podrá ver tu lista. 
-              Marca como "Comprado" cuando ya tengas el artículo o ya no lo quieras.
-            </p>
-          </div>
-          <Button 
-            className="gap-2"
+        <UserProfileHeader
+          name={user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuario'}
+          email={user?.email}
+          avatarUrl={user?.user_metadata?.avatar_url}
+          wishCount={totalWishCount}
+          listCount={lists.length}
+          friendCount={0}
+        />
+
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-semibold text-gray-900">
+            {language === 'es' ? 'Mis listas de deseos' : 'My wishlists'}
+          </h2>
+          <button
             onClick={() => navigate("/create-list/step-1")}
+            className="w-9 h-9 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:border-[#1ABC9C] hover:text-[#1ABC9C] transition-colors shadow-sm"
           >
-            <Plus className="w-4 h-4" />
-            {t('lists.newList')}
-          </Button>
+            <Plus className="w-5 h-5" />
+          </button>
         </div>
 
-        {lists.length > 0 && (
-          <div className="flex gap-2 mb-6">
-            <Button
-              variant={listFilter === 'all' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setListFilter('all')}
-            >
-              {language === 'es' ? 'Todas' : 'All'} ({lists.length})
-            </Button>
-            <Button
-              variant={listFilter === 'with_items' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setListFilter('with_items')}
-            >
-              {language === 'es' ? 'Con regalos' : 'With gifts'} ({lists.filter(l => (l.items?.length || 0) > 0).length})
-            </Button>
-            <Button
-              variant={listFilter === 'empty' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setListFilter('empty')}
-            >
-              {language === 'es' ? 'Vacías' : 'Empty'} ({lists.filter(l => (l.items?.length || 0) === 0).length})
-            </Button>
-          </div>
-        )}
-
         {lists.length === 0 ? (
-          <EmptyStateCard
-            icon={Gift}
-            title={t('lists.emptyTitle')}
-            description={t('lists.emptyDescription')}
-            actionLabel={t('lists.createFirst')}
-            onAction={() => navigate("/create-list/step-1")}
-          />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <AddWishlistTile onClick={() => navigate("/create-list/step-1")} />
+          </div>
         ) : (
-          <div className="grid gap-6">
-            {getFilteredLists().length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                {language === 'es' ? 'No hay listas con este filtro' : 'No lists match this filter'}
-              </div>
-            ) : getFilteredLists().map((list) => (
-              <Card key={list.id} className="shadow-medium">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <CardTitle>{list.name}</CardTitle>
-                        <span className={cn(
-                          "inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium",
-                          (list.access_type === 'private' || list.access_type === 'personal') ? "bg-[#1ABC9C]/10 text-[#1ABC9C]" : 
-                          (list.access_type === 'shared' || list.access_type === 'receive') ? "bg-[#FF9900]/10 text-[#FF9900]" :
-                          (list.access_type === 'group_event' || list.access_type === 'group') ? "bg-[#8B5CF6]/10 text-[#8B5CF6]" :
-                          "bg-[#3B82F6]/10 text-[#3B82F6]"
-                        )}>
-                          <img 
-                            src={
-                              (list.access_type === 'private' || list.access_type === 'personal') ? "/images/list-types/treasure_chest_wishlist_icon.png" :
-                              (list.access_type === 'shared' || list.access_type === 'receive') ? "/images/list-types/person_receiving_gift_icon.png" :
-                              (list.access_type === 'group_event' || list.access_type === 'group') ? "/images/list-types/group_coordination_hands_icon.png" :
-                              "/images/list-types/caretaker_with_child_icon.png"
-                            }
-                            alt=""
-                            className="w-4 h-4 object-contain"
-                          />
-                          {(list.access_type === 'private' || list.access_type === 'personal') ? (language === 'es' ? 'Personal' : 'Personal') :
-                           (list.access_type === 'shared' || list.access_type === 'receive') ? (language === 'es' ? 'Compartida' : 'Shared') :
-                           (list.access_type === 'group_event' || list.access_type === 'group') ? (language === 'es' ? 'Grupo' : 'Group') :
-                           (language === 'es' ? 'Administrada' : 'Managed')}
-                        </span>
-                      </div>
-                      <CardDescription>
-                        {list.items?.length || 0} {language === 'es' ? 'regalos en esta lista' : 'gifts in this list'}
-                      </CardDescription>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        onClick={() => {
-                          setSelectedList(list.id);
-                          setItemDialogOpen(true);
-                        }}
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        {t('lists.addGift')}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleEditList(list)}
-                        title={language === 'es' ? 'Editar lista' : 'Edit list'}
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => {
-                          const shareUrl = `${window.location.origin}/lists/${list.id}`;
-                          if (navigator.share) {
-                            navigator.share({
-                              title: list.name,
-                              text: language === 'es' ? '¡Mira mi lista de regalos!' : 'Check out my gift list!',
-                              url: shareUrl
-                            }).catch(() => {
-                              navigator.clipboard.writeText(shareUrl);
-                              toast.success(language === 'es' ? 'Enlace copiado' : 'Link copied');
-                            });
-                          } else {
-                            navigator.clipboard.writeText(shareUrl);
-                            toast.success(language === 'es' ? 'Enlace copiado al portapapeles' : 'Link copied to clipboard');
-                          }
-                        }}
-                        title={t('lists.share')}
-                      >
-                        <Share2 className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleDeleteList(list.id)}
-                        title={t('lists.delete')}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {list.items && list.items.length > 0 ? (
-                    <div className="space-y-3">
-                      {list.items.map((item) => (
-                        <div
-                          key={item.id}
-                          className={`flex items-start gap-3 p-4 rounded-lg border transition-all duration-300 ${
-                            item.is_purchased 
-                              ? "bg-success/5 border-success/30" 
-                              : "bg-card hover:bg-muted/50 hover:shadow-sm"
-                          }`}
-                        >
-                          <div className="flex flex-col items-center gap-1 pt-1">
-                            <input
-                              type="checkbox"
-                              checked={item.is_purchased}
-                              onChange={() => handleTogglePurchased(item.id, item.is_purchased)}
-                              className="w-5 h-5 rounded border-border cursor-pointer accent-success"
-                              title={item.is_purchased ? "Marcar como pendiente" : "Marcar como comprado"}
-                            />
-                            <span className="text-[10px] text-muted-foreground/70 whitespace-nowrap">
-                              {item.is_purchased ? "Comprado" : "Pendiente"}
-                            </span>
-                          </div>
-                          
-                          {/* Product Image */}
-                          {item.image_url && item.reference_link && (
-                            <a
-                              href={item.reference_link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex-shrink-0"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <img 
-                                src={item.image_url} 
-                                alt={item.name}
-                                className="w-20 h-20 object-cover rounded-md border border-border hover:scale-105 transition-transform cursor-pointer"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = 'none';
-                                }}
-                              />
-                            </a>
-                          )}
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {getFilteredLists().map((list) => (
+                <WishlistTile
+                  key={list.id}
+                  id={list.id}
+                  name={list.name}
+                  itemCount={list.items?.length || 0}
+                  coverImage={list.items?.[0]?.image_url}
+                  accessType={list.access_type}
+                  onClick={() => setSelectedList(list.id)}
+                />
+              ))}
+              <AddWishlistTile onClick={() => navigate("/create-list/step-1")} />
+            </div>
 
-                          <div className="flex-1">
-                            <div className="flex items-start gap-2 mb-1">
-                              <h4 className={`font-semibold flex-1 ${
-                                item.is_purchased ? "text-muted-foreground" : ""
-                              }`}>
-                                {item.name}
-                              </h4>
-                              {item.is_purchased && (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/20 text-success text-xs font-medium whitespace-nowrap">
-                                  ✓ Comprado
-                                </span>
-                              )}
+            {selectedList && (
+              <div className="mt-8 bg-white rounded-2xl shadow-lg overflow-hidden">
+                {(() => {
+                  const list = lists.find(l => l.id === selectedList);
+                  if (!list) return null;
+                  
+                  return (
+                    <>
+                      <div className="p-6 border-b border-gray-100">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <button
+                              onClick={() => setSelectedList(null)}
+                              className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                            >
+                              <ArrowLeft className="w-4 h-4" />
+                            </button>
+                            <div>
+                              <h3 className="text-xl font-bold text-gray-900">{list.name}</h3>
+                              <p className="text-sm text-gray-500">
+                                {list.items?.length || 0} {language === 'es' ? 'regalos' : 'gifts'}
+                              </p>
                             </div>
-                            <p className="text-sm text-muted-foreground">{item.category}</p>
-                            {item.color && <p className="text-sm">Color: {item.color}</p>}
-                            {item.size && <p className="text-sm">Talla: {item.size}</p>}
-                            {item.brand && <p className="text-sm">Marca: {item.brand}</p>}
-                            {item.notes && <p className="text-sm text-muted-foreground mt-1">{item.notes}</p>}
-                            {item.reference_link && (
-                              <div className="flex flex-col gap-1.5 mt-2">
-                                <a
-                                  href={item.reference_link}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  onClick={async (e) => {
-                                    e.stopPropagation();
-                                    
-                                    // Track click con Edge Function (analytics avanzado)
-                                    try {
-                                      await supabase.functions.invoke('track-affiliate-click', {
-                                        body: {
-                                          item_id: item.id,
-                                          item_name: item.name,
-                                          category: item.category,
-                                          reference_link: item.reference_link,
-                                          user_id: user?.id
-                                        }
-                                      });
-                                    } catch (error) {
-                                      // Silent fail - no bloqueamos el click
-                                      console.log('📊 Analytics tracking (optional):', error);
-                                    }
-                                    
-                                    toast.success('¡Redirigiendo a la tienda!', {
-                                      description: 'Gracias por usar nuestro link de afiliado 🎁'
-                                    });
-                                  }}
-                                  className="group relative inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-primary via-primary to-primary/90 hover:from-primary/95 hover:via-primary/90 hover:to-primary/85 text-primary-foreground text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] overflow-hidden"
-                                >
-                                  {/* Shine effect */}
-                                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                                  
-                                  <ShoppingBag className="w-4 h-4 relative z-10" />
-                                  <span className="relative z-10">Comprar Ahora</span>
-                                  <ExternalLink className="w-3.5 h-3.5 relative z-10" />
-                                  
-                                  {/* Badge de comisión */}
-                                  <span className="absolute -top-1 -right-1 flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-success text-success-foreground text-[10px] font-bold shadow-sm">
-                                    💰 +
-                                  </span>
-                                </a>
-                                <span className="text-[11px] text-muted-foreground text-center leading-tight px-2">
-                                  🎁 Link de afiliado - Apoyas sin costo extra
-                                </span>
-                              </div>
-                            )}
                           </div>
-                          <div className="flex flex-col gap-2">
-                            <span className={`px-2 py-1 rounded text-xs text-center ${
-                              item.priority === "high" ? "bg-destructive/20 text-destructive" :
-                              item.priority === "medium" ? "bg-accent/20 text-accent-foreground" :
-                              "bg-muted text-muted-foreground"
-                            }`}>
-                              {item.priority === "high" ? "Alta" : item.priority === "medium" ? "Media" : "Baja"}
-                            </span>
+                          <div className="flex items-center gap-2">
                             <Button
                               size="sm"
-                              variant="outline"
-                              onClick={() => handleEditItem(item)}
-                              title="Editar regalo"
+                              className="bg-[#1ABC9C] hover:bg-[#16A085] text-white"
+                              onClick={() => setItemDialogOpen(true)}
                             >
-                              <Edit className="w-4 h-4" />
+                              <Plus className="w-4 h-4 mr-1" />
+                              {language === 'es' ? 'Agregar Regalo' : 'Add Gift'}
                             </Button>
                             <Button
                               size="sm"
-                              variant="ghost"
-                              onClick={() => handleDeleteItem(item.id)}
-                              title="Eliminar regalo"
+                              variant="outline"
+                              onClick={() => handleEditList(list)}
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                const shareUrl = `${window.location.origin}/lists/${list.id}`;
+                                if (navigator.share) {
+                                  navigator.share({
+                                    title: list.name,
+                                    text: language === 'es' ? 'Mira mi lista de regalos' : 'Check out my gift list',
+                                    url: shareUrl
+                                  }).catch(() => {
+                                    navigator.clipboard.writeText(shareUrl);
+                                    toast.success(language === 'es' ? 'Enlace copiado' : 'Link copied');
+                                  });
+                                } else {
+                                  navigator.clipboard.writeText(shareUrl);
+                                  toast.success(language === 'es' ? 'Enlace copiado' : 'Link copied');
+                                }
+                              }}
+                            >
+                              <Share2 className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                              onClick={() => handleDeleteList(list.id)}
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-center text-muted-foreground py-4">
-                      No hay regalos en esta lista. ¡Agrega el primero!
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                      </div>
+
+                      <div className="p-6">
+                        {list.items && list.items.length > 0 ? (
+                          <div className="grid gap-4">
+                            {list.items.map((item) => (
+                              <div
+                                key={item.id}
+                                className={cn(
+                                  "flex items-start gap-4 p-4 rounded-xl border transition-all duration-200",
+                                  item.is_purchased 
+                                    ? "bg-green-50/50 border-green-200" 
+                                    : "bg-white border-gray-100 hover:border-gray-200 hover:shadow-sm"
+                                )}
+                              >
+                                <div className="flex flex-col items-center gap-1">
+                                  <input
+                                    type="checkbox"
+                                    checked={item.is_purchased}
+                                    onChange={() => handleTogglePurchased(item.id, item.is_purchased)}
+                                    className="w-5 h-5 rounded-full border-2 border-gray-300 cursor-pointer accent-[#1ABC9C]"
+                                  />
+                                  <span className="text-[10px] text-gray-400">
+                                    {item.is_purchased ? (language === 'es' ? 'Listo' : 'Done') : ''}
+                                  </span>
+                                </div>
+
+                                {item.image_url && (
+                                  <a
+                                    href={item.reference_link || '#'}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex-shrink-0"
+                                  >
+                                    <img 
+                                      src={item.image_url} 
+                                      alt={item.name}
+                                      className="w-20 h-20 object-cover rounded-lg border border-gray-100 hover:scale-105 transition-transform"
+                                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                    />
+                                  </a>
+                                )}
+
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-start justify-between gap-2">
+                                    <h4 className={cn(
+                                      "font-semibold text-gray-900",
+                                      item.is_purchased && "text-gray-400 line-through"
+                                    )}>
+                                      {item.name}
+                                    </h4>
+                                    {item.is_purchased && (
+                                      <span className="flex-shrink-0 px-2 py-0.5 rounded-full bg-green-100 text-green-600 text-xs font-medium">
+                                        {language === 'es' ? 'Comprado' : 'Purchased'}
+                                      </span>
+                                    )}
+                                  </div>
+                                  
+                                  <div className="flex flex-wrap gap-2 mt-1 text-sm text-gray-500">
+                                    {item.category && <span>{item.category}</span>}
+                                    {item.brand && <span>• {item.brand}</span>}
+                                    {item.color && <span>• {item.color}</span>}
+                                    {item.size && <span>• {item.size}</span>}
+                                  </div>
+
+                                  {item.notes && (
+                                    <p className="text-sm text-gray-400 mt-2 line-clamp-2">{item.notes}</p>
+                                  )}
+
+                                  {item.reference_link && (
+                                    <a
+                                      href={item.reference_link}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      onClick={async () => {
+                                        try {
+                                          await supabase.functions.invoke('track-affiliate-click', {
+                                            body: {
+                                              item_id: item.id,
+                                              item_name: item.name,
+                                              category: item.category,
+                                              reference_link: item.reference_link,
+                                              user_id: user?.id
+                                            }
+                                          });
+                                        } catch (error) {
+                                          console.log('Analytics tracking:', error);
+                                        }
+                                      }}
+                                      className="inline-flex items-center gap-1.5 mt-3 px-4 py-2 rounded-lg bg-[#1ABC9C] hover:bg-[#16A085] text-white text-sm font-medium transition-colors"
+                                    >
+                                      <ShoppingBag className="w-4 h-4" />
+                                      {language === 'es' ? 'Ver en tienda' : 'View in store'}
+                                      <ExternalLink className="w-3 h-3" />
+                                    </a>
+                                  )}
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                  <span className={cn(
+                                    "px-2 py-1 rounded-lg text-xs font-medium text-center",
+                                    item.priority === "high" ? "bg-red-100 text-red-600" :
+                                    item.priority === "medium" ? "bg-yellow-100 text-yellow-600" :
+                                    "bg-gray-100 text-gray-500"
+                                  )}>
+                                    {item.priority === "high" ? (language === 'es' ? 'Alta' : 'High') : 
+                                     item.priority === "medium" ? (language === 'es' ? 'Media' : 'Medium') : 
+                                     (language === 'es' ? 'Baja' : 'Low')}
+                                  </span>
+                                  <Button size="sm" variant="ghost" onClick={() => handleEditItem(item)}>
+                                    <Edit className="w-4 h-4" />
+                                  </Button>
+                                  <Button size="sm" variant="ghost" onClick={() => handleDeleteItem(item.id)}>
+                                    <Trash2 className="w-4 h-4 text-gray-400" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-12">
+                            <Gift className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                            <p className="text-gray-500 mb-4">
+                              {language === 'es' ? 'No hay regalos en esta lista.' : 'No gifts in this list yet.'}
+                            </p>
+                            <Button
+                              className="bg-[#1ABC9C] hover:bg-[#16A085]"
+                              onClick={() => setItemDialogOpen(true)}
+                            >
+                              <Plus className="w-4 h-4 mr-2" />
+                              {language === 'es' ? 'Agregar el primero' : 'Add the first one'}
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+            )}
+          </>
         )}
+
+        <InspirationSection />
 
         {/* Add Item Dialog */}
         <Dialog open={itemDialogOpen} onOpenChange={(open) => {
