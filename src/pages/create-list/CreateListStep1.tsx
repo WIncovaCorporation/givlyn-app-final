@@ -118,61 +118,58 @@ export default function CreateListStep1() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
-      <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-2">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <button 
-            onClick={() => navigate("/dashboard")}
-            className="flex items-center gap-2 text-gray-600 hover:text-[#1A3E5C] transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span className="text-sm font-medium">
-              {language === 'es' ? 'Volver' : 'Back'}
-            </span>
-          </button>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500">
-              {language === 'es' ? 'Paso 1/3' : 'Step 1/3'}
-            </span>
-            <Progress value={33} className="h-1.5 w-16" />
-          </div>
-        </div>
+    <div className="min-h-screen bg-gray-50 pb-28">
+      <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-3 shadow-sm">
+        <button 
+          onClick={() => navigate("/dashboard")}
+          className="flex items-center gap-2 text-gray-600 hover:text-[#1A3E5C] transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span className="text-sm font-medium">
+            {language === 'es' ? 'Volver al Dashboard' : 'Back to Dashboard'}
+          </span>
+        </button>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-4 fade-in-up">
-        <div className="flex flex-col lg:flex-row lg:items-start lg:gap-8">
-          <div className="lg:w-80 lg:flex-shrink-0 mb-4 lg:mb-0">
-            <h1 className="text-xl lg:text-2xl font-bold text-[#1A3E5C] mb-1">
-              {language === 'es' ? '¿Qué celebras?' : 'What are you celebrating?'}
-            </h1>
-            <p className="text-sm text-gray-500 mb-4">
-              {language === 'es' 
-                ? 'Personaliza tu experiencia' 
-                : 'Personalize your experience'}
-            </p>
+      <div className="max-w-5xl mx-auto px-4 py-6 fade-in-up">
+        <div className="mb-6">
+          <p className="text-sm text-gray-500 mb-2 font-medium">
+            {language === 'es' ? 'Paso 1 de 3' : 'Step 1 of 3'}
+          </p>
+          <Progress value={33} className="h-2" />
+        </div>
 
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-              <Label htmlFor="list-name" className="text-sm font-semibold text-gray-700 mb-2 block">
-                {language === 'es' ? 'Nombre de tu Lista' : 'Your List Name'}
-              </Label>
-              <Input
-                id="list-name"
-                value={name}
-                onChange={handleNameChange}
-                placeholder={language === 'es' ? 'Ej: "Cumpleaños de Mateo"' : 'E.g.: "Matt\'s Birthday"'}
-                maxLength={50}
-                className={`border-gray-200 focus:border-[#1ABC9C] focus:ring-[#1ABC9C] text-sm h-10 ${nameError ? 'border-red-400' : ''}`}
-              />
-              <div className="flex justify-between items-center mt-1">
-                <span className={`text-xs ${nameError ? 'text-red-500' : 'text-gray-400'}`}>
-                  {nameError || ''}
-                </span>
-                <span className="text-xs text-gray-400">{name.length}/50</span>
-              </div>
+        <h1 className="text-2xl font-bold text-[#1A3E5C] mb-2">
+          {language === 'es' ? '¿Qué vas a celebrar?' : 'What are you celebrating?'}
+        </h1>
+        <p className="text-gray-500 mb-6">
+          {language === 'es' 
+            ? 'Elige el evento para personalizar tu experiencia' 
+            : 'Choose the event to personalize your experience'}
+        </p>
+
+        <div className="space-y-6">
+          <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+            <Label htmlFor="list-name" className="text-sm font-semibold text-gray-700 mb-2 block">
+              {language === 'es' ? 'Nombre de tu Lista' : 'Your List Name'}
+            </Label>
+            <Input
+              id="list-name"
+              value={name}
+              onChange={handleNameChange}
+              placeholder={language === 'es' ? 'Ej: "Cumpleaños de mi hijo Mateo"' : 'E.g.: "My son\'s Birthday"'}
+              maxLength={50}
+              className={`border-gray-200 focus:border-[#1ABC9C] focus:ring-[#1ABC9C] text-base py-3 h-12 ${nameError ? 'border-red-400' : ''}`}
+            />
+            <div className="flex justify-between items-center mt-2">
+              <span className={`text-xs ${nameError ? 'text-red-500' : 'text-gray-400'}`}>
+                {nameError || (language === 'es' ? 'Máx. 50 caracteres' : 'Max. 50 characters')}
+              </span>
+              <span className="text-xs text-gray-400 font-medium">{name.length}/50</span>
             </div>
           </div>
 
-          <div className="flex-1">
+          <div>
             <Label className="text-sm font-semibold text-gray-700 mb-3 block">
               {language === 'es' ? 'Tipo de Evento' : 'Event Type'}
               <span className="text-gray-400 font-normal ml-1">
@@ -180,7 +177,7 @@ export default function CreateListStep1() {
               </span>
             </Label>
             
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {EVENT_TYPES.map((eventType) => {
                 const isSelected = selectedType === eventType.id;
                 return (
@@ -188,7 +185,7 @@ export default function CreateListStep1() {
                     key={eventType.id}
                     onClick={() => handleCardClick(eventType.id)}
                     className={cn(
-                      "group p-5 lg:p-6 rounded-2xl border-2 text-left transition-all duration-200",
+                      "group p-5 rounded-2xl border-2 text-left transition-all duration-200",
                       "hover:shadow-lg hover:scale-[1.02]",
                       isSelected
                         ? "border-[#1ABC9C] bg-[#1ABC9C]/5 shadow-md"
@@ -197,24 +194,24 @@ export default function CreateListStep1() {
                   >
                     <div className="flex flex-col items-center text-center gap-3">
                       <div className={cn(
-                        "w-16 h-16 lg:w-20 lg:h-20 rounded-2xl flex items-center justify-center transition-all",
+                        "w-16 h-16 rounded-2xl flex items-center justify-center transition-all",
                         isSelected ? "bg-white shadow-md" : "bg-gray-50 group-hover:bg-white group-hover:shadow-sm"
                       )}>
                         <img 
                           src={eventType.image} 
                           alt=""
-                          className="w-14 h-14 lg:w-16 lg:h-16 object-contain"
+                          className="w-14 h-14 object-contain"
                         />
                       </div>
                       
                       <div>
                         <p className={cn(
-                          "font-bold text-sm lg:text-base leading-tight transition-colors",
+                          "font-bold text-sm leading-tight transition-colors",
                           isSelected ? "text-[#1A3E5C]" : "text-gray-800 group-hover:text-[#1A3E5C]"
                         )}>
                           {language === 'es' ? eventType.title : eventType.titleEn}
                         </p>
-                        <p className="text-xs lg:text-sm text-gray-500 mt-1.5 leading-relaxed">
+                        <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">
                           {language === 'es' ? eventType.microCopy : eventType.microCopyEn}
                         </p>
                       </div>
@@ -235,12 +232,12 @@ export default function CreateListStep1() {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-3 bg-white border-t border-gray-100 shadow-lg">
-        <div className="max-w-6xl mx-auto">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 shadow-lg">
+        <div className="max-w-5xl mx-auto">
           <Button
             onClick={handleNext}
             disabled={!isValid || isChecking}
-            className="w-full py-5 text-base font-bold bg-[#1ABC9C] hover:bg-[#1ABC9C]/90 disabled:bg-gray-200 disabled:text-gray-400 transition-all rounded-xl"
+            className="w-full py-6 text-base font-semibold bg-[#1ABC9C] hover:bg-[#1ABC9C]/90 disabled:bg-gray-200 disabled:text-gray-400 transition-all"
           >
             {isChecking ? (
               <>
@@ -249,16 +246,16 @@ export default function CreateListStep1() {
               </>
             ) : (
               <>
-                {language === 'es' ? 'Siguiente: ¿Cómo la Usarás?' : 'Next: How Will You Use It?'}
+                {language === 'es' ? 'Siguiente: ¿Cómo funcionará?' : 'Next: How Will It Work?'}
                 <ArrowRight className="w-5 h-5 ml-2" />
               </>
             )}
           </Button>
           {!isValid && (
-            <p className="text-center text-xs text-gray-400 mt-1">
+            <p className="text-center text-xs text-gray-400 mt-2">
               {language === 'es' 
-                ? 'Completa el nombre y selecciona un evento' 
-                : 'Complete the name and select an event'}
+                ? 'Completa el nombre y selecciona un tipo de evento' 
+                : 'Complete the name and select an event type'}
             </p>
           )}
         </div>
