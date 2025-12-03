@@ -180,7 +180,7 @@ export default function CreateListStep1() {
               </span>
             </Label>
             
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
               {EVENT_TYPES.map((eventType) => {
                 const isSelected = selectedType === eventType.id;
                 return (
@@ -188,40 +188,40 @@ export default function CreateListStep1() {
                     key={eventType.id}
                     onClick={() => handleCardClick(eventType.id)}
                     className={cn(
-                      "group p-3 lg:p-4 rounded-xl border-2 text-left transition-all duration-200",
-                      "hover:shadow-md hover:scale-[1.02]",
+                      "group p-5 lg:p-6 rounded-2xl border-2 text-left transition-all duration-200",
+                      "hover:shadow-lg hover:scale-[1.02]",
                       isSelected
-                        ? "border-[#1ABC9C] bg-[#1ABC9C]/5 shadow-sm"
+                        ? "border-[#1ABC9C] bg-[#1ABC9C]/5 shadow-md"
                         : "border-gray-100 bg-white hover:border-[#1ABC9C]/50"
                     )}
                   >
-                    <div className="flex flex-col items-center text-center gap-2">
+                    <div className="flex flex-col items-center text-center gap-3">
                       <div className={cn(
-                        "w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center transition-all",
-                        isSelected ? "bg-white shadow-sm" : "bg-gray-50 group-hover:bg-white"
+                        "w-16 h-16 lg:w-20 lg:h-20 rounded-2xl flex items-center justify-center transition-all",
+                        isSelected ? "bg-white shadow-md" : "bg-gray-50 group-hover:bg-white group-hover:shadow-sm"
                       )}>
                         <img 
                           src={eventType.image} 
                           alt=""
-                          className="w-10 h-10 lg:w-12 lg:h-12 object-contain"
+                          className="w-14 h-14 lg:w-16 lg:h-16 object-contain"
                         />
                       </div>
                       
                       <div>
                         <p className={cn(
-                          "font-semibold text-xs lg:text-sm leading-tight transition-colors",
+                          "font-bold text-sm lg:text-base leading-tight transition-colors",
                           isSelected ? "text-[#1A3E5C]" : "text-gray-800 group-hover:text-[#1A3E5C]"
                         )}>
                           {language === 'es' ? eventType.title : eventType.titleEn}
                         </p>
-                        <p className="text-[10px] lg:text-xs text-gray-500 mt-1 leading-tight line-clamp-2">
+                        <p className="text-xs lg:text-sm text-gray-500 mt-1.5 leading-relaxed">
                           {language === 'es' ? eventType.microCopy : eventType.microCopyEn}
                         </p>
                       </div>
                       
                       {isSelected && (
-                        <div className="w-5 h-5 rounded-full bg-[#1ABC9C] flex items-center justify-center">
-                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div className="w-6 h-6 rounded-full bg-[#1ABC9C] flex items-center justify-center">
+                          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
