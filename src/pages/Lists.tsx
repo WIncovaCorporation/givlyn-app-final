@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -50,6 +50,7 @@ interface GiftItem {
 
 const Lists = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { t, language } = useLanguage();
   const { isFree } = useUserRole();
   const { features, getLimit } = useSubscription();
@@ -107,6 +108,16 @@ const Lists = () => {
   useEffect(() => {
     checkAuth();
   }, []);
+
+  useEffect(() => {
+    const listId = searchParams.get('id');
+    if (listId && lists.length > 0 && !selectedList) {
+      const listExists = lists.find(l => l.id === listId);
+      if (listExists) {
+        setSelectedList(listId);
+      }
+    }
+  }, [searchParams, lists, selectedList]);
 
   // Mostrar tooltip solo la primera vez que carga la página de wishlists
   useEffect(() => {

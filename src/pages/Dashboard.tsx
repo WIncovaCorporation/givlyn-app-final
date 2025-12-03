@@ -300,7 +300,7 @@ const Dashboard = () => {
               {myLists.map((list) => (
                 <button
                   key={list.id}
-                  onClick={() => navigate(`/lists`)}
+                  onClick={() => navigate(`/lists?id=${list.id}`)}
                   className="group bg-white rounded-2xl p-5 text-left transition-all duration-200 hover:-translate-y-0.5"
                   style={{ boxShadow: '0 15px 40px rgba(0, 0, 0, 0.06)' }}
                 >
