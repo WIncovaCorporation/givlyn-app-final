@@ -4,7 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
-import { Gift, Share2, ArrowLeft, Loader2, Sparkles, Users } from "lucide-react";
+import { Gift, Share2, Loader2, Check, Copy, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import Confetti from 'react-confetti';
@@ -16,13 +16,13 @@ interface ListData {
 }
 
 const eventTypeLabels: Record<string, { es: string; en: string }> = {
-  personal_celebration: { es: "Celebración Personal", en: "Personal Celebration" },
-  holidays: { es: "Días Festivos", en: "Holidays" },
+  personal_celebration: { es: "Celebracion Personal", en: "Personal Celebration" },
+  holidays: { es: "Dias Festivos", en: "Holidays" },
   wedding_couple: { es: "Boda/Pareja", en: "Wedding/Couple" },
-  baby_kids_family: { es: "Bebé/Niños/Familia", en: "Baby/Kids/Family" },
-  collaboration: { es: "Colaboración", en: "Collaboration" },
+  baby_kids_family: { es: "Bebe/Ninos/Familia", en: "Baby/Kids/Family" },
+  collaboration: { es: "Colaboracion", en: "Collaboration" },
   other: { es: "Otro", en: "Other" },
-  birthday: { es: "Cumpleaños", en: "Birthday" },
+  birthday: { es: "Cumpleanos", en: "Birthday" },
   christmas: { es: "Navidad", en: "Christmas" },
   wedding: { es: "Boda", en: "Wedding" },
   baby_shower: { es: "Baby Shower", en: "Baby Shower" }
@@ -45,8 +45,16 @@ export default function CreateListSuccess() {
   const [isCreating, setIsCreating] = useState(true);
   const [showContent, setShowContent] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [userName, setUserName] = useState<string>("");
+  const [linkCopied, setLinkCopied] = useState(false);
   const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const createList = async () => {
@@ -64,14 +72,12 @@ export default function CreateListSuccess() {
         const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
         
         if (sessionError || !sessionData?.session?.user) {
-          toast.error(language === 'es' ? 'Debes iniciar sesión' : 'You must be logged in');
+          toast.error(language === 'es' ? 'Debes iniciar sesion' : 'You must be logged in');
           navigate("/auth");
           return;
         }
 
         const user = sessionData.session.user;
-        const displayName = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || '';
-        setUserName(displayName.split(' ')[0]);
 
         const { data: newList, error } = await supabase
           .from('gift_lists')
@@ -124,7 +130,7 @@ export default function CreateListSuccess() {
         await navigator.share({
           title: listData?.name || 'Mi Lista',
           text: language === 'es' 
-            ? '¡Mira mi lista de regalos en Givlyn!' 
+            ? 'Mira mi lista de regalos en Givlyn!' 
             : 'Check out my gift list on Givlyn!',
           url: shareUrl
         });
@@ -140,12 +146,29 @@ export default function CreateListSuccess() {
     }
   };
 
+  const handleWhatsAppShare = () => {
+    if (!listId) return;
+    const shareUrl = `${window.location.origin}/lists/${listId}`;
+    const message = language === 'es' 
+      ? `Mira mi lista de regalos "${listData?.name}" en Givlyn: ${shareUrl}`
+      : `Check out my gift list "${listData?.name}" on Givlyn: ${shareUrl}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+  };
+
+  const handleCopyLink = async () => {
+    if (!listId) return;
+    const shareUrl = `${window.location.origin}/lists/${listId}`;
+    await navigator.clipboard.writeText(shareUrl);
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2000);
+  };
+
   if (isCreating) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FAFBFC] flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 text-[#1ABC9C] animate-spin mx-auto mb-4" />
-          <p className="text-gray-600 text-lg">
+          <Loader2 className="w-16 h-16 text-[#1ABC9C] animate-spin mx-auto mb-6" />
+          <p className="text-gray-600 text-xl font-medium">
             {language === 'es' ? 'Creando tu lista...' : 'Creating your list...'}
           </p>
         </div>
@@ -154,101 +177,140 @@ export default function CreateListSuccess() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 relative overflow-hidden">
+    <div className="min-h-screen bg-[#FAFBFC] relative overflow-hidden">
       {showConfetti && (
         <Confetti
           width={windowSize.width}
           height={windowSize.height}
           recycle={false}
-          numberOfPieces={400}
-          gravity={0.25}
-          initialVelocityY={20}
-          colors={['#FF9900', '#1ABC9C', '#EC4899', '#3B82F6', '#22C55E', '#FFB800', '#FFD700', '#FF6B6B']}
+          numberOfPieces={500}
+          gravity={0.2}
+          initialVelocityY={25}
+          colors={['#1ABC9C', '#FF9900', '#EC4899', '#3B82F6', '#22C55E', '#FFD700', '#8B5CF6']}
         />
       )}
       
-      <div className="max-w-4xl mx-auto px-4 py-4 md:py-6">
-        <div className="mb-4">
-          <p className="text-sm text-gray-500 mb-2 font-medium">
+      <div className="max-w-2xl mx-auto px-4 py-6">
+        <div className="mb-6">
+          <p className="text-sm text-gray-500 mb-2 font-medium text-center">
             {language === 'es' ? 'Paso 3 de 3' : 'Step 3 of 3'}
           </p>
           <Progress value={100} className="h-2" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
-          <div className={cn(
-            "text-center md:text-left transition-all duration-500",
-            showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          )}>
-            <div className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-[#FF9900] via-[#FFB800] to-[#FFD700] rounded-full flex items-center justify-center mx-auto md:mx-0 mb-4 shadow-xl animate-bounce">
-              <Sparkles className="w-10 h-10 md:w-12 md:h-12 text-white" />
-            </div>
-            
-            <h1 className="text-3xl md:text-4xl font-bold text-[#1A3E5C] mb-2">
-              {language === 'es' 
-                ? `¡LO LOGRASTE${userName ? `, ${userName}` : ''}!` 
-                : `YOU DID IT${userName ? `, ${userName}` : ''}!`}
-            </h1>
-            
-            <p className="text-lg md:text-xl font-semibold text-[#FF9900] mb-4">
-              {language === 'es' 
-                ? 'El ahorro comienza AHORA'
-                : 'Savings start NOW'}
-            </p>
+        <div className={cn(
+          "text-center transition-all duration-500",
+          showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        )}>
+          <div className="w-24 h-24 bg-gradient-to-br from-[#1ABC9C] to-[#22C55E] rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
+            <Check className="w-14 h-14 text-white" strokeWidth={3} />
+          </div>
+          
+          <h1 className="text-3xl md:text-4xl font-black text-[#1A3E5C] mb-2 tracking-tight">
+            {language === 'es' 
+              ? 'LISTA LISTA!' 
+              : 'LIST READY!'}
+          </h1>
+          
+          <p className="text-xl md:text-2xl font-bold text-[#FF9900] mb-6">
+            {language === 'es' 
+              ? 'Ahora toca lo divertido'
+              : 'Now for the fun part'}
+          </p>
 
-            {listData && (
-              <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 inline-block text-left">
-                <p className="font-bold text-[#1A3E5C] text-lg mb-2">"{listData.name}"</p>
-                <div className="flex gap-4 text-sm">
-                  <span className="text-gray-500">
-                    {eventTypeLabels[listData.event_type]?.[language] || listData.event_type}
-                  </span>
-                  <span className="text-gray-300">|</span>
-                  <span className="text-gray-500">
-                    {accessTypeLabels[listData.access_type]?.[language] || listData.access_type}
-                  </span>
-                </div>
+          {listData && (
+            <div 
+              className="bg-white rounded-2xl p-5 mb-8 border border-gray-100 inline-block"
+              style={{ boxShadow: '0 10px 30px rgba(0, 0, 0, 0.06)' }}
+            >
+              <p className="font-bold text-[#1A3E5C] text-lg mb-2">"{listData.name}"</p>
+              <div className="flex gap-3 text-sm justify-center">
+                <span className="bg-gray-100 px-3 py-1 rounded-full text-gray-600">
+                  {eventTypeLabels[listData.event_type]?.[language] || listData.event_type}
+                </span>
+                <span className="bg-[#1ABC9C]/10 px-3 py-1 rounded-full text-[#1ABC9C] font-medium">
+                  {accessTypeLabels[listData.access_type]?.[language] || listData.access_type}
+                </span>
               </div>
-            )}
-          </div>
-
-          <div className={cn(
-            "space-y-4 transition-all duration-500 delay-200",
-            showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          )}>
-            <Button
-              onClick={handleAddGift}
-              className="w-full py-7 md:py-8 text-lg md:text-xl font-bold bg-gradient-to-r from-[#FF9900] to-[#FFB800] hover:from-[#FF9900]/90 hover:to-[#FFB800]/90 shadow-lg rounded-xl"
-            >
-              <Gift className="w-6 h-6 md:w-7 md:h-7 mr-2" />
-              {language === 'es' ? 'ENCONTRAR REGALO AHORA' : 'FIND GIFT NOW'}
-            </Button>
-
-            <Button
-              onClick={handleShare}
-              variant="outline"
-              className="w-full py-6 text-base font-bold border-2 border-[#1ABC9C] text-[#1ABC9C] hover:bg-[#1ABC9C] hover:text-white transition-all rounded-xl"
-            >
-              <Users className="w-5 h-5 mr-2" />
-              {language === 'es' ? 'COMPARTIR Y AHORRAR MAS' : 'SHARE & SAVE MORE'}
-            </Button>
-
-            <div className="bg-gradient-to-r from-[#1ABC9C]/10 to-[#22C55E]/10 rounded-xl p-4 text-center">
-              <p className="text-sm font-medium text-[#1A3E5C]">
-                {language === 'es' 
-                  ? 'Invita a 3 personas y maximiza los beneficios de tu lista.'
-                  : 'Invite 3 people and maximize your list benefits.'}
-              </p>
             </div>
+          )}
+        </div>
 
-            <button
-              onClick={() => navigate("/dashboard")}
-              className="w-full text-center text-sm text-gray-500 hover:text-[#1A3E5C] transition-colors py-2"
-            >
-              <ArrowLeft className="w-4 h-4 inline mr-1" />
-              {language === 'es' ? 'Volver al Dashboard' : 'Back to Dashboard'}
-            </button>
+        <div className={cn(
+          "space-y-4 transition-all duration-500 delay-200",
+          showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        )}>
+          <Button
+            onClick={handleAddGift}
+            className="w-full py-8 text-lg md:text-xl font-black bg-[#1ABC9C] hover:bg-[#1ABC9C]/90 rounded-2xl transition-all group"
+            style={{ boxShadow: '0 12px 35px rgba(26, 188, 156, 0.35)' }}
+          >
+            <Gift className="w-7 h-7 mr-3" />
+            {language === 'es' 
+              ? 'ANADIR MI PRIMER REGALO' 
+              : 'ADD MY FIRST GIFT'}
+            <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-1 transition-transform" />
+          </Button>
+
+          <Button
+            onClick={handleShare}
+            variant="outline"
+            className="w-full py-6 text-base font-bold border-2 border-[#FF9900] text-[#FF9900] hover:bg-[#FF9900] hover:text-white transition-all rounded-2xl"
+          >
+            <Share2 className="w-5 h-5 mr-2" />
+            {language === 'es' 
+              ? 'COMPARTIR LISTA Y EMPEZAR A RECIBIR' 
+              : 'SHARE LIST & START RECEIVING'}
+          </Button>
+
+          <div className="pt-4">
+            <p className="text-center text-sm text-gray-500 font-medium mb-4">
+              {language === 'es' 
+                ? 'O compartela inmediatamente por...' 
+                : 'Or share it immediately via...'}
+            </p>
+            
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={handleWhatsAppShare}
+                className="flex items-center gap-3 px-6 py-4 bg-[#25D366] hover:bg-[#25D366]/90 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl"
+              >
+                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                WhatsApp
+              </button>
+              
+              <button
+                onClick={handleCopyLink}
+                className={cn(
+                  "flex items-center gap-3 px-6 py-4 font-bold rounded-xl transition-all shadow-lg hover:shadow-xl",
+                  linkCopied 
+                    ? "bg-[#22C55E] text-white" 
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                )}
+              >
+                {linkCopied ? (
+                  <>
+                    <Check className="w-6 h-6" />
+                    {language === 'es' ? 'Copiado!' : 'Copied!'}
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-6 h-6" />
+                    {language === 'es' ? 'Copiar Link' : 'Copy Link'}
+                  </>
+                )}
+              </button>
+            </div>
           </div>
+
+          <button
+            onClick={() => navigate("/dashboard")}
+            className="w-full text-center text-sm text-gray-400 hover:text-[#1A3E5C] transition-colors py-4 mt-4"
+          >
+            {language === 'es' ? 'Ir al Dashboard' : 'Go to Dashboard'}
+          </button>
         </div>
       </div>
     </div>
