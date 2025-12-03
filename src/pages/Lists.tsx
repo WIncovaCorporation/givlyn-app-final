@@ -241,6 +241,15 @@ const Lists = () => {
 
     try {
       if (deleteConfirm.type === "list") {
+        // First delete all items in the list (foreign key constraint)
+        const { error: itemsError } = await supabase
+          .from("gift_items")
+          .delete()
+          .eq("list_id", deleteConfirm.id);
+
+        if (itemsError) throw itemsError;
+
+        // Then delete the list
         const { error } = await supabase
           .from("gift_lists")
           .delete()
