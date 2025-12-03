@@ -24,17 +24,17 @@ const accessTypes: AccessType[] = [
     id: "private", 
     nameEs: "Lista Personal", 
     nameEn: "Personal List", 
-    descEs: "Para mí (Privada). Cosas que me quiero comprar o que añado a mi catálogo de sueños.", 
-    descEn: "For me (Private). Things I want to buy or add to my dream catalog.",
+    descEs: "Para mí (Privada). Mi catálogo de sueños personal.", 
+    descEn: "For me (Private). My personal dream catalog.",
     image: "/images/list-types/treasure_chest_wishlist_icon.png",
     color: "#1ABC9C"
   },
   { 
     id: "shared", 
-    nameEs: "Recibir Regalos (Wishlist Compartida)", 
-    nameEn: "Receive Gifts (Shared Wishlist)", 
-    descEs: "Para que otros compren regalos para mí.", 
-    descEn: "For others to buy gifts for me.",
+    nameEs: "Recibir Regalos", 
+    nameEn: "Receive Gifts", 
+    descEs: "Wishlist compartida para que otros me regalen.", 
+    descEn: "Shared wishlist for others to gift me.",
     descEsDynamic: "Ideal para tu {category}. Garantiza que recibes exactamente lo que deseas.",
     descEnDynamic: "Ideal for your {category}. Guarantees you get exactly what you want.",
     image: "/images/list-types/person_receiving_gift_icon.png",
@@ -42,19 +42,19 @@ const accessTypes: AccessType[] = [
   },
   { 
     id: "group_event", 
-    nameEs: "Evento de Grupo (Coordinada)", 
-    nameEn: "Group Event (Coordinated)", 
-    descEs: "Participo en un intercambio, sorteo o co-financiación. Todos dan y reciben.", 
-    descEn: "I participate in an exchange, raffle or co-funding. Everyone gives and receives.",
+    nameEs: "Evento de Grupo", 
+    nameEn: "Group Event", 
+    descEs: "Intercambio, sorteo o co-financiación. Todos dan y reciben.", 
+    descEn: "Exchange, raffle or co-funding. Everyone gives and receives.",
     image: "/images/list-types/group_coordination_hands_icon.png",
     color: "#8B5CF6"
   },
   { 
     id: "managed", 
-    nameEs: "Administrar Lista (Para un Tercero)", 
-    nameEn: "Manage List (For Someone Else)", 
-    descEs: "Soy el Curador. Organizo y gestiono la lista de un niño, un familiar o una persona ajena al evento.", 
-    descEn: "I am the Curator. I organize and manage the list for a child, family member or person outside the event.",
+    nameEs: "Administrar Lista", 
+    nameEn: "Manage List", 
+    descEs: "Soy el Curador. Organizo la lista de un tercero (niño, familiar, etc).", 
+    descEn: "I am the Curator. I organize someone else's list (child, family, etc).",
     image: "/images/list-types/caretaker_with_child_icon.png",
     color: "#3B82F6"
   },
@@ -109,35 +109,37 @@ export default function CreateListStep2() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
-      <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-3">
-        <button 
-          onClick={handleBack}
-          className="flex items-center gap-2 text-gray-600 hover:text-[#1A3E5C] transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span className="text-sm font-medium">
-            {language === 'es' ? 'Volver' : 'Back'}
-          </span>
-        </button>
+    <div className="min-h-screen bg-gray-50 pb-28">
+      <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-3 shadow-sm">
+        <div className="max-w-4xl mx-auto">
+          <button 
+            onClick={handleBack}
+            className="flex items-center gap-2 text-gray-600 hover:text-[#1A3E5C] transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-sm font-medium">
+              {language === 'es' ? 'Volver' : 'Back'}
+            </span>
+          </button>
+        </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 py-6">
+      <div className="max-w-4xl mx-auto px-4 py-6">
         <div className="mb-6">
-          <p className="text-sm text-gray-500 mb-2">
+          <p className="text-sm text-gray-500 mb-2 font-medium">
             {language === 'es' ? 'Paso 2 de 3' : 'Step 2 of 3'}
           </p>
           <Progress value={66} className="h-2" />
         </div>
 
-        <h1 className="text-2xl font-bold text-[#1A3E5C] mb-2">
-          {language === 'es' ? '¿Cómo funcionará tu lista?' : 'How will your list work?'}
+        <h1 className="text-2xl md:text-3xl font-bold text-[#1A3E5C] mb-2">
+          {language === 'es' ? '¿Cómo Quieres Usar Esta Lista?' : 'How Do You Want to Use This List?'}
         </h1>
-        <p className="text-gray-500 text-sm mb-6">
-          {language === 'es' ? 'Define tu rol y la mecánica de la lista' : 'Define your role and the list mechanics'}
+        <p className="text-gray-500 mb-6">
+          {language === 'es' ? 'Define tu rol y la mecánica perfecta para ti' : 'Define your role and the perfect mechanics for you'}
         </p>
 
-        <div className="space-y-3 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           {accessTypes.map((type) => {
             const isSelected = selectedAccess === type.id;
             return (
@@ -145,54 +147,55 @@ export default function CreateListStep2() {
                 key={type.id}
                 onClick={() => setSelectedAccess(type.id)}
                 className={cn(
-                  "w-full p-4 rounded-xl border-2 text-left transition-all",
+                  "group p-6 md:p-8 rounded-2xl border-2 text-left transition-all duration-200",
+                  "hover:shadow-lg hover:scale-[1.02]",
                   isSelected
                     ? "shadow-md"
-                    : "border-gray-100 bg-white hover:border-gray-200 hover:shadow-sm"
+                    : "border-gray-100 bg-white hover:border-opacity-50"
                 )}
                 style={{
                   borderColor: isSelected ? type.color : undefined,
                   backgroundColor: isSelected ? `${type.color}08` : undefined,
                 }}
               >
-                <div className="flex items-start gap-4">
+                <div className="flex flex-col items-center text-center gap-4">
                   <div className={cn(
-                    "w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden",
-                    isSelected ? "bg-white shadow-sm" : "bg-gray-50"
+                    "w-20 h-20 md:w-24 md:h-24 rounded-2xl flex items-center justify-center transition-all",
+                    isSelected ? "bg-white shadow-md" : "bg-gray-50 group-hover:bg-white group-hover:shadow-sm"
                   )}>
                     <img 
                       src={type.image} 
                       alt=""
-                      className="w-12 h-12 object-contain"
+                      className="w-16 h-16 md:w-20 md:h-20 object-contain"
                     />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <p className={cn(
-                        "font-semibold text-sm leading-tight",
-                        isSelected ? "text-[#1A3E5C]" : "text-gray-700"
-                      )}>
-                        {language === 'es' ? type.nameEs : type.nameEn}
-                      </p>
-                      <div 
-                        className={cn(
-                          "w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5"
-                        )}
-                        style={{
-                          borderColor: isSelected ? type.color : '#D1D5DB'
-                        }}
-                      >
-                        {isSelected && (
-                          <div 
-                            className="w-3 h-3 rounded-full"
-                            style={{ backgroundColor: type.color }}
-                          />
-                        )}
-                      </div>
-                    </div>
-                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                  
+                  <div>
+                    <p className={cn(
+                      "font-bold text-lg md:text-xl mb-2 transition-colors",
+                      isSelected ? "text-[#1A3E5C]" : "text-gray-800"
+                    )}>
+                      {language === 'es' ? type.nameEs : type.nameEn}
+                    </p>
+                    <p className="text-sm md:text-base text-gray-500 leading-relaxed">
                       {getDescription(type)}
                     </p>
+                  </div>
+                  
+                  <div 
+                    className={cn(
+                      "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all"
+                    )}
+                    style={{
+                      borderColor: isSelected ? type.color : '#D1D5DB'
+                    }}
+                  >
+                    {isSelected && (
+                      <div 
+                        className="w-3.5 h-3.5 rounded-full"
+                        style={{ backgroundColor: type.color }}
+                      />
+                    )}
                   </div>
                 </div>
               </button>
@@ -201,13 +204,13 @@ export default function CreateListStep2() {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100">
-        <div className="max-w-lg mx-auto">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 shadow-lg">
+        <div className="max-w-4xl mx-auto">
           <Button
             onClick={handleNext}
-            className="w-full py-6 text-base font-semibold bg-[#1ABC9C] hover:bg-[#1ABC9C]/90"
+            className="w-full py-6 text-lg font-bold bg-[#1ABC9C] hover:bg-[#1ABC9C]/90 rounded-xl"
           >
-            {language === 'es' ? 'Siguiente: Finalizar' : 'Next: Finish'}
+            {language === 'es' ? 'Finalizar y Crear Lista' : 'Finish and Create List'}
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </div>
