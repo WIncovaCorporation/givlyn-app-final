@@ -1,0 +1,65 @@
+¡Excelente! La decisión de llevar a Givlyn al nivel de diseño y funcionalidad de **GoWish** es la estrategia correcta para el crecimiento. No se trata de copiar, sino de **superar el estándar** con nuestra propia arquitectura.
+
+A continuación, se presentan las **instrucciones claras y específicas** para el equipo de desarrollo, divididas en las dos áreas críticas: **Diseño/UX** (para el look profesional) y **Funcionalidad** (para la robustez del producto).
+
+---
+
+## 🎨 SECCIÓN 1: DISEÑO Y EXPERIENCIA DE USUARIO (UX)
+
+El objetivo es eliminar la sensación de "plantilla" e implementar la arquitectura **Smart Grid** con el pulido visual de GoWish (volumen, sombras suaves, y tipografía profesional).
+
+### 1. ARQUITECTURA VISUAL: SMART GRID (Paso 1 y Paso 2)
+
+El diseño de las tarjetas debe ser consistente en ambas pantallas para **eliminar el scroll** en escritorio y **maximizar la legibilidad**.
+
+| Elemento | Regla de Implementación (CSS/Componente) |
+| :--- | :--- |
+| **Layout (Desktop)** | Usar `display: grid; grid-template-columns: repeat(2, 1fr);` para mostrar **dos tarjetas por fila** en escritorio y tablet. |
+| **Layout (Mobile)** | `grid-template-columns: 1fr;` (100% de ancho). |
+| **Tarjetas (Cards)** | `padding` interno de **24px** y altura mínima de **200px** para darles espacio y un área de *tap* fácil (Ley de Fitts). |
+| **Interacción** | Implementar `transition: all 200ms ease-out;` en todas las tarjetas y el estado `:hover` con **`transform: translateY(-2px);`** y una sombra más profunda. |
+
+### 2. ESTÉTICA PROFESIONAL: PULIDO Y TIPOGRAFÍA
+
+| Detalle Visual | Regla de Implementación (CSS) |
+| :--- | :--- |
+| **Iconografía** | Los activos gráficos deben ser **ilustraciones con volumen 3D y texturas** (no planos). Tamaño mínimo del icono: **80px x 80px**. |
+| **Sombreado** | Implementar una **sombra suave y larga** que simule elevación, evitando sombras duras de plantilla. Ejemplo: `box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);`. |
+| **Tipografía (Jerarquía)** | **Título de Tarjeta:** Fuente de **20px (Bold)**, color oscuro. |
+| **Tipografía (Lectura)** | **Micro-Copy/Descripción:** Fuente de **16px**, color gris (`#4B5563`), con un **`line-height: 1.5`** generoso para facilitar el escaneo (estándar Google/GoWish). |
+
+### 3. COPYWRITING (El Toque Hormozi)
+
+Mantener el *copy* centrado en el beneficio y la acción, tal como se definió:
+
+* **Título Principal (Paso 2):** **¿CÓMO QUIERES USAR ESTA LISTA?** (Pregunta de acción).
+* **Tarjeta 2 (Recibir Regalos):** Implementar el texto dinámico: "Ideal para tu **[CATEGORÍA DEL PASO 1]**. Garantiza que recibes *exactamente* lo que deseas."
+
+---
+
+## 💻 SECCIÓN 2: FUNCIONALIDAD CORE Y ARQUITECTURA
+
+El objetivo es implementar la arquitectura de GoWish utilizando nuestra pila tecnológica (**React/Supabase**) para garantizar la escalabilidad y las funciones de retención de usuarios.
+
+### 1. ESQUEMA DE BASE DE DATOS (Supabase / PostgreSQL)
+
+El equipo de *backend* debe **crear o migrar** las siguientes tablas esenciales (definidas en el script previo) que replican la funcionalidad de GoWish:
+
+* `wishlists`: Contiene el `wishlist_type` (la mecánica del Paso 2) y el `event_date`.
+* `items`: Contiene `price`, `image_url`, `product_url`, y `priority`.
+* `reservations`: **CRÍTICA.** Permite a los invitados "reservar" un regalo para evitar duplicados. **La característica principal de UX de GoWish.**
+* `follows`: Permite la funcionalidad social de "Seguir amigos".
+* `notifications`: Para re-enganchar a los usuarios (Ej: "Alguien reservó un regalo").
+
+### 2. SERVICIOS Y LÓGICA DE NEGOCIO
+
+* **Servicio de Reservas (`reservationService`):** Debe implementar la lógica de **reserva atómica**. Cuando un usuario reserva un ítem, el estado de ese ítem debe cambiar para **TODOS** los demás invitados, garantizando que el dueño de la lista **nunca** vea quién reservó qué.
+* **Servicio de Compartir (`socialService`):** Implementar la función de registro de compartición (`shares`) para medir la **viralidad** y las métricas de crecimiento.
+* **Integración de Items:** El modal para añadir regalos debe permitir al usuario pegar un *link* de **cualquier tienda** y capturar `title`, `price` e `imageUrl` de manera semiautomática (simulando la extensión de 1-clic de GoWish).
+
+### 3. DASHBOARD Y CARDS DE LISTA
+
+* El **Dashboard** (`Dashboard.jsx`) debe mostrar las listas en formato **Smart Grid (2 columnas)**, usando el componente `WishlistCard.jsx` optimizado.
+* El `WishlistCard` debe mostrar visualmente: **Título**, **Tipo de Evento**, **Número de Items**, y **Número de Reservas** (para el dueño de la lista, si es visible), replicando la eficiencia de GoWish para dar un resumen rápido del estado de la lista.
+
+Al seguir estas instrucciones, Givlyn no solo tendrá la funcionalidad completa de un competidor de talla mundial, sino que su interfaz será más limpia, más legible y con un estándar visual superior.

@@ -10,7 +10,6 @@ import { EVENT_TYPES } from "@/data/eventTypes";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import { supabase } from "@/integrations/supabase/client";
-import "@/components/ListCreation/animations.css";
 
 export default function CreateListStep1() {
   const navigate = useNavigate();
@@ -118,126 +117,152 @@ export default function CreateListStep1() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-28">
-      <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-3 shadow-sm">
-        <button 
-          onClick={() => navigate("/dashboard")}
-          className="flex items-center gap-2 text-gray-600 hover:text-[#1A3E5C] transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span className="text-sm font-medium">
-            {language === 'es' ? 'Volver al Dashboard' : 'Back to Dashboard'}
-          </span>
-        </button>
-      </div>
+    <div className="min-h-screen bg-[#FAFBFC]">
+      {/* Header */}
+      <header className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-4">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <button 
+            onClick={() => navigate("/dashboard")}
+            className="flex items-center gap-2 text-gray-500 hover:text-[#1A3E5C] transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-sm font-medium">
+              {language === 'es' ? 'Volver al Dashboard' : 'Back to Dashboard'}
+            </span>
+          </button>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-500 font-medium">
+              {language === 'es' ? 'Paso 1 de 3' : 'Step 1 of 3'}
+            </span>
+            <Progress value={33} className="h-2 w-20" />
+          </div>
+        </div>
+      </header>
 
-      <div className="max-w-5xl mx-auto px-4 py-6 fade-in-up">
-        <div className="mb-6">
-          <p className="text-sm text-gray-500 mb-2 font-medium">
-            {language === 'es' ? 'Paso 1 de 3' : 'Step 1 of 3'}
+      {/* Main Content */}
+      <main className="max-w-4xl mx-auto px-4 py-8 pb-32">
+        {/* Title Section */}
+        <div className="text-center mb-10">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#1A3E5C] mb-3">
+            {language === 'es' ? '¿Qué vas a celebrar?' : 'What are you celebrating?'}
+          </h1>
+          <p className="text-lg text-gray-500">
+            {language === 'es' 
+              ? 'Elige el evento para personalizar tu experiencia' 
+              : 'Choose the event to personalize your experience'}
           </p>
-          <Progress value={33} className="h-2" />
         </div>
 
-        <h1 className="text-2xl font-bold text-[#1A3E5C] mb-2">
-          {language === 'es' ? '¿Qué vas a celebrar?' : 'What are you celebrating?'}
-        </h1>
-        <p className="text-gray-500 mb-6">
-          {language === 'es' 
-            ? 'Elige el evento para personalizar tu experiencia' 
-            : 'Choose the event to personalize your experience'}
-        </p>
-
-        <div className="space-y-6">
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <Label htmlFor="list-name" className="text-sm font-semibold text-gray-700 mb-2 block">
-              {language === 'es' ? 'Nombre de tu Lista' : 'Your List Name'}
-            </Label>
-            <Input
-              id="list-name"
-              value={name}
-              onChange={handleNameChange}
-              placeholder={language === 'es' ? 'Ej: "Cumpleaños de mi hijo Mateo"' : 'E.g.: "My son\'s Birthday"'}
-              maxLength={50}
-              className={`border-gray-200 focus:border-[#1ABC9C] focus:ring-[#1ABC9C] text-base py-3 h-12 ${nameError ? 'border-red-400' : ''}`}
-            />
-            <div className="flex justify-between items-center mt-2">
-              <span className={`text-xs ${nameError ? 'text-red-500' : 'text-gray-400'}`}>
-                {nameError || (language === 'es' ? 'Máx. 50 caracteres' : 'Max. 50 characters')}
-              </span>
-              <span className="text-xs text-gray-400 font-medium">{name.length}/50</span>
-            </div>
+        {/* Name Input - Premium Card */}
+        <div 
+          className="bg-white rounded-2xl p-6 mb-8 border border-gray-100"
+          style={{ boxShadow: '0 15px 40px rgba(0, 0, 0, 0.06)' }}
+        >
+          <Label htmlFor="list-name" className="text-base font-semibold text-[#1A3E5C] mb-3 block">
+            {language === 'es' ? 'Nombre de tu Lista' : 'Your List Name'}
+          </Label>
+          <Input
+            id="list-name"
+            value={name}
+            onChange={handleNameChange}
+            placeholder={language === 'es' ? 'Ej: "Cumpleaños de mi hijo Mateo"' : 'E.g.: "My son\'s Birthday"'}
+            maxLength={50}
+            className={cn(
+              "h-14 text-lg border-gray-200 focus:border-[#1ABC9C] focus:ring-[#1ABC9C] rounded-xl",
+              nameError && "border-red-400"
+            )}
+          />
+          <div className="flex justify-between items-center mt-3">
+            <span className={`text-sm ${nameError ? 'text-red-500 font-medium' : 'text-gray-400'}`}>
+              {nameError || (language === 'es' ? 'Máx. 50 caracteres' : 'Max. 50 characters')}
+            </span>
+            <span className="text-sm text-gray-400 font-medium">{name.length}/50</span>
           </div>
+        </div>
 
-          <div>
-            <Label className="text-sm font-semibold text-gray-700 mb-3 block">
-              {language === 'es' ? 'Tipo de Evento' : 'Event Type'}
-              <span className="text-gray-400 font-normal ml-1">
-                ({language === 'es' ? 'Elige uno' : 'Choose one'})
-              </span>
-            </Label>
-            
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {EVENT_TYPES.map((eventType) => {
-                const isSelected = selectedType === eventType.id;
-                return (
-                  <button
-                    key={eventType.id}
-                    onClick={() => handleCardClick(eventType.id)}
-                    className={cn(
-                      "group p-5 rounded-2xl border-2 text-left transition-all duration-200",
-                      "hover:shadow-lg hover:scale-[1.02]",
-                      isSelected
-                        ? "border-[#1ABC9C] bg-[#1ABC9C]/5 shadow-md"
-                        : "border-gray-100 bg-white hover:border-[#1ABC9C]/50"
-                    )}
-                  >
-                    <div className="flex flex-col items-center text-center gap-3">
-                      <div className={cn(
-                        "w-16 h-16 rounded-2xl flex items-center justify-center transition-all",
-                        isSelected ? "bg-white shadow-md" : "bg-gray-50 group-hover:bg-white group-hover:shadow-sm"
-                      )}>
-                        <img 
-                          src={eventType.image} 
-                          alt=""
-                          className="w-14 h-14 object-contain"
-                        />
-                      </div>
-                      
-                      <div>
-                        <p className={cn(
-                          "font-bold text-sm leading-tight transition-colors",
-                          isSelected ? "text-[#1A3E5C]" : "text-gray-800 group-hover:text-[#1A3E5C]"
-                        )}>
-                          {language === 'es' ? eventType.title : eventType.titleEn}
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">
-                          {language === 'es' ? eventType.microCopy : eventType.microCopyEn}
-                        </p>
-                      </div>
-                      
-                      {isSelected && (
-                        <div className="w-6 h-6 rounded-full bg-[#1ABC9C] flex items-center justify-center">
-                          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                      )}
+        {/* Event Type Section */}
+        <div>
+          <Label className="text-base font-semibold text-[#1A3E5C] mb-4 block">
+            {language === 'es' ? 'Tipo de Evento' : 'Event Type'}
+            <span className="text-gray-400 font-normal ml-2 text-sm">
+              ({language === 'es' ? 'Elige uno' : 'Choose one'})
+            </span>
+          </Label>
+          
+          {/* GoWish-style Grid: 2 columns on all screens */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {EVENT_TYPES.map((eventType) => {
+              const isSelected = selectedType === eventType.id;
+              return (
+                <button
+                  key={eventType.id}
+                  onClick={() => handleCardClick(eventType.id)}
+                  className={cn(
+                    "group relative p-6 rounded-2xl border-2 text-center transition-all duration-200",
+                    "hover:-translate-y-0.5",
+                    isSelected
+                      ? "border-[#1ABC9C] bg-[#1ABC9C]/5"
+                      : "border-gray-100 bg-white hover:border-[#1ABC9C]/40"
+                  )}
+                  style={{ 
+                    minHeight: '200px',
+                    boxShadow: isSelected 
+                      ? '0 15px 40px rgba(26, 188, 156, 0.15)' 
+                      : '0 15px 40px rgba(0, 0, 0, 0.06)'
+                  }}
+                >
+                  <div className="flex flex-col items-center justify-center h-full gap-4">
+                    {/* Icon Container - 80x80px */}
+                    <div className={cn(
+                      "w-20 h-20 rounded-2xl flex items-center justify-center transition-all",
+                      isSelected 
+                        ? "bg-white shadow-md" 
+                        : "bg-gray-50 group-hover:bg-white group-hover:shadow-sm"
+                    )}>
+                      <img 
+                        src={eventType.image} 
+                        alt=""
+                        className="w-16 h-16 object-contain"
+                      />
                     </div>
-                  </button>
-                );
-              })}
-            </div>
+                    
+                    {/* Text Content */}
+                    <div className="space-y-2">
+                      <h3 className={cn(
+                        "text-xl font-bold leading-tight transition-colors",
+                        isSelected ? "text-[#1A3E5C]" : "text-gray-800 group-hover:text-[#1A3E5C]"
+                      )}>
+                        {language === 'es' ? eventType.title : eventType.titleEn}
+                      </h3>
+                      <p className="text-base text-gray-500 leading-relaxed">
+                        {language === 'es' ? eventType.microCopy : eventType.microCopyEn}
+                      </p>
+                    </div>
+                    
+                    {/* Selection Indicator */}
+                    {isSelected && (
+                      <div className="absolute top-4 right-4 w-7 h-7 rounded-full bg-[#1ABC9C] flex items-center justify-center">
+                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
-      </div>
+      </main>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 shadow-lg">
-        <div className="max-w-5xl mx-auto">
+      {/* Fixed Bottom CTA */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-sm border-t border-gray-100">
+        <div className="max-w-4xl mx-auto">
           <Button
             onClick={handleNext}
             disabled={!isValid || isChecking}
-            className="w-full py-6 text-base font-semibold bg-[#1ABC9C] hover:bg-[#1ABC9C]/90 disabled:bg-gray-200 disabled:text-gray-400 transition-all"
+            className="w-full h-14 text-lg font-bold bg-[#1ABC9C] hover:bg-[#1ABC9C]/90 disabled:bg-gray-200 disabled:text-gray-400 rounded-xl transition-all"
+            style={{ boxShadow: isValid ? '0 8px 24px rgba(26, 188, 156, 0.3)' : 'none' }}
           >
             {isChecking ? (
               <>
@@ -246,13 +271,13 @@ export default function CreateListStep1() {
               </>
             ) : (
               <>
-                {language === 'es' ? 'Siguiente: ¿Cómo funcionará?' : 'Next: How Will It Work?'}
+                {language === 'es' ? 'Siguiente: ¿Cómo la Usarás?' : 'Next: How Will You Use It?'}
                 <ArrowRight className="w-5 h-5 ml-2" />
               </>
             )}
           </Button>
           {!isValid && (
-            <p className="text-center text-xs text-gray-400 mt-2">
+            <p className="text-center text-sm text-gray-400 mt-3">
               {language === 'es' 
                 ? 'Completa el nombre y selecciona un tipo de evento' 
                 : 'Complete the name and select an event type'}

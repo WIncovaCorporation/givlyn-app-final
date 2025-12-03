@@ -35,8 +35,8 @@ const accessTypes: AccessType[] = [
     nameEn: "Receive Gifts", 
     descEs: "Wishlist compartida para que otros me regalen.", 
     descEn: "Shared wishlist for others to gift me.",
-    descEsDynamic: "Ideal para tu {category}.",
-    descEnDynamic: "Ideal for your {category}.",
+    descEsDynamic: "Ideal para tu {category}. Garantiza que recibes exactamente lo que deseas.",
+    descEnDynamic: "Ideal for your {category}. Ensures you get exactly what you want.",
     image: "/images/list-types/person_receiving_gift_icon.png",
     color: "#FF9900"
   },
@@ -86,9 +86,7 @@ export default function CreateListStep2() {
     if (type.id === 'shared' && categoryName) {
       const template = language === 'es' ? type.descEsDynamic : type.descEnDynamic;
       if (template) {
-        const baseDesc = language === 'es' ? type.descEs : type.descEn;
-        const dynamicPart = template.replace('{category}', categoryName);
-        return `${baseDesc} ${dynamicPart}`;
+        return template.replace('{category}', categoryName);
       }
     }
     return language === 'es' ? type.descEs : type.descEn;
@@ -109,36 +107,42 @@ export default function CreateListStep2() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
-      <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-2">
+    <div className="min-h-screen bg-[#FAFBFC]">
+      {/* Header */}
+      <header className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <button 
             onClick={handleBack}
-            className="flex items-center gap-2 text-gray-600 hover:text-[#1A3E5C] transition-colors"
+            className="flex items-center gap-2 text-gray-500 hover:text-[#1A3E5C] transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-5 h-5" />
             <span className="text-sm font-medium">
               {language === 'es' ? 'Volver' : 'Back'}
             </span>
           </button>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500">
-              {language === 'es' ? 'Paso 2/3' : 'Step 2/3'}
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-500 font-medium">
+              {language === 'es' ? 'Paso 2 de 3' : 'Step 2 of 3'}
             </span>
-            <Progress value={66} className="h-1.5 w-16" />
+            <Progress value={66} className="h-2 w-20" />
           </div>
         </div>
-      </div>
+      </header>
 
-      <div className="max-w-4xl mx-auto px-4 py-4">
-        <h1 className="text-xl lg:text-2xl font-bold text-[#1A3E5C] mb-1">
-          {language === 'es' ? '¿Cómo Quieres Usar Esta Lista?' : 'How Do You Want to Use This List?'}
-        </h1>
-        <p className="text-sm text-gray-500 mb-4">
-          {language === 'es' ? 'Define tu rol y la mecánica' : 'Define your role and mechanics'}
-        </p>
+      {/* Main Content */}
+      <main className="max-w-4xl mx-auto px-4 py-8 pb-32">
+        {/* Title Section */}
+        <div className="text-center mb-10">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#1A3E5C] mb-3">
+            {language === 'es' ? '¿Cómo Quieres Usar Esta Lista?' : 'How Do You Want to Use This List?'}
+          </h1>
+          <p className="text-lg text-gray-500">
+            {language === 'es' ? 'Define tu rol y la mecánica' : 'Define your role and mechanics'}
+          </p>
+        </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {/* GoWish-style Grid: 2 columns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {accessTypes.map((type) => {
             const isSelected = selectedAccess === type.id;
             return (
@@ -146,44 +150,53 @@ export default function CreateListStep2() {
                 key={type.id}
                 onClick={() => setSelectedAccess(type.id)}
                 className={cn(
-                  "group p-4 rounded-xl border-2 text-left transition-all duration-200",
-                  "hover:shadow-md hover:scale-[1.02]",
+                  "group relative p-6 rounded-2xl border-2 text-center transition-all duration-200",
+                  "hover:-translate-y-0.5",
                   isSelected
-                    ? "shadow-sm"
+                    ? "bg-opacity-5"
                     : "border-gray-100 bg-white"
                 )}
                 style={{
+                  minHeight: '200px',
                   borderColor: isSelected ? type.color : undefined,
                   backgroundColor: isSelected ? `${type.color}08` : undefined,
+                  boxShadow: isSelected 
+                    ? `0 15px 40px ${type.color}20` 
+                    : '0 15px 40px rgba(0, 0, 0, 0.06)'
                 }}
               >
-                <div className="flex flex-col items-center text-center gap-2">
+                <div className="flex flex-col items-center justify-center h-full gap-4">
+                  {/* Icon Container - 80x80px */}
                   <div className={cn(
-                    "w-14 h-14 lg:w-16 lg:h-16 rounded-xl flex items-center justify-center transition-all",
-                    isSelected ? "bg-white shadow-sm" : "bg-gray-50 group-hover:bg-white"
+                    "w-20 h-20 rounded-2xl flex items-center justify-center transition-all",
+                    isSelected 
+                      ? "bg-white shadow-md" 
+                      : "bg-gray-50 group-hover:bg-white group-hover:shadow-sm"
                   )}>
                     <img 
                       src={type.image} 
                       alt=""
-                      className="w-12 h-12 lg:w-14 lg:h-14 object-contain"
+                      className="w-16 h-16 object-contain"
                     />
                   </div>
                   
-                  <div>
-                    <p className={cn(
-                      "font-semibold text-sm leading-tight transition-colors",
-                      isSelected ? "text-[#1A3E5C]" : "text-gray-800"
+                  {/* Text Content */}
+                  <div className="space-y-2">
+                    <h3 className={cn(
+                      "text-xl font-bold leading-tight transition-colors",
+                      isSelected ? "text-[#1A3E5C]" : "text-gray-800 group-hover:text-[#1A3E5C]"
                     )}>
                       {language === 'es' ? type.nameEs : type.nameEn}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1 leading-tight line-clamp-3">
+                    </h3>
+                    <p className="text-base text-gray-500 leading-relaxed">
                       {getDescription(type)}
                     </p>
                   </div>
                   
+                  {/* Selection Indicator */}
                   <div 
                     className={cn(
-                      "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all"
+                      "w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all"
                     )}
                     style={{
                       borderColor: isSelected ? type.color : '#D1D5DB'
@@ -191,7 +204,7 @@ export default function CreateListStep2() {
                   >
                     {isSelected && (
                       <div 
-                        className="w-3 h-3 rounded-full"
+                        className="w-4 h-4 rounded-full"
                         style={{ backgroundColor: type.color }}
                       />
                     )}
@@ -201,13 +214,15 @@ export default function CreateListStep2() {
             );
           })}
         </div>
-      </div>
+      </main>
 
-      <div className="fixed bottom-0 left-0 right-0 p-3 bg-white border-t border-gray-100 shadow-lg">
+      {/* Fixed Bottom CTA */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-sm border-t border-gray-100">
         <div className="max-w-4xl mx-auto">
           <Button
             onClick={handleNext}
-            className="w-full py-5 text-base font-bold bg-[#1ABC9C] hover:bg-[#1ABC9C]/90 rounded-xl"
+            className="w-full h-14 text-lg font-bold bg-[#1ABC9C] hover:bg-[#1ABC9C]/90 rounded-xl transition-all"
+            style={{ boxShadow: '0 8px 24px rgba(26, 188, 156, 0.3)' }}
           >
             {language === 'es' ? 'Finalizar y Crear Lista' : 'Finish and Create List'}
             <ArrowRight className="w-5 h-5 ml-2" />
