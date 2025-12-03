@@ -206,6 +206,23 @@ const Lists = () => {
     if (!editingList || !user) return;
 
     try {
+      const { data: existingLists } = await supabase
+        .from("gift_lists")
+        .select("id, name")
+        .eq("user_id", user.id)
+        .ilike("name", editingList.name.trim());
+
+      const isDuplicate = existingLists?.some(
+        list => list.id !== editingList.id && list.name.toLowerCase() === editingList.name.trim().toLowerCase()
+      );
+
+      if (isDuplicate) {
+        toast.error(language === 'es' 
+          ? 'Ya tienes una lista con este nombre. Usa un nombre diferente.' 
+          : 'You already have a list with this name. Use a different name.');
+        return;
+      }
+
       const { error } = await supabase
         .from("gift_lists")
         .update({ 

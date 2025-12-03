@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { EVENT_TYPES } from "@/data/eventTypes";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
@@ -61,9 +61,23 @@ export default function CreateListStep1() {
     trackEvent('step1_card_selected', { event_type: typeId });
   };
 
+  const [isChecking, setIsChecking] = useState(false);
   const isValid = name.trim().length >= 3 && name.trim().length <= 50 && selectedType !== null;
 
-  const handleNext = () => {
+  const checkDuplicateName = async (listName: string): Promise<boolean> => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) return false;
+
+    const { data: existingLists } = await supabase
+      .from('gift_lists')
+      .select('name')
+      .eq('user_id', session.user.id)
+      .ilike('name', listName.trim());
+
+    return (existingLists?.length || 0) > 0;
+  };
+
+  const handleNext = async () => {
     if (!name.trim()) {
       setNameError(language === 'es' ? 'Por favor, ingresa un nombre' : 'Please enter a name');
       return;
@@ -73,17 +87,34 @@ export default function CreateListStep1() {
       return;
     }
 
-    sessionStorage.setItem("createList", JSON.stringify({ 
-      name: name.trim(), 
-      event_type: selectedType 
-    }));
+    setIsChecking(true);
+    try {
+      const isDuplicate = await checkDuplicateName(name);
+      if (isDuplicate) {
+        setNameError(language === 'es' 
+          ? 'Ya tienes una lista con este nombre. Usa un nombre diferente.' 
+          : 'You already have a list with this name. Use a different name.');
+        setIsChecking(false);
+        return;
+      }
 
-    trackEvent('step1_completed', { 
-      event_type: selectedType,
-      list_name_length: name.trim().length
-    });
+      sessionStorage.setItem("createList", JSON.stringify({ 
+        name: name.trim(), 
+        event_type: selectedType 
+      }));
 
-    navigate("/create-list/step-2");
+      trackEvent('step1_completed', { 
+        event_type: selectedType,
+        list_name_length: name.trim().length
+      });
+
+      navigate("/create-list/step-2");
+    } catch (error) {
+      console.error('Error checking duplicate:', error);
+      navigate("/create-list/step-2");
+    } finally {
+      setIsChecking(false);
+    }
   };
 
   return (
@@ -207,11 +238,20 @@ export default function CreateListStep1() {
         <div className="max-w-4xl mx-auto">
           <Button
             onClick={handleNext}
-            disabled={!isValid}
+            disabled={!isValid || isChecking}
             className="w-full py-6 text-lg font-bold bg-[#1ABC9C] hover:bg-[#1ABC9C]/90 disabled:bg-gray-200 disabled:text-gray-400 transition-all rounded-xl"
           >
-            {language === 'es' ? 'Siguiente: ¿Cómo la Usarás?' : 'Next: How Will You Use It?'}
-            <ArrowRight className="w-5 h-5 ml-2" />
+            {isChecking ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                {language === 'es' ? 'Verificando...' : 'Checking...'}
+              </>
+            ) : (
+              <>
+                {language === 'es' ? 'Siguiente: ¿Cómo la Usarás?' : 'Next: How Will You Use It?'}
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </>
+            )}
           </Button>
           {!isValid && (
             <p className="text-center text-sm text-gray-400 mt-2">
