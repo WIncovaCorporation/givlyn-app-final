@@ -166,11 +166,11 @@ export default function CreateListStep2() {
         const fileExt = coverFile.name.split('.').pop();
         const fileName = `${session.user.id}/${Date.now()}.${fileExt}`;
         
-        const { data: uploadData, error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
           .from('list-covers')
           .upload(fileName, coverFile);
         
-        if (!uploadError && uploadData) {
+        if (!uploadError) {
           const { data: urlData } = supabase.storage
             .from('list-covers')
             .getPublicUrl(fileName);
@@ -188,10 +188,6 @@ export default function CreateListStep2() {
         .insert({
           user_id: session.user.id,
           name: listName,
-          description: description || null,
-          cover_image: coverUrl,
-          event_date: eventDate,
-          is_public: visibility === 'public',
         })
         .select()
         .single();
@@ -222,6 +218,7 @@ export default function CreateListStep2() {
       navigate("/create-list/success");
     } catch (error) {
       console.error('Error:', error);
+      alert(language === 'es' ? 'Error inesperado' : 'Unexpected error');
     } finally {
       setIsCreating(false);
     }
