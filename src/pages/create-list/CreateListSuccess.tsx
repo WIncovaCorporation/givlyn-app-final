@@ -13,6 +13,7 @@ interface ListData {
   event_type: string;
   access_type: string;
   list_id?: string;
+  share_message?: string;
 }
 
 const eventTypeLabels: Record<string, { es: string; en: string }> = {
@@ -96,22 +97,28 @@ export default function CreateListSuccess() {
   };
 
   const getShareUrl = () => `${window.location.origin}/lists/${listId}`;
-  const getShareMessage = () => language === 'es' 
-    ? `Mira mi lista de regalos "${listData?.name}" en Givlyn`
-    : `Check out my gift list "${listData?.name}" on Givlyn`;
+  
+  const getShareMessage = () => {
+    if (listData?.share_message) {
+      return listData.share_message;
+    }
+    return language === 'es' 
+      ? `Mira mi lista de regalos "${listData?.name}" en Givlyn`
+      : `Check out my gift list "${listData?.name}" on Givlyn`;
+  };
 
   const handleWhatsAppShare = () => {
     if (!listId) return;
-    const message = `${getShareMessage()}: ${getShareUrl()}`;
+    const message = `${getShareMessage()}\n\n${getShareUrl()}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   const handleEmailShare = () => {
     if (!listId) return;
     const subject = language === 'es' 
-      ? `Te comparto mi lista de regalos: ${listData?.name}`
-      : `Sharing my gift list: ${listData?.name}`;
-    const body = `${getShareMessage()}\n\n${getShareUrl()}`;
+      ? `Te invito a ver mi lista: ${listData?.name}`
+      : `Check out my list: ${listData?.name}`;
+    const body = `${getShareMessage()}\n\n${language === 'es' ? 'Ver lista aqui' : 'View list here'}: ${getShareUrl()}`;
     window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
   };
 

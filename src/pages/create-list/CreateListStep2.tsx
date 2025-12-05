@@ -96,6 +96,7 @@ export default function CreateListStep2() {
   const [eventType, setEventType] = useState("");
   
   const [description, setDescription] = useState("");
+  const [shareMessage, setShareMessage] = useState("");
   const [eventDay, setEventDay] = useState<number | null>(null);
   const [eventMonth, setEventMonth] = useState<number | null>(null);
   const [eventYear, setEventYear] = useState<number | null>(null);
@@ -104,6 +105,37 @@ export default function CreateListStep2() {
   const [visibility, setVisibility] = useState<"public" | "private">("public");
   const [isCreating, setIsCreating] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
+
+  const getDefaultShareMessage = (name: string, eventTypeId: string) => {
+    const messages: Record<string, { es: string; en: string }> = {
+      personal_celebration: {
+        es: `Te invito a ver mi lista de regalos "${name}". Elige algo especial para mi celebracion.`,
+        en: `Check out my gift list "${name}". Pick something special for my celebration!`
+      },
+      holidays: {
+        es: `Mira mi lista de deseos "${name}" para estas fiestas. Encuentra el regalo perfecto.`,
+        en: `See my holiday wishlist "${name}". Find the perfect gift!`
+      },
+      wedding_couple: {
+        es: `Estamos emocionados de compartir nuestra lista de bodas "${name}". Gracias por ser parte de este momento especial.`,
+        en: `We're excited to share our wedding registry "${name}". Thank you for being part of this special moment!`
+      },
+      baby_kids_family: {
+        es: `Te comparto la lista "${name}" con los regalos que necesitamos. Gracias por tu carino.`,
+        en: `Here's our gift list "${name}" with what we need. Thanks for your love!`
+      },
+      collaboration: {
+        es: `Unete a nuestra lista colaborativa "${name}". Juntos hacemos la diferencia.`,
+        en: `Join our collaborative list "${name}". Together we make a difference!`
+      },
+      other: {
+        es: `Te invito a ver mi lista "${name}" en Givlyn. Encuentra el regalo ideal.`,
+        en: `Check out my list "${name}" on Givlyn. Find the ideal gift!`
+      }
+    };
+    const template = messages[eventTypeId] || messages.other;
+    return language === 'es' ? template.es : template.en;
+  };
 
   useEffect(() => {
     const saved = sessionStorage.getItem("createList");
@@ -115,7 +147,8 @@ export default function CreateListStep2() {
     const data = JSON.parse(saved);
     setListName(data.name || "");
     setEventType(data.event_type || "");
-  }, [navigate]);
+    setShareMessage(getDefaultShareMessage(data.name || "", data.event_type || "other"));
+  }, [navigate, language]);
 
   const handleAccessSelect = (accessId: string) => {
     setSelectedAccess(accessId);
@@ -202,6 +235,7 @@ export default function CreateListStep2() {
         ...JSON.parse(sessionStorage.getItem("createList") || "{}"),
         access_type: selectedAccess,
         description,
+        share_message: shareMessage,
         event_date: eventDate,
         cover_image: coverUrl,
         visibility,
@@ -390,6 +424,40 @@ export default function CreateListStep2() {
                     className="min-h-[100px] text-base border-gray-200 focus:border-[#1ABC9C] focus:ring-0 rounded-2xl resize-none"
                     maxLength={500}
                   />
+                </div>
+
+                {/* Share Message - Personalized Invitation */}
+                <div className="bg-gradient-to-r from-[#FF9900]/5 to-[#FFD700]/5 rounded-2xl p-5 border border-[#FF9900]/20">
+                  <label className="text-sm font-semibold text-[#1A3E5C] mb-2 flex items-center gap-2">
+                    <svg className="w-4 h-4 text-[#FF9900]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                    </svg>
+                    {language === 'es' ? 'Mensaje de Invitacion' : 'Invitation Message'}
+                  </label>
+                  <p className="text-xs text-gray-500 mb-3">
+                    {language === 'es' 
+                      ? 'Este mensaje se enviara cuando compartas tu lista por WhatsApp o Email' 
+                      : 'This message will be sent when you share your list via WhatsApp or Email'}
+                  </p>
+                  <Textarea
+                    value={shareMessage}
+                    onChange={(e) => setShareMessage(e.target.value)}
+                    placeholder={language === 'es' 
+                      ? 'Escribe un mensaje personalizado para tus invitados...' 
+                      : 'Write a personalized message for your guests...'}
+                    className="min-h-[80px] text-base border-[#FF9900]/30 focus:border-[#FF9900] focus:ring-0 rounded-xl resize-none bg-white"
+                    maxLength={200}
+                  />
+                  <div className="flex justify-between items-center mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setShareMessage(getDefaultShareMessage(listName, eventType))}
+                      className="text-xs text-[#1ABC9C] hover:underline font-medium"
+                    >
+                      {language === 'es' ? 'Restaurar mensaje sugerido' : 'Restore suggested message'}
+                    </button>
+                    <span className="text-xs text-gray-400">{shareMessage.length}/200</span>
+                  </div>
                 </div>
 
                 {/* Event Date */}
