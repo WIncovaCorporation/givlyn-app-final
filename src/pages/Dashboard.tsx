@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Gift, Users, Plus, Search, List, Home, ClipboardList, Calendar, ChevronRight } from "lucide-react";
+import { Gift, Users, Plus, Search, List, Home, ClipboardList, ChevronRight, ChevronLeft } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -12,10 +12,17 @@ interface GiftList {
   id: string;
   name: string;
   created_at: string;
-  event_type?: string;
-  access_type?: string;
   item_count?: number;
 }
+
+const listBackgrounds = [
+  "https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=400&q=80",
+  "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400&q=80",
+  "https://images.unsplash.com/photo-1512909006721-3d6018887383?w=400&q=80",
+  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
+  "https://images.unsplash.com/photo-1607344645866-009c320b63e0?w=400&q=80",
+  "https://images.unsplash.com/photo-1576919228236-a097c32a5cd4?w=400&q=80",
+];
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -28,8 +35,29 @@ const Dashboard = () => {
     myGroups: 0,
     totalSaved: 0,
   });
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   const userName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'Usuario';
+
+  const checkScrollButtons = () => {
+    if (carouselRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  const scrollCarousel = (direction: 'left' | 'right') => {
+    if (carouselRef.current) {
+      const scrollAmount = 320;
+      const newScrollLeft = direction === 'left' 
+        ? carouselRef.current.scrollLeft - scrollAmount 
+        : carouselRef.current.scrollLeft + scrollAmount;
+      carouselRef.current.scrollTo({ left: newScrollLeft, behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -77,6 +105,19 @@ const Dashboard = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  useEffect(() => {
+    checkScrollButtons();
+    const carousel = carouselRef.current;
+    if (carousel) {
+      carousel.addEventListener('scroll', checkScrollButtons);
+      window.addEventListener('resize', checkScrollButtons);
+      return () => {
+        carousel.removeEventListener('scroll', checkScrollButtons);
+        window.removeEventListener('resize', checkScrollButtons);
+      };
+    }
+  }, [myLists]);
+
   const loadStats = async (userId: string) => {
     try {
       const { data: lists } = await supabase
@@ -117,10 +158,10 @@ const Dashboard = () => {
     try {
       const { data: lists } = await supabase
         .from("gift_lists")
-        .select("id, name, created_at, event_type, access_type")
+        .select("id, name, created_at")
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
-        .limit(6);
+        .limit(10);
 
       if (lists) {
         const listsWithCounts = await Promise.all(
@@ -143,18 +184,6 @@ const Dashboard = () => {
     }
   };
 
-  const getEventTypeLabel = (eventType?: string) => {
-    const labels: Record<string, { es: string; en: string }> = {
-      personal_celebration: { es: 'Celebración Personal', en: 'Personal Celebration' },
-      holidays: { es: 'Días Festivos', en: 'Holidays' },
-      wedding_couple: { es: 'Boda/Pareja', en: 'Wedding/Couple' },
-      baby_kids_family: { es: 'Bebé/Familia', en: 'Baby/Family' },
-      collaboration: { es: 'Colaboración', en: 'Collaboration' },
-      other: { es: 'Otro', en: 'Other' },
-    };
-    return labels[eventType || '']?.[language] || (language === 'es' ? 'Lista' : 'List');
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-[#FAFBFC] flex items-center justify-center">
@@ -165,58 +194,58 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#FAFBFC] pb-24 md:pb-8">
-      <div className="max-w-5xl mx-auto px-4 md:px-6 py-8">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-2xl md:text-3xl font-bold text-[#1A3E5C] mb-2">
             {language === 'es' ? `Hola, ${userName}` : `Hi, ${userName}`}
           </h1>
           <p className="text-gray-500 text-lg">
-            {language === 'es' ? '¿Qué regalo encontramos hoy?' : 'What gift shall we find today?'}
+            {language === 'es' ? 'Que regalo encontramos hoy?' : 'What gift shall we find today?'}
           </p>
         </div>
 
-        {/* Action Buttons - Premium Style */}
-        <div className="grid md:grid-cols-2 gap-4 mb-10">
+        {/* Action Buttons - Large Premium Style */}
+        <div className="grid md:grid-cols-2 gap-5 mb-10">
           <button 
             onClick={() => navigate("/create-list/step-1")}
-            className="group p-6 rounded-2xl bg-gradient-to-br from-[#FF9900] to-[#FF7700] text-white text-left transition-all duration-200 hover:-translate-y-0.5"
-            style={{ boxShadow: '0 15px 40px rgba(255, 153, 0, 0.25)' }}
+            className="group p-8 rounded-3xl bg-gradient-to-br from-[#FF9900] to-[#FF7700] text-white text-left transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl"
+            style={{ boxShadow: '0 20px 50px rgba(255, 153, 0, 0.3)' }}
           >
             <div className="flex items-center justify-between">
               <div>
-                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
-                  <Plus className="w-6 h-6" />
+                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-5">
+                  <Plus className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-bold mb-1">
+                <h3 className="text-2xl font-black mb-2">
                   {language === 'es' ? 'Crear Nueva Lista' : 'Create New List'}
                 </h3>
-                <p className="text-white/80 text-sm">
+                <p className="text-white/80 text-base">
                   {language === 'es' ? 'Empieza a organizar tus regalos' : 'Start organizing your gifts'}
                 </p>
               </div>
-              <ChevronRight className="w-6 h-6 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+              <ChevronRight className="w-8 h-8 opacity-60 group-hover:opacity-100 group-hover:translate-x-2 transition-all" />
             </div>
           </button>
 
           <button 
             onClick={() => navigate("/search")}
-            className="group p-6 rounded-2xl bg-white border-2 border-[#1ABC9C] text-left transition-all duration-200 hover:-translate-y-0.5"
+            className="group p-8 rounded-3xl bg-white border-2 border-[#1ABC9C] text-left transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl hover:border-[#1ABC9C]"
             style={{ boxShadow: '0 15px 40px rgba(0, 0, 0, 0.06)' }}
           >
             <div className="flex items-center justify-between">
               <div>
-                <div className="w-12 h-12 bg-[#1ABC9C]/10 rounded-xl flex items-center justify-center mb-4">
-                  <Search className="w-6 h-6 text-[#1ABC9C]" />
+                <div className="w-16 h-16 bg-[#1ABC9C]/10 rounded-2xl flex items-center justify-center mb-5">
+                  <Search className="w-8 h-8 text-[#1ABC9C]" />
                 </div>
-                <h3 className="text-xl font-bold text-[#1A3E5C] mb-1">
-                  {language === 'es' ? 'Encontrar Regalo con IA' : 'Find Gift with AI'}
+                <h3 className="text-2xl font-black text-[#1A3E5C] mb-2">
+                  {language === 'es' ? 'Encontrar Regalo' : 'Find Gift'}
                 </h3>
-                <p className="text-gray-500 text-sm">
-                  {language === 'es' ? 'Amazon, Walmart, eBay y más' : 'Amazon, Walmart, eBay and more'}
+                <p className="text-gray-500 text-base">
+                  {language === 'es' ? 'Amazon, Walmart, eBay y mas' : 'Amazon, Walmart, eBay and more'}
                 </p>
               </div>
-              <ChevronRight className="w-6 h-6 text-gray-300 group-hover:text-[#1ABC9C] group-hover:translate-x-1 transition-all" />
+              <ChevronRight className="w-8 h-8 text-gray-300 group-hover:text-[#1ABC9C] group-hover:translate-x-2 transition-all" />
             </div>
           </button>
         </div>
@@ -252,8 +281,8 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* My Lists Section - GoWish Style Grid */}
-        <div>
+        {/* My Lists Section - Horizontal Carousel GoWish Style */}
+        <div className="relative">
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-xl font-bold text-[#1A3E5C] flex items-center gap-2">
               <ClipboardList className="w-5 h-5" />
@@ -279,11 +308,11 @@ const Dashboard = () => {
                 <Gift className="w-8 h-8 text-[#1ABC9C]" />
               </div>
               <h3 className="text-xl font-bold text-[#1A3E5C] mb-2">
-                {language === 'es' ? 'Tu lista está vacía' : 'Your list is empty'}
+                {language === 'es' ? 'Tu lista esta vacia' : 'Your list is empty'}
               </h3>
               <p className="text-gray-500 mb-6 max-w-sm mx-auto">
                 {language === 'es' 
-                  ? '¿Qué evento se acerca que requiera un regalo?' 
+                  ? 'Que evento se acerca que requiera un regalo?' 
                   : "What upcoming event needs a gift?"}
               </p>
               <Button 
@@ -296,40 +325,85 @@ const Dashboard = () => {
               </Button>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 gap-5">
-              {myLists.map((list) => (
+            <div className="relative group">
+              {/* Left Arrow */}
+              {canScrollLeft && (
                 <button
-                  key={list.id}
-                  onClick={() => navigate(`/lists?id=${list.id}`)}
-                  className="group bg-white rounded-2xl p-5 text-left transition-all duration-200 hover:-translate-y-0.5"
-                  style={{ boxShadow: '0 15px 40px rgba(0, 0, 0, 0.06)' }}
+                  onClick={() => scrollCarousel('left')}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center text-[#1A3E5C] hover:bg-[#1ABC9C] hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                  style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)' }}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="w-14 h-14 bg-gradient-to-br from-[#1ABC9C]/20 to-[#1ABC9C]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <Gift className="w-7 h-7 text-[#1ABC9C]" />
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+              )}
+
+              {/* Carousel Container */}
+              <div 
+                ref={carouselRef}
+                className="flex gap-5 overflow-x-auto scrollbar-hide pb-4 -mx-4 px-4 snap-x snap-mandatory"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {myLists.map((list, index) => (
+                  <button
+                    key={list.id}
+                    onClick={() => navigate(`/lists?id=${list.id}`)}
+                    className="group/card flex-shrink-0 w-[280px] h-[200px] rounded-2xl overflow-hidden relative transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl snap-start"
+                    style={{ boxShadow: '0 15px 40px rgba(0, 0, 0, 0.1)' }}
+                  >
+                    {/* Background Image */}
+                    <div 
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover/card:scale-110"
+                      style={{ 
+                        backgroundImage: `url(${listBackgrounds[index % listBackgrounds.length]})`,
+                      }}
+                    />
+                    
+                    {/* Dark Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
+                    
+                    {/* Item Count Badge */}
+                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-[#1A3E5C] text-sm font-bold px-3 py-1 rounded-full">
+                      {list.item_count || 0}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-[#1A3E5C] text-lg mb-1 truncate group-hover:text-[#1ABC9C] transition-colors">
+                    
+                    {/* List Icon */}
+                    <div className="absolute top-4 left-4 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                      <Gift className="w-5 h-5 text-white" />
+                    </div>
+                    
+                    {/* List Name */}
+                    <div className="absolute bottom-0 left-0 right-0 p-5">
+                      <h3 className="text-white font-bold text-lg leading-tight line-clamp-2">
                         {list.name}
                       </h3>
-                      <p className="text-sm text-gray-500 mb-2">
-                        {getEventTypeLabel(list.event_type)}
-                      </p>
-                      <div className="flex items-center gap-4 text-sm">
-                        <span className="text-gray-400 flex items-center gap-1">
-                          <Gift className="w-4 h-4" />
-                          {list.item_count || 0} {language === 'es' ? 'items' : 'items'}
-                        </span>
-                        <span className="text-gray-400 flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          {new Date(list.created_at).toLocaleDateString()}
-                        </span>
-                      </div>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#1ABC9C] group-hover:translate-x-1 transition-all flex-shrink-0 mt-2" />
+                  </button>
+                ))}
+                
+                {/* Add New List Card */}
+                <button
+                  onClick={() => navigate("/create-list/step-1")}
+                  className="flex-shrink-0 w-[280px] h-[200px] rounded-2xl border-2 border-dashed border-gray-300 hover:border-[#1ABC9C] bg-white/50 flex flex-col items-center justify-center gap-3 transition-all duration-300 hover:-translate-y-1 snap-start"
+                >
+                  <div className="w-14 h-14 bg-[#1ABC9C]/10 rounded-2xl flex items-center justify-center">
+                    <Plus className="w-7 h-7 text-[#1ABC9C]" />
                   </div>
+                  <span className="text-[#1A3E5C] font-bold">
+                    {language === 'es' ? 'Nueva Lista' : 'New List'}
+                  </span>
                 </button>
-              ))}
+              </div>
+
+              {/* Right Arrow */}
+              {canScrollRight && (
+                <button
+                  onClick={() => scrollCarousel('right')}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center text-[#1A3E5C] hover:bg-[#1ABC9C] hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                  style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)' }}
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+              )}
             </div>
           )}
         </div>
