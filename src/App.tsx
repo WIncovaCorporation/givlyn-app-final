@@ -42,6 +42,7 @@ import Search from "./pages/Search";
 import CreateListStep1 from "./pages/create-list/CreateListStep1";
 import CreateListStep2 from "./pages/create-list/CreateListStep2";
 import CreateListSuccess from "./pages/create-list/CreateListSuccess";
+import SharedList from "./pages/SharedList";
 import { lazy, Suspense } from "react";
 
 const DebugPanel = lazy(() => import("@/components/DebugPanel").then(m => ({ default: m.DebugPanel })));
@@ -78,6 +79,9 @@ const App = () => (
                 <Route path="/create-list/step-1" element={<CreateListStep1 />} />
                 <Route path="/create-list/step-2" element={<CreateListStep2 />} />
                 <Route path="/create-list/success" element={<CreateListSuccess />} />
+                
+                {/* SHARED LIST - Public view */}
+                <Route path="/lists/:slug" element={<SharedList />} />
                 
                 {/* AUTHENTICATED ROUTES - With AppLayout (Header + Footer) */}
                 <Route element={<AppLayout />}>

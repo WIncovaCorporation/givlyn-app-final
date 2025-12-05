@@ -646,6 +646,7 @@ export type Database = {
           event_id: string | null
           id: string
           name: string
+          slug: string | null
           updated_at: string
           user_id: string
         }
@@ -655,6 +656,7 @@ export type Database = {
           event_id?: string | null
           id?: string
           name: string
+          slug?: string | null
           updated_at?: string
           user_id: string
         }
@@ -664,6 +666,7 @@ export type Database = {
           event_id?: string | null
           id?: string
           name?: string
+          slug?: string | null
           updated_at?: string
           user_id?: string
         }

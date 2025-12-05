@@ -238,11 +238,28 @@ export default function CreateListStep2() {
         eventDate = `${eventYear}-${String(eventMonth).padStart(2, '0')}-${String(eventDay).padStart(2, '0')}`;
       }
 
+      const generateSlug = (name: string): string => {
+        const base = name
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9\s-]/g, '')
+          .trim()
+          .replace(/\s+/g, '-')
+          .replace(/-+/g, '-')
+          .substring(0, 50);
+        const uniqueSuffix = Date.now().toString(36).slice(-4);
+        return `${base}-${uniqueSuffix}`;
+      };
+
+      const slug = generateSlug(listName);
+
       const { data: newList, error } = await supabase
         .from('gift_lists')
         .insert({
           user_id: session.user.id,
           name: listName,
+          slug: slug,
         })
         .select()
         .single();
@@ -261,7 +278,8 @@ export default function CreateListStep2() {
         event_date: eventDate,
         cover_image: coverUrl,
         visibility,
-        list_id: newList.id
+        list_id: newList.id,
+        list_slug: slug
       }));
 
       trackEvent('list_created', {

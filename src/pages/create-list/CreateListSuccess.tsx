@@ -13,6 +13,7 @@ interface ListData {
   event_type: string;
   access_type: string;
   list_id?: string;
+  list_slug?: string;
   share_message?: string;
 }
 
@@ -43,6 +44,7 @@ export default function CreateListSuccess() {
   const { language } = useLanguage();
   const [listData, setListData] = useState<ListData | null>(null);
   const [listId, setListId] = useState<string | null>(null);
+  const [listSlug, setListSlug] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showContent, setShowContent] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -71,6 +73,7 @@ export default function CreateListSuccess() {
       
       if (data.list_id) {
         setListId(data.list_id);
+        setListSlug(data.list_slug || null);
         sessionStorage.removeItem("createList");
         
         setTimeout(() => {
@@ -96,7 +99,7 @@ export default function CreateListSuccess() {
     }
   };
 
-  const getShareUrl = () => `${window.location.origin}/lists/${listId}`;
+  const getShareUrl = () => `${window.location.origin}/lists/${listSlug || listId}`;
   
   const getShareMessage = () => {
     if (listData?.share_message) {
