@@ -124,9 +124,10 @@ export default function CreateListSuccess() {
 
   const handleCopyLink = async () => {
     if (!listId) return;
-    await navigator.clipboard.writeText(getShareUrl());
+    const fullMessage = `${getShareMessage()}\n\n${getShareUrl()}`;
+    await navigator.clipboard.writeText(fullMessage);
     setLinkCopied(true);
-    toast.success(language === 'es' ? 'Enlace copiado' : 'Link copied');
+    toast.success(language === 'es' ? 'Mensaje copiado' : 'Message copied');
     setTimeout(() => setLinkCopied(false), 3000);
   };
 

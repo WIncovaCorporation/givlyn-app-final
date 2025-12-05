@@ -105,6 +105,7 @@ export default function CreateListStep2() {
   const [visibility, setVisibility] = useState<"public" | "private">("public");
   const [isCreating, setIsCreating] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
+  const [dateError, setDateError] = useState<string | null>(null);
 
   const getDefaultShareMessage = (name: string, eventTypeId: string) => {
     const messages: Record<string, { es: string; en: string }> = {
@@ -183,7 +184,28 @@ export default function CreateListStep2() {
     setCoverFile(null);
   };
 
+  const validateDate = (): boolean => {
+    if (eventDay && eventMonth && eventYear) {
+      const selectedDate = new Date(eventYear, eventMonth - 1, eventDay);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      if (selectedDate < today) {
+        setDateError(language === 'es' 
+          ? 'La fecha del evento no puede ser en el pasado' 
+          : 'Event date cannot be in the past');
+        return false;
+      }
+    }
+    setDateError(null);
+    return true;
+  };
+
   const handleCreateList = async () => {
+    if (!validateDate()) {
+      return;
+    }
+    
     setIsCreating(true);
     
     try {
@@ -471,8 +493,14 @@ export default function CreateListStep2() {
                     <div className="relative">
                       <select
                         value={eventDay || ""}
-                        onChange={(e) => setEventDay(e.target.value ? Number(e.target.value) : null)}
-                        className="w-full h-14 px-4 bg-gray-50 border border-gray-200 rounded-2xl appearance-none cursor-pointer focus:border-[#1ABC9C] focus:ring-0 text-base"
+                        onChange={(e) => {
+                          setEventDay(e.target.value ? Number(e.target.value) : null);
+                          setDateError(null);
+                        }}
+                        className={cn(
+                          "w-full h-14 px-4 bg-gray-50 border rounded-2xl appearance-none cursor-pointer focus:ring-0 text-base",
+                          dateError ? "border-red-400 focus:border-red-500" : "border-gray-200 focus:border-[#1ABC9C]"
+                        )}
                       >
                         <option value="">{language === 'es' ? 'Dia' : 'Day'}</option>
                         {days.map(d => (
@@ -486,8 +514,14 @@ export default function CreateListStep2() {
                     <div className="relative">
                       <select
                         value={eventMonth || ""}
-                        onChange={(e) => setEventMonth(e.target.value ? Number(e.target.value) : null)}
-                        className="w-full h-14 px-4 bg-gray-50 border border-gray-200 rounded-2xl appearance-none cursor-pointer focus:border-[#1ABC9C] focus:ring-0 text-base"
+                        onChange={(e) => {
+                          setEventMonth(e.target.value ? Number(e.target.value) : null);
+                          setDateError(null);
+                        }}
+                        className={cn(
+                          "w-full h-14 px-4 bg-gray-50 border rounded-2xl appearance-none cursor-pointer focus:ring-0 text-base",
+                          dateError ? "border-red-400 focus:border-red-500" : "border-gray-200 focus:border-[#1ABC9C]"
+                        )}
                       >
                         <option value="">{language === 'es' ? 'Mes' : 'Month'}</option>
                         {months.map(m => (
@@ -503,8 +537,14 @@ export default function CreateListStep2() {
                     <div className="relative">
                       <select
                         value={eventYear || ""}
-                        onChange={(e) => setEventYear(e.target.value ? Number(e.target.value) : null)}
-                        className="w-full h-14 px-4 bg-gray-50 border border-gray-200 rounded-2xl appearance-none cursor-pointer focus:border-[#1ABC9C] focus:ring-0 text-base"
+                        onChange={(e) => {
+                          setEventYear(e.target.value ? Number(e.target.value) : null);
+                          setDateError(null);
+                        }}
+                        className={cn(
+                          "w-full h-14 px-4 bg-gray-50 border rounded-2xl appearance-none cursor-pointer focus:ring-0 text-base",
+                          dateError ? "border-red-400 focus:border-red-500" : "border-gray-200 focus:border-[#1ABC9C]"
+                        )}
                       >
                         <option value="">{language === 'es' ? 'Ano' : 'Year'}</option>
                         {years.map(y => (
@@ -514,6 +554,16 @@ export default function CreateListStep2() {
                       <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                     </div>
                   </div>
+                  
+                  {/* Date Error Message */}
+                  {dateError && (
+                    <div className="mt-3 flex items-center gap-2 text-red-500 bg-red-50 px-4 py-3 rounded-xl">
+                      <svg className="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="text-sm font-medium">{dateError}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Cover Image */}
