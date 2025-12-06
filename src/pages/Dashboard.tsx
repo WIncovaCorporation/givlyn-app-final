@@ -61,14 +61,14 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [myLists, setMyLists] = useState<GiftList[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [stats, setStats] = useState({
     myLists: 0,
     myGroups: 0,
     totalSaved: 0,
   });
   const listsCarouselRef = useRef<HTMLDivElement>(null);
-  const trendingCarouselRef = useRef<HTMLDivElement>(null);
-  const storesCarouselRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [canScrollListsLeft, setCanScrollListsLeft] = useState(false);
   const [canScrollListsRight, setCanScrollListsRight] = useState(false);
 
@@ -77,6 +77,12 @@ const Dashboard = () => {
   const filteredLists = myLists.filter(list => 
     list.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const suggestions = searchQuery.length > 0 
+    ? myLists.filter(list => 
+        list.name.toLowerCase().includes(searchQuery.toLowerCase())
+      ).slice(0, 5)
+    : [];
 
   const checkScrollButtons = () => {
     if (listsCarouselRef.current) {
@@ -96,23 +102,21 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    const autoScrollCarousels = () => {
-      [trendingCarouselRef, storesCarouselRef].forEach(ref => {
-        if (ref.current) {
-          const { scrollLeft, scrollWidth, clientWidth } = ref.current;
-          if (scrollLeft >= scrollWidth - clientWidth - 5) {
-            ref.current.scrollTo({ left: 0, behavior: 'smooth' });
-          } else {
-            ref.current.scrollTo({ left: scrollLeft + 1, behavior: 'smooth' });
-          }
-        }
-      });
-    };
+  const handleSuggestionClick = (listId: string) => {
+    setShowSuggestions(false);
+    setSearchQuery("");
+    navigate(`/lists?id=${listId}`);
+  };
 
-    const interval = setInterval(autoScrollCarousels, 50);
-    return () => clearInterval(interval);
-  }, []);
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && suggestions.length > 0) {
+      handleSuggestionClick(suggestions[0].id);
+    }
+    if (e.key === 'Escape') {
+      setShowSuggestions(false);
+      searchInputRef.current?.blur();
+    }
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -204,6 +208,16 @@ const Dashboard = () => {
     }
   }, [myLists]);
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchInputRef.current && !searchInputRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleEventClick = (template: string, eventName: string) => {
     navigate(`/create-list/step-1?template=${template}&name=${encodeURIComponent(eventName)}`);
   };
@@ -217,12 +231,12 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFBFC] pb-24 md:pb-8">
-      <div className="max-w-7xl mx-auto px-3 md:px-4 py-5">
+    <div className="min-h-screen bg-[#FAFBFC] pb-28 md:pb-12">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8">
         
-        {/* HERO SECTION */}
-        <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-[#1A3E5C] mb-1">
+        {/* HERO SECTION - More breathing room */}
+        <div className="mb-10">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#1A3E5C] mb-2">
             {language === 'es' ? `Hola, ${userName}` : `Hi, ${userName}`}
           </h1>
           <p className="text-gray-500 text-base md:text-lg">
@@ -231,62 +245,62 @@ const Dashboard = () => {
         </div>
 
         {/* CTAs - Side by Side Desktop, Stacked Mobile */}
-        <div className="grid md:grid-cols-2 gap-3 mb-6">
+        <div className="grid md:grid-cols-2 gap-4 mb-12">
           <button 
             onClick={() => navigate("/create-list/step-1")}
-            className="group p-5 rounded-xl bg-[#FF9900] text-white text-left transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
+            className="group p-6 rounded-2xl bg-[#FF9900] text-white text-left transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 bg-white/20 rounded-lg flex items-center justify-center">
-                  <Plus className="w-5 h-5" />
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <Plus className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold">
+                  <h3 className="text-lg font-bold">
                     {language === 'es' ? 'CREAR NUEVA LISTA' : 'CREATE NEW LIST'}
                   </h3>
-                  <p className="text-white/80 text-xs">
+                  <p className="text-white/80 text-sm">
                     {language === 'es' ? 'Empieza a organizar tus regalos' : 'Start organizing your gifts'}
                   </p>
                 </div>
               </div>
-              <ChevronRight className="w-5 h-5 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+              <ChevronRight className="w-6 h-6 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
             </div>
           </button>
 
           <button 
             onClick={() => navigate("/search")}
-            className="group p-5 rounded-xl bg-white border border-gray-200 text-left transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-[#1ABC9C]"
+            className="group p-6 rounded-2xl bg-white border border-gray-200 text-left transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:border-[#1ABC9C]"
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 bg-[#1ABC9C]/10 rounded-lg flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-[#1ABC9C]" />
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#1ABC9C]/10 rounded-xl flex items-center justify-center">
+                  <Sparkles className="w-6 h-6 text-[#1ABC9C]" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-[#1A3E5C]">
+                  <h3 className="text-lg font-bold text-[#1A3E5C]">
                     {language === 'es' ? 'ASISTENTE DE COMPRAS' : 'SHOPPING ASSISTANT'}
                   </h3>
-                  <p className="text-gray-500 text-xs">
+                  <p className="text-gray-500 text-sm">
                     {language === 'es' ? 'Encuentra el regalo perfecto con IA' : 'Find the perfect gift with AI'}
                   </p>
                 </div>
               </div>
-              <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#1ABC9C] group-hover:translate-x-1 transition-all" />
+              <ChevronRight className="w-6 h-6 text-gray-300 group-hover:text-[#1ABC9C] group-hover:translate-x-1 transition-all" />
             </div>
           </button>
         </div>
 
-        {/* MIS LISTAS - STATIC CAROUSEL with Search */}
-        <div className="relative mb-8">
+        {/* MIS LISTAS - STATIC CAROUSEL with Autocomplete Search */}
+        <div className="relative mb-14">
           {/* Header with Title + Total */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
               <Gift className="w-5 h-5 text-[#1A3E5C]" />
-              <h2 className="text-lg font-bold text-[#1A3E5C]">
+              <h2 className="text-xl font-bold text-[#1A3E5C]">
                 {language === 'es' ? 'Mis Listas' : 'My Lists'}
               </h2>
-              <span className="text-xs text-gray-400 font-medium">
+              <span className="text-sm text-gray-400 font-medium">
                 ({stats.myLists} {language === 'es' ? 'creadas' : 'created'})
               </span>
             </div>
@@ -301,38 +315,60 @@ const Dashboard = () => {
             )}
           </div>
 
-          {/* Search Bar */}
+          {/* Autocomplete Search Bar */}
           {myLists.length > 3 && (
-            <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <div className="relative mb-5">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
+                ref={searchInputRef}
                 type="text"
                 placeholder={language === 'es' ? 'Buscar lista...' : 'Search list...'}
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#1ABC9C] focus:ring-1 focus:ring-[#1ABC9C]"
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowSuggestions(true);
+                }}
+                onFocus={() => setShowSuggestions(true)}
+                onKeyDown={handleSearchKeyDown}
+                className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-base focus:outline-none focus:border-[#1ABC9C] focus:ring-2 focus:ring-[#1ABC9C]/20 transition-all"
               />
+              
+              {/* Autocomplete Suggestions Dropdown */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg z-20 overflow-hidden">
+                  {suggestions.map((list) => (
+                    <button
+                      key={list.id}
+                      onClick={() => handleSuggestionClick(list.id)}
+                      className="w-full px-4 py-3 text-left hover:bg-[#1ABC9C]/5 flex items-center gap-3 transition-colors border-b border-gray-100 last:border-0"
+                    >
+                      <Gift className="w-4 h-4 text-[#1ABC9C]" />
+                      <span className="text-[#1A3E5C] font-medium">{list.name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
           {myLists.length === 0 ? (
-            <div className="bg-white rounded-xl p-6 text-center border border-gray-100">
-              <div className="w-12 h-12 mx-auto mb-3 bg-[#1ABC9C]/10 rounded-lg flex items-center justify-center">
-                <Gift className="w-6 h-6 text-[#1ABC9C]" />
+            <div className="bg-white rounded-2xl p-8 text-center border border-gray-100">
+              <div className="w-14 h-14 mx-auto mb-4 bg-[#1ABC9C]/10 rounded-xl flex items-center justify-center">
+                <Gift className="w-7 h-7 text-[#1ABC9C]" />
               </div>
-              <h3 className="text-base font-bold text-[#1A3E5C] mb-1">
+              <h3 className="text-lg font-bold text-[#1A3E5C] mb-2">
                 {language === 'es' ? 'Tu lista esta vacia' : 'Your list is empty'}
               </h3>
-              <p className="text-gray-500 mb-4 text-sm">
+              <p className="text-gray-500 mb-5 text-sm">
                 {language === 'es' 
                   ? 'Crea tu primera lista para empezar' 
                   : 'Create your first list to get started'}
               </p>
               <Button 
                 onClick={() => navigate("/create-list/step-1")} 
-                className="bg-[#FF9900] hover:bg-[#FF9900]/90 text-white font-semibold px-4 py-2 h-auto rounded-lg text-sm"
+                className="bg-[#FF9900] hover:bg-[#FF9900]/90 text-white font-semibold px-5 py-2.5 h-auto rounded-xl text-sm"
               >
-                <Plus className="w-4 h-4 mr-1" />
+                <Plus className="w-4 h-4 mr-2" />
                 {language === 'es' ? 'Crear mi primera lista' : 'Create my first list'}
               </Button>
             </div>
@@ -341,7 +377,7 @@ const Dashboard = () => {
               {canScrollListsLeft && (
                 <button
                   onClick={() => scrollCarousel(listsCarouselRef, 'left')}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 z-10 w-9 h-9 bg-white rounded-full shadow-md flex items-center justify-center text-[#1A3E5C] hover:bg-[#1ABC9C] hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-[#1A3E5C] hover:bg-[#1ABC9C] hover:text-white transition-all opacity-0 group-hover:opacity-100"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -349,28 +385,28 @@ const Dashboard = () => {
 
               <div 
                 ref={listsCarouselRef}
-                className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory"
+                className="flex gap-4 overflow-x-auto scrollbar-hide pb-3 snap-x snap-mandatory"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
                 {filteredLists.map((list, index) => (
                   <button
                     key={list.id}
                     onClick={() => navigate(`/lists?id=${list.id}`)}
-                    className="group/card flex-shrink-0 w-[220px] h-[150px] rounded-xl overflow-hidden relative transition-all duration-300 hover:-translate-y-1 hover:shadow-lg snap-start"
+                    className="group/card flex-shrink-0 w-[240px] h-[170px] rounded-2xl overflow-hidden relative transition-all duration-300 hover:-translate-y-1 hover:shadow-xl snap-start"
                   >
                     <div 
                       className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover/card:scale-105"
                       style={{ backgroundImage: `url(${listBackgrounds[index % listBackgrounds.length]})` }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-                    <div className="absolute top-3 right-3 bg-white/90 text-[#1A3E5C] text-xs font-bold px-2 py-0.5 rounded-full">
+                    <div className="absolute top-3 right-3 bg-white/90 text-[#1A3E5C] text-xs font-bold px-2.5 py-1 rounded-full">
                       {list.item_count || 0}
                     </div>
-                    <div className="absolute top-3 left-3 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                    <div className="absolute top-3 left-3 w-9 h-9 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
                       <Gift className="w-4 h-4 text-white" />
                     </div>
-                    <div className="absolute bottom-0 left-0 right-0 p-3">
-                      <h3 className="text-white font-semibold text-sm leading-tight line-clamp-2">
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold text-base leading-tight line-clamp-2">
                         {list.name}
                       </h3>
                     </div>
@@ -379,12 +415,12 @@ const Dashboard = () => {
                 
                 <button
                   onClick={() => navigate("/create-list/step-1")}
-                  className="flex-shrink-0 w-[220px] h-[150px] rounded-xl border-2 border-dashed border-gray-200 hover:border-[#1ABC9C] bg-white flex flex-col items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-1 snap-start"
+                  className="flex-shrink-0 w-[240px] h-[170px] rounded-2xl border-2 border-dashed border-gray-200 hover:border-[#1ABC9C] bg-white flex flex-col items-center justify-center gap-3 transition-all duration-300 hover:-translate-y-1 snap-start"
                 >
-                  <div className="w-10 h-10 bg-[#1ABC9C]/10 rounded-lg flex items-center justify-center">
-                    <Plus className="w-5 h-5 text-[#1ABC9C]" />
+                  <div className="w-12 h-12 bg-[#1ABC9C]/10 rounded-xl flex items-center justify-center">
+                    <Plus className="w-6 h-6 text-[#1ABC9C]" />
                   </div>
-                  <span className="text-[#1A3E5C] font-semibold text-sm">
+                  <span className="text-[#1A3E5C] font-semibold">
                     {language === 'es' ? 'Nueva Lista' : 'New List'}
                   </span>
                 </button>
@@ -393,7 +429,7 @@ const Dashboard = () => {
               {canScrollListsRight && (
                 <button
                   onClick={() => scrollCarousel(listsCarouselRef, 'right')}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 z-10 w-9 h-9 bg-white rounded-full shadow-md flex items-center justify-center text-[#1A3E5C] hover:bg-[#1ABC9C] hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-[#1A3E5C] hover:bg-[#1ABC9C] hover:text-white transition-all opacity-0 group-hover:opacity-100"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -402,93 +438,90 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* TENDENCIAS - DYNAMIC AUTO-SCROLL */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-3">
+        {/* TENDENCIAS - STATIC CAROUSEL (user controlled) */}
+        <div className="mb-14">
+          <div className="flex items-center gap-2 mb-5">
             <TrendingUp className="w-5 h-5 text-[#FF9900]" />
-            <h2 className="text-lg font-bold text-[#1A3E5C]">
+            <h2 className="text-xl font-bold text-[#1A3E5C]">
               {language === 'es' ? 'Tendencias del Momento' : 'Trending Now'}
             </h2>
           </div>
           
           <div 
-            ref={trendingCarouselRef}
-            className="flex gap-3 overflow-x-auto scrollbar-hide pb-2"
+            className="flex gap-4 overflow-x-auto scrollbar-hide pb-3"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {trendingProducts.map((product) => (
               <div
                 key={product.id}
-                className="flex-shrink-0 w-[150px] bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+                className="flex-shrink-0 w-[170px] bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all cursor-pointer hover:-translate-y-0.5"
               >
-                <div className="relative h-[110px]">
+                <div className="relative h-[130px]">
                   <img 
                     src={product.image} 
                     alt={product.name}
                     className="w-full h-full object-cover"
                   />
                   {product.discount && (
-                    <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded">
+                    <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-lg">
                       {product.discount}
                     </span>
                   )}
                 </div>
-                <div className="p-2.5">
-                  <h4 className="text-xs font-medium text-[#1A3E5C] line-clamp-1">{product.name}</h4>
-                  <p className="text-[#1ABC9C] font-bold text-sm">{product.price}</p>
+                <div className="p-3">
+                  <h4 className="text-sm font-medium text-[#1A3E5C] line-clamp-1">{product.name}</h4>
+                  <p className="text-[#1ABC9C] font-bold">{product.price}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* MARCAS - DYNAMIC MARQUEE with Clickable Links */}
-        <div className="mb-8">
-          <h2 className="text-lg font-bold text-[#1A3E5C] mb-3">
+        {/* MARCAS - CSS MARQUEE (Smooth, no JS) */}
+        <div className="mb-14">
+          <h2 className="text-xl font-bold text-[#1A3E5C] mb-5">
             {language === 'es' ? 'Compra en tus tiendas favoritas' : 'Shop at your favorite stores'}
           </h2>
           
-          <div 
-            ref={storesCarouselRef}
-            className="flex items-center gap-8 overflow-x-auto scrollbar-hide py-3 px-2"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {[...affiliateStores, ...affiliateStores].map((store, index) => (
-              <a
-                key={`${store.name}-${index}`}
-                href={store.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
-              >
-                <store.Logo height={26} />
-              </a>
-            ))}
+          <div className="overflow-hidden py-4">
+            <div className="flex items-center gap-12 animate-marquee-smooth">
+              {[...affiliateStores, ...affiliateStores].map((store, index) => (
+                <a
+                  key={`${store.name}-${index}`}
+                  href={store.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-shrink-0 hover:opacity-70 transition-opacity cursor-pointer"
+                >
+                  <store.Logo height={28} />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* EVENTOS - STATIC CAROUSEL (User Controls) */}
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-3">
+        <div className="mb-10">
+          <div className="flex items-center gap-2 mb-5">
             <Calendar className="w-5 h-5 text-purple-500" />
-            <h2 className="text-lg font-bold text-[#1A3E5C]">
+            <h2 className="text-xl font-bold text-[#1A3E5C]">
               {language === 'es' ? 'Proximos Eventos y Festividades' : 'Upcoming Events & Holidays'}
             </h2>
           </div>
           
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2"
+          <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-3"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {upcomingEvents.map((event) => (
               <button
                 key={event.id}
                 onClick={() => handleEventClick(event.template, language === 'es' ? event.name : event.nameEn)}
-                className={`flex-shrink-0 w-[160px] h-[90px] rounded-xl bg-gradient-to-br ${event.color} p-3 text-white text-left hover:shadow-lg hover:-translate-y-0.5 transition-all`}
+                className={`flex-shrink-0 w-[180px] h-[110px] rounded-2xl bg-gradient-to-br ${event.color} p-4 text-white text-left hover:shadow-xl hover:-translate-y-1 transition-all`}
               >
-                <h4 className="font-bold text-sm line-clamp-1 mb-0.5">
+                <h4 className="font-bold text-base line-clamp-1 mb-1">
                   {language === 'es' ? event.name : event.nameEn}
                 </h4>
-                <p className="text-white/80 text-xs">{event.date}</p>
+                <p className="text-white/80 text-sm">{event.date}</p>
               </button>
             ))}
           </div>
@@ -497,34 +530,34 @@ const Dashboard = () => {
 
       {/* Mobile Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-gray-100 md:hidden z-50">
-        <div className="flex items-center justify-around py-2.5">
+        <div className="flex items-center justify-around py-3">
           <button 
             onClick={() => navigate("/dashboard")}
-            className="flex flex-col items-center p-1.5 text-[#1ABC9C]"
+            className="flex flex-col items-center p-2 text-[#1ABC9C]"
           >
-            <Home className="w-5 h-5" />
-            <span className="text-[10px] mt-0.5 font-medium">{language === 'es' ? 'Inicio' : 'Home'}</span>
+            <Home className="w-6 h-6" />
+            <span className="text-[10px] mt-1 font-medium">{language === 'es' ? 'Inicio' : 'Home'}</span>
           </button>
           <button 
             onClick={() => navigate("/lists")}
-            className="flex flex-col items-center p-1.5 text-gray-400 hover:text-[#1ABC9C] transition-colors"
+            className="flex flex-col items-center p-2 text-gray-400 hover:text-[#1ABC9C] transition-colors"
           >
-            <List className="w-5 h-5" />
-            <span className="text-[10px] mt-0.5">{language === 'es' ? 'Listas' : 'Lists'}</span>
+            <List className="w-6 h-6" />
+            <span className="text-[10px] mt-1">{language === 'es' ? 'Listas' : 'Lists'}</span>
           </button>
           <button 
             onClick={() => navigate("/groups")}
-            className="flex flex-col items-center p-1.5 text-gray-400 hover:text-[#1ABC9C] transition-colors"
+            className="flex flex-col items-center p-2 text-gray-400 hover:text-[#1ABC9C] transition-colors"
           >
-            <Users className="w-5 h-5" />
-            <span className="text-[10px] mt-0.5">{language === 'es' ? 'Amigos' : 'Friends'}</span>
+            <Users className="w-6 h-6" />
+            <span className="text-[10px] mt-1">{language === 'es' ? 'Amigos' : 'Friends'}</span>
           </button>
           <button 
             onClick={() => navigate("/search")}
-            className="flex flex-col items-center p-1.5 text-gray-400 hover:text-[#1ABC9C] transition-colors"
+            className="flex flex-col items-center p-2 text-gray-400 hover:text-[#1ABC9C] transition-colors"
           >
-            <Sparkles className="w-5 h-5" />
-            <span className="text-[10px] mt-0.5">{language === 'es' ? 'IA' : 'AI'}</span>
+            <Sparkles className="w-6 h-6" />
+            <span className="text-[10px] mt-1">{language === 'es' ? 'IA' : 'AI'}</span>
           </button>
         </div>
       </nav>

@@ -1,0 +1,49 @@
+¡Excelente! La clave para una aplicación de talla mundial es el **"aire"** (whitespace) y las **interacciones fluidas**. La página debe sentirse espaciosa y profesional.
+
+Aquí está el **Prompt Maestro Final y Definitivo**, que soluciona los problemas de *vibración*, **densidad de espacio** y eleva la UX del filtro de búsqueda.
+
+***
+
+# 🏆 MASTER PROMPT FINAL: DASHBOARD (FLUIDEZ Y ESPACIO)
+
+## 0. MANDATO DE CALIDAD Y RENDIMIENTO
+
+**ROL:** Senior Staff Software Engineer & UX Architect.
+
+**PRIORIDADES:**
+1.  **Fluidez y Rendimiento:** Arreglar los fallos de animación (vibración).
+2.  **Estética Espacial:** Introducir **más "aire" (whitespace/padding)** vertical y horizontal para evitar que el contenido se sienta pegado.
+3.  **UX Avanzada:** Implementar la funcionalidad de búsqueda dinámica en "Mis Listas".
+
+---
+
+## 1. ⚙️ REFINAMIENTO DE FUNCIONALIDAD Y UX
+
+### A. Mis Listas: Filtro Dinámico (UX Avanzada)
+* **Componente:** La barra de búsqueda debe ser un campo de entrada (`input`) dinámico.
+* **Implementación:** Debe funcionar con **AUTO-COMPLETADO**.
+    * Mientras el usuario escribe el nombre de una lista, el sistema debe desplegar dinámicamente las sugerencias.
+    * Al seleccionar una sugerencia (o pulsar Enter), el usuario es redirigido directamente a esa lista.
+    * *Razón:* Esto es el estándar de búsqueda de Google, minimizando la fricción y las pulsaciones de tecla.
+
+### B. Carrusel de Tiendas: Arreglo de Rendimiento
+* **Problema:** El carrusel de logos vectorizados está "vibrando" o se detiene de forma no fluida.
+* **Solución:** El equipo debe refactorizar la implementación Marquee/Auto-Scroll para usar técnicas modernas de CSS/JS (ej. `transform` CSS, no manipulación de `margin` o `position`) que garanticen un **desplazamiento continuo, suave y de alto rendimiento**, sin saltos.
+
+---
+
+## 2. 📐 AJUSTES DE ESTÉTICA ESPACIAL Y TAMAÑO
+
+El objetivo es pasar de una aplicación "cramped" (apretada) a una aplicación "airy" (con aire).
+
+| Elemento | Regla de Implementación | Razón (UX World-Class) |
+| :--- | :--- | :--- |
+| **Espacio Vertical** | Aumentar significativamente el `margin-bottom` o `padding-bottom` entre **TODAS las secciones** (Hero, Mis Listas, Tendencias, etc.) para crear "aire" y scroll intencional. | Una página robusta debe scrollar. El espacio vacío aumenta el foco y la percepción de profesionalismo. |
+| **Carrusel Mis Listas** | Aumentar la altura (`height`) de las tarjetas de lista para que el contenido se sienta menos comprimido y sean más clicables. | Más grandes = Más fáciles de tocar en móvil y mejor uso del espacio en desktop. |
+| **Carrusel Eventos** | **Imágenes Profesionales:** Crear ilustraciones o iconos vectoriales (SVG) nuevos y de alta calidad para cada evento (Navidad, Día de la Madre, etc.) que coincidan con la estética limpia de Givlyn. | La calidad visual debe ser uniforme en toda la aplicación. |
+
+---
+
+## 3. 🎯 INSTRUCCIÓN FINAL DE CÓDIGO
+
+> **"Agente, implementa la barra de búsqueda de 'Mis Listas' con funcionalidad de AUTO-COMPLETADO. Corrige la animación del carrusel de tiendas para que sea perfectamente fluida. Y, fundamentalmente, revisa el CSS global para AUMENTAR el espaciado vertical (`margin`/`padding`) en todos los puntos de la página para lograr una sensación de aire y amplitud."**
