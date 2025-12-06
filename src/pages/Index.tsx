@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
-import { Globe, ArrowRight, Search, Tag, CheckCircle, ShoppingBag } from "lucide-react";
+import { Globe, ArrowRight, Sparkles, Search, Tag, CheckCircle, ShoppingBag } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -37,15 +37,20 @@ const Index = () => {
     navigate(user ? "/lists" : "/auth?tab=signup&action=create-list");
   };
 
+  const handleSmartAssistant = () => {
+    navigate(user ? "/dashboard" : "/auth?tab=signup&action=smart-assistant");
+  };
+
   const toggleLanguage = () => setLanguage(prev => prev === 'es' ? 'en' : 'es');
 
   const content = {
     es: {
       heroTitle1: 'LA UNICA LISTA DE REGALOS QUE',
       heroTitle2: 'GARANTIZA CERO DUPLICADOS.',
-      heroSub: 'Anade productos de cualquier tienda online en segundos, comparte un solo link y permite que tus invitados reserven el regalo perfecto.',
+      heroSub: 'Anade productos de cualquier tienda, o deja que nuestro Asistente IA encuentre el regalo perfecto por ti.',
       ctaPrimary: 'CREAR LISTA GRATIS EN 2 MINUTOS',
-      trustText: 'Compra desde estas... y miles de tiendas online mas.',
+      ctaSecondary: 'UTILIZA EL ASISTENTE DE COMPRAS INTELIGENTE',
+      trustText: 'Compra en Amazon, Walmart, Best Buy y +MILES DE TIENDAS ONLINE MAS',
       howItWorks: 'Como Funciona',
       step1: 'Crea tu lista',
       step1Sub: 'Anade productos de cualquier tienda',
@@ -63,9 +68,10 @@ const Index = () => {
     en: {
       heroTitle1: 'THE ONLY GIFT LIST THAT',
       heroTitle2: 'GUARANTEES ZERO DUPLICATES.',
-      heroSub: 'Add products from any online store in seconds, share a single link and let your guests reserve the perfect gift.',
+      heroSub: 'Add products from any store, or let our AI Assistant find the perfect gift for you.',
       ctaPrimary: 'CREATE FREE LIST IN 2 MINUTES',
-      trustText: 'Shop from these... and thousands more online stores.',
+      ctaSecondary: 'USE THE SMART SHOPPING ASSISTANT',
+      trustText: 'Shop at Amazon, Walmart, Best Buy and +THOUSANDS OF ONLINE STORES',
       howItWorks: 'How It Works',
       step1: 'Create your list',
       step1Sub: 'Add products from any store',
@@ -89,6 +95,7 @@ const Index = () => {
     actionOrange: '#FF9900',
     actionOrangeHover: '#E07C00',
     accentGreen: '#1ABC9C',
+    accentGreenHover: '#16A085',
     textDark: '#1F2937',
     textGrey: '#6B7280',
     bgWhite: '#FFFFFF',
@@ -97,9 +104,21 @@ const Index = () => {
   };
 
   const stores = [
-    'Amazon', 'Walmart', 'Target', 'Etsy', 'Best Buy', 
-    'eBay', "Macy's", 'Home Depot', 'Nike', 'Adidas',
-    'Costco', 'Nordstrom', 'Sephora', 'Apple', 'Samsung'
+    { name: 'Amazon', color: '#FF9900' },
+    { name: 'Walmart', color: '#0071CE' },
+    { name: 'Target', color: '#CC0000' },
+    { name: 'Etsy', color: '#F56400' },
+    { name: 'Best Buy', color: '#0046BE' },
+    { name: 'eBay', color: '#E53238' },
+    { name: "Macy's", color: '#E21A2C' },
+    { name: 'Home Depot', color: '#F96302' },
+    { name: 'Nike', color: '#111111' },
+    { name: 'Adidas', color: '#000000' },
+    { name: 'Costco', color: '#E31837' },
+    { name: 'Nordstrom', color: '#000000' },
+    { name: 'Sephora', color: '#000000' },
+    { name: 'Apple', color: '#555555' },
+    { name: 'Samsung', color: '#1428A0' },
   ];
 
   const steps = [
@@ -109,8 +128,10 @@ const Index = () => {
     { num: 4, title: t.step4, sub: t.step4Sub, Icon: ShoppingBag },
   ];
 
-  const cardShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
-  const cardShadowHover = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+  const cardShadow = '0 2px 8px rgba(0, 0, 0, 0.06)';
+  const cardShadowHover = '0 8px 24px rgba(0, 0, 0, 0.1)';
+  const btnShadow = '0 2px 8px rgba(0, 0, 0, 0.12)';
+  const btnShadowHover = '0 4px 16px rgba(0, 0, 0, 0.15)';
 
   return (
     <div style={{
@@ -126,14 +147,14 @@ const Index = () => {
       {/* HEADER */}
       <header style={{
         background: colors.bgWhite,
-        boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
         position: 'sticky',
         top: 0,
         zIndex: 100,
         height: '56px',
       }}>
         <div style={{
-          maxWidth: '1400px',
+          maxWidth: '1200px',
           margin: '0 auto',
           padding: '0 20px',
           display: 'flex',
@@ -198,127 +219,132 @@ const Index = () => {
         </div>
       </header>
 
-      {/* HERO SECTION - Split Layout */}
+      {/* HERO SECTION - CENTERED */}
       <section style={{
         background: colors.bgWhite,
-        padding: isMobile ? '32px 20px' : isTablet ? '48px 32px' : '64px 48px',
-        maxWidth: '1400px',
+        padding: isMobile ? '40px 20px 32px' : isTablet ? '56px 32px 48px' : '72px 48px 56px',
+        maxWidth: '900px',
         margin: '0 auto',
         width: '100%',
+        textAlign: 'center',
       }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-          gap: isMobile ? '32px' : '48px',
-          alignItems: 'center',
+        <h1 style={{
+          fontSize: isMobile ? '28px' : isTablet ? '40px' : '52px',
+          lineHeight: 1.1,
+          fontWeight: 800,
+          color: colors.primaryBlue,
+          marginBottom: '20px',
+          letterSpacing: '-0.02em',
         }}>
-          {/* LEFT: Copy */}
-          <div style={{ textAlign: isMobile ? 'center' : 'left' }}>
-            <h1 style={{
-              fontSize: isMobile ? '28px' : isTablet ? '36px' : '48px',
-              lineHeight: 1.1,
-              fontWeight: 800,
-              color: colors.primaryBlue,
-              marginBottom: '20px',
-              letterSpacing: '-0.02em',
-            }}>
-              {t.heroTitle1}<br />
-              <span style={{ color: colors.actionOrange }}>{t.heroTitle2}</span>
-            </h1>
+          {t.heroTitle1}<br />
+          <span style={{ color: colors.actionOrange }}>{t.heroTitle2}</span>
+        </h1>
 
-            <p style={{
-              fontSize: isMobile ? '16px' : '20px',
-              color: colors.textGrey,
-              marginBottom: '32px',
-              lineHeight: 1.6,
-              maxWidth: '540px',
-              margin: isMobile ? '0 auto 32px' : '0 0 32px 0',
-            }}>
-              {t.heroSub}
-            </p>
+        <p style={{
+          fontSize: isMobile ? '16px' : '20px',
+          color: colors.textGrey,
+          marginBottom: '36px',
+          lineHeight: 1.6,
+          maxWidth: '680px',
+          margin: '0 auto 36px',
+        }}>
+          {t.heroSub}
+        </p>
 
-            {/* CTA Principal - Big & Bold */}
-            <button
-              onClick={handleCreateList}
-              style={{
-                background: `linear-gradient(135deg, ${colors.actionOrange} 0%, ${colors.actionOrangeHover} 100%)`,
-                color: 'white',
-                padding: isMobile ? '18px 28px' : '20px 40px',
-                borderRadius: '12px',
-                border: 'none',
-                fontSize: isMobile ? '16px' : '18px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                boxShadow: '0 4px 14px rgba(255, 153, 0, 0.4)',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '12px',
-                width: isMobile ? '100%' : 'auto',
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'translateY(-3px)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 153, 0, 0.5)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 14px rgba(255, 153, 0, 0.4)';
-              }}
-            >
-              {t.ctaPrimary}
-              <ArrowRight size={20} />
-            </button>
-          </div>
-
-          {/* RIGHT: Hero Image Placeholder (Hidden on Mobile) */}
-          {!isMobile && (
-            <div style={{
-              display: 'flex',
-              justifyContent: 'center',
+        {/* CTAs Container */}
+        <div style={{
+          display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: isMobile ? '14px' : '20px',
+        }}>
+          {/* CTA Primary */}
+          <button
+            onClick={handleCreateList}
+            style={{
+              background: colors.actionOrange,
+              color: 'white',
+              padding: isMobile ? '16px 28px' : '18px 36px',
+              borderRadius: '10px',
+              border: 'none',
+              fontSize: isMobile ? '15px' : '17px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: btnShadow,
+              display: 'inline-flex',
               alignItems: 'center',
-            }}>
-              <div style={{
-                width: '100%',
-                maxWidth: '480px',
-                aspectRatio: '4/3',
-                background: `linear-gradient(135deg, ${colors.bgLight} 0%, #E2E8F0 100%)`,
-                borderRadius: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: cardShadow,
-                overflow: 'hidden',
-              }}>
-                <img 
-                  src="/logo-icon-only.png" 
-                  alt="Givlyn" 
-                  style={{ 
-                    width: '120px', 
-                    height: 'auto',
-                    opacity: 0.3,
-                  }} 
-                />
-              </div>
-            </div>
-          )}
+              justifyContent: 'center',
+              gap: '10px',
+              width: isMobile ? '100%' : 'auto',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = btnShadowHover;
+              e.currentTarget.style.background = colors.actionOrangeHover;
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = btnShadow;
+              e.currentTarget.style.background = colors.actionOrange;
+            }}
+          >
+            {t.ctaPrimary}
+            <ArrowRight size={18} />
+          </button>
+
+          {/* CTA Secondary */}
+          <button
+            onClick={handleSmartAssistant}
+            style={{
+              background: 'transparent',
+              color: colors.accentGreen,
+              padding: isMobile ? '14px 24px' : '16px 32px',
+              borderRadius: '10px',
+              border: `2px solid ${colors.accentGreen}`,
+              fontSize: isMobile ? '14px' : '16px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px',
+              width: isMobile ? '100%' : 'auto',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.background = colors.accentGreen;
+              e.currentTarget.style.color = 'white';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.color = colors.accentGreen;
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            <Sparkles size={18} />
+            {t.ctaSecondary}
+          </button>
         </div>
       </section>
 
-      {/* TRUST BAR - Infinite Marquee Carousel */}
+      {/* TRUST BAR - Store Logos Marquee */}
       <section style={{
         background: colors.bgTrust,
-        padding: '20px 0',
+        padding: '24px 0 20px',
         overflow: 'hidden',
         borderTop: '1px solid #E5E7EB',
         borderBottom: '1px solid #E5E7EB',
       }}>
         <p style={{
           textAlign: 'center',
-          fontSize: '13px',
-          color: colors.textGrey,
-          marginBottom: '16px',
-          fontWeight: 500,
+          fontSize: isMobile ? '13px' : '15px',
+          color: colors.textDark,
+          marginBottom: '18px',
+          fontWeight: 600,
+          padding: '0 20px',
         }}>
           {t.trustText}
         </p>
@@ -328,34 +354,57 @@ const Index = () => {
           display: 'flex',
           overflow: 'hidden',
           width: '100%',
+          maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
         }}>
           <div 
             style={{
               display: 'flex',
-              gap: '48px',
-              animation: 'marquee 30s linear infinite',
+              gap: isMobile ? '32px' : '48px',
+              animation: 'marquee 40s linear infinite',
               whiteSpace: 'nowrap',
             }}
           >
             {[...stores, ...stores, ...stores].map((store, idx) => (
-              <span 
+              <div 
                 key={idx}
                 style={{
-                  fontSize: isMobile ? '14px' : '16px',
-                  fontWeight: 600,
-                  color: colors.primaryBlue,
-                  opacity: 0.5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
                   flexShrink: 0,
-                  fontStyle: store === 'Etsy' ? 'italic' : 'normal',
                 }}
               >
-                {store}
-              </span>
+                {/* SVG Circle Logo Placeholder */}
+                <div style={{
+                  width: isMobile ? '24px' : '28px',
+                  height: isMobile ? '24px' : '28px',
+                  borderRadius: '6px',
+                  background: store.color,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'white',
+                  fontSize: isMobile ? '10px' : '11px',
+                  fontWeight: 700,
+                }}>
+                  {store.name.charAt(0)}
+                </div>
+                <span 
+                  style={{
+                    fontSize: isMobile ? '13px' : '15px',
+                    fontWeight: 600,
+                    color: colors.textDark,
+                    opacity: 0.7,
+                  }}
+                >
+                  {store.name}
+                </span>
+              </div>
             ))}
           </div>
         </div>
 
-        {/* Marquee Animation CSS */}
         <style>{`
           @keyframes marquee {
             0% { transform: translateX(0); }
@@ -368,7 +417,7 @@ const Index = () => {
       <section style={{
         background: colors.bgWhite,
         padding: isMobile ? '40px 20px' : '64px 48px',
-        maxWidth: '1400px',
+        maxWidth: '1200px',
         margin: '0 auto',
         width: '100%',
       }}>
@@ -382,7 +431,7 @@ const Index = () => {
           {t.howItWorks}
         </h2>
 
-        {/* 4-Column Grid (2 on mobile) */}
+        {/* 4-Column Grid */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
@@ -396,7 +445,7 @@ const Index = () => {
                 borderRadius: '16px',
                 padding: isMobile ? '20px 16px' : '28px 24px',
                 boxShadow: cardShadow,
-                transition: 'all 0.2s ease',
+                transition: 'all 0.25s ease',
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
@@ -419,23 +468,23 @@ const Index = () => {
                 width: isMobile ? '56px' : '72px',
                 height: isMobile ? '56px' : '72px',
                 borderRadius: '16px',
-                background: `linear-gradient(135deg, ${colors.accentGreen}15 0%, ${colors.accentGreen}25 100%)`,
+                background: `linear-gradient(135deg, ${colors.accentGreen}12 0%, ${colors.accentGreen}20 100%)`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginBottom: '12px',
+                marginBottom: '16px',
               }}>
                 <step.Icon size={isMobile ? 28 : 36} color={colors.accentGreen} strokeWidth={1.5} />
               </div>
 
               {/* Step Number */}
               <div style={{
-                width: '24px',
-                height: '24px',
+                width: '26px',
+                height: '26px',
                 borderRadius: '50%',
                 background: colors.accentGreen,
                 color: 'white',
-                fontSize: '12px',
+                fontSize: '13px',
                 fontWeight: 700,
                 display: 'flex',
                 alignItems: 'center',
@@ -451,7 +500,7 @@ const Index = () => {
                 fontSize: isMobile ? '15px' : '18px',
                 fontWeight: 700,
                 color: colors.textDark,
-                marginBottom: '6px',
+                marginBottom: '8px',
                 lineHeight: 1.3,
               }}>
                 {step.title}
@@ -474,27 +523,29 @@ const Index = () => {
           <button
             onClick={handleCreateList}
             style={{
-              background: `linear-gradient(135deg, ${colors.accentGreen} 0%, #16A085 100%)`,
+              background: colors.accentGreen,
               color: 'white',
               padding: isMobile ? '16px 32px' : '18px 48px',
-              borderRadius: '12px',
+              borderRadius: '10px',
               border: 'none',
               fontSize: isMobile ? '15px' : '17px',
               fontWeight: 700,
               cursor: 'pointer',
               transition: 'all 0.2s ease',
-              boxShadow: '0 4px 14px rgba(26, 188, 156, 0.4)',
+              boxShadow: btnShadow,
               display: 'inline-flex',
               alignItems: 'center',
               gap: '10px',
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 20px rgba(26, 188, 156, 0.5)';
+              e.currentTarget.style.boxShadow = btnShadowHover;
+              e.currentTarget.style.background = colors.accentGreenHover;
             }}
             onMouseOut={(e) => {
               e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 14px rgba(26, 188, 156, 0.4)';
+              e.currentTarget.style.boxShadow = btnShadow;
+              e.currentTarget.style.background = colors.accentGreen;
             }}
           >
             {t.ctaPrimary}
@@ -511,7 +562,7 @@ const Index = () => {
         textAlign: 'center',
         marginTop: 'auto',
       }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ 
             display: 'flex', 
             justifyContent: 'center', 
