@@ -1,0 +1,72 @@
+¡Excelente decisión estratégica\! Estás aplicando el principio de **desacoplamiento** (decoupling): la interfaz no debe esperar al backend.
+
+La recomendación es clara: **Dejen lista la arquitectura (Service Layer) para la integración futura.** Esto se logra utilizando **Datos Mock (Mock Data)**.
+
+Aquí tienes la instrucción para el equipo de desarrollo, enfocada en construir el *contrato* de la API mientras solicitas los accesos.
+
+-----
+
+## 🏗️ INSTRUCCIONES: ARQUITECTURA PRE-API (MOCK DATA)
+
+**ROL:** Backend Engineer.
+**OBJETIVO:** Construir la arquitectura de la función "Tendencias del Momento" usando datos ficticios (Mock Data) para que el frontend pueda renderizar la interfaz.
+
+### 1\. Definición del Contrato de Datos (Interface)
+
+El equipo debe definir el **formato exacto de los datos** que *esperamos* que la API de Amazon/CJ nos devuelva. Esto se conoce como el "Contrato".
+
+| Campo Requerido | Tipo de Dato | Función |
+| :--- | :--- | :--- |
+| `id` | String | Identificador único del producto. |
+| `productName` | String | Nombre del producto. |
+| `imageUrl` | String (URL) | URL de la imagen (debe ser placeholder por ahora). |
+| `price` | Decimal | Precio actual (ej. 45.99). |
+| `storeName` | String | Nombre de la tienda (ej. 'Amazon' o 'Etsy'). |
+| `affiliateLink` | String (URL) | El enlace de rastreo final (placeholder: `#`). |
+
+### 2\. Implementación del Servicio Mock (`itemService.js`)
+
+Crea un módulo de servicio que contendrá la lógica futura de la API. Por ahora, solo devolverá datos codificados (hardcodeados).
+
+  * **Instrucción Clave:** Crear la función `getTrendingProducts()` que simula la respuesta de la API.
+
+<!-- end list -->
+
+```javascript
+// itemService.js
+
+const mockTrendingProducts = [
+  {
+    id: 'TND001',
+    productName: 'Audífonos Inalámbricos Bluetooth X9',
+    imageUrl: 'https://placeholder.com/trend1.jpg', // Usar imágenes placeholder profesionales
+    price: 59.99,
+    storeName: 'Best Buy',
+    affiliateLink: '#',
+  },
+  {
+    id: 'TND002',
+    productName: 'Vela Aromática de Vainilla Francesa',
+    imageUrl: 'https://placeholder.com/trend2.jpg',
+    price: 19.50,
+    storeName: 'Etsy',
+    affiliateLink: '#',
+  },
+  // Agregar 8 productos más aquí...
+];
+
+export const getTrendingProducts = async () => {
+  // Retraso simulado para imitar una llamada de red
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return mockTrendingProducts;
+};
+
+// ... otras funciones de la API
+```
+
+### 3\. Integración al Frontend (Carousel)
+
+  * **Instrucción Clave:** El componente del carrusel "Tendencias del Momento" debe llamar a **`getTrendingProducts()`**.
+  * **Beneficio:** Una vez que obtengas las credenciales de Amazon y CJ, solo tendrás que modificar el cuerpo interno de la función `getTrendingProducts` para que apunte a las API reales. **El frontend (la interfaz de usuario) no tendrá que cambiar en absoluto.**
+
+De esta manera, la arquitectura estará limpia, desacoplada y 100% lista para cuando lleguen las claves de acceso de las API.

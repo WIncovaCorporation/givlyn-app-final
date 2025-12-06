@@ -8,6 +8,7 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { AmazonLogo, WalmartLogo, TargetLogo, EtsyLogo, EbayLogo, BestBuyLogo, HomeDepotLogo, NikeLogo, AdidasLogo, MacysLogo, KohlsLogo, SephoraLogo, UltaLogo, LululemonLogo, NordstromLogo, ZaraLogo, HMlogo, GapLogo, CoachLogo, AppleLogo, SamsungLogo, SonyLogo, LowesLogo, CostcoLogo, WayfairLogo } from "@/components/StoreLogos";
 import { X } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
+import { getTrendingProductsSync, type TrendingProduct } from "@/services/trendingService";
 
 interface GiftList {
   id: string;
@@ -25,14 +26,7 @@ const listBackgrounds = [
   "https://images.unsplash.com/photo-1576919228236-a097c32a5cd4?w=400&q=80",
 ];
 
-const trendingProducts = [
-  { id: 1, name: "AirPods Pro 2", price: "$249", image: "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=300&q=80", discount: "-15%" },
-  { id: 2, name: "Stanley Tumbler", price: "$45", image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=300&q=80", discount: "-20%" },
-  { id: 3, name: "Kindle Paperwhite", price: "$139", image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&q=80", discount: "-25%" },
-  { id: 4, name: "Dyson Airwrap", price: "$599", image: "https://images.unsplash.com/photo-1522338242042-2d1c27096969?w=300&q=80", discount: "" },
-  { id: 5, name: "Lego Set Architecture", price: "$129", image: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=300&q=80", discount: "-10%" },
-  { id: 6, name: "Nintendo Switch", price: "$299", image: "https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?w=300&q=80", discount: "" },
-];
+const trendingProducts: TrendingProduct[] = getTrendingProductsSync();
 
 const upcomingEvents = [
   { id: 1, name: "Navidad", nameEn: "Christmas", date: "25 Dic", color: "from-red-500 to-green-600", template: "navidad" },
@@ -485,7 +479,7 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* TENDENCIAS - STATIC CAROUSEL (user controlled) */}
+        {/* TENDENCIAS - GRID RESPONSIVE (optimizado para llenar espacio) */}
         <div className="mb-14">
           <div className="flex items-center gap-2 mb-5">
             <TrendingUp className="w-5 h-5 text-[#FF9900]" />
@@ -494,19 +488,19 @@ const Dashboard = () => {
             </h2>
           </div>
           
-          <div 
-            className="flex gap-4 overflow-x-auto scrollbar-hide pb-3"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             {trendingProducts.map((product) => (
-              <div
+              <a
                 key={product.id}
-                className="flex-shrink-0 w-[140px] sm:w-[160px] bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all cursor-pointer hover:-translate-y-0.5"
+                href={product.affiliateLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all cursor-pointer hover:-translate-y-1"
               >
-                <div className="relative h-[100px] sm:h-[110px]">
+                <div className="relative aspect-square">
                   <img 
-                    src={product.image} 
-                    alt={product.name}
+                    src={product.imageUrl} 
+                    alt={product.productName}
                     className="w-full h-full object-cover"
                   />
                   {product.discount && (
@@ -514,12 +508,20 @@ const Dashboard = () => {
                       {product.discount}
                     </span>
                   )}
+                  <span className="absolute bottom-2 right-2 bg-white/90 text-[10px] font-medium text-gray-600 px-2 py-0.5 rounded">
+                    {product.storeName}
+                  </span>
                 </div>
                 <div className="p-3">
-                  <h4 className="text-sm font-medium text-[#1A3E5C] line-clamp-1">{product.name}</h4>
-                  <p className="text-[#1ABC9C] font-bold">{product.price}</p>
+                  <h4 className="text-sm font-medium text-[#1A3E5C] line-clamp-1">{product.productName}</h4>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-[#1ABC9C] font-bold">${product.price}</span>
+                    {product.originalPrice && (
+                      <span className="text-xs text-gray-400 line-through">${product.originalPrice}</span>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </div>
