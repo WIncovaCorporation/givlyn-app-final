@@ -141,38 +141,51 @@ export const MacysLogo = ({ height = 22 }: LogoProps) => (
 );
 
 export const HomeDepotLogo = ({ height = 24 }: LogoProps) => (
-  <div style={{ display: 'flex', alignItems: 'center', gap: `${height * 0.15}px` }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
     <div style={{
-      width: `${height * 1.2}px`,
-      height: `${height * 1.2}px`,
+      width: `${Math.min(height, 20)}px`,
+      height: `${Math.min(height, 20)}px`,
       background: '#F96302',
-      borderRadius: '3px',
+      borderRadius: '2px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      flexShrink: 0,
     }}>
       <span style={{
         color: '#FFFFFF',
-        fontSize: `${height * 0.7}px`,
+        fontSize: `${Math.min(height * 0.5, 10)}px`,
         fontWeight: 800,
         fontFamily: "Arial, sans-serif",
       }}>
         HD
       </span>
     </div>
-    <span style={{ 
-      fontSize: `${height * 0.65}px`, 
-      fontWeight: 700, 
-      color: '#F96302',
-      fontFamily: "Arial, sans-serif",
-    }}>
-      Home Depot
-    </span>
+    <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
+      <span style={{ 
+        fontSize: `${Math.min(height * 0.4, 9)}px`, 
+        fontWeight: 700, 
+        color: '#F96302',
+        fontFamily: "Arial, sans-serif",
+        whiteSpace: 'nowrap',
+      }}>
+        Home
+      </span>
+      <span style={{ 
+        fontSize: `${Math.min(height * 0.4, 9)}px`, 
+        fontWeight: 700, 
+        color: '#F96302',
+        fontFamily: "Arial, sans-serif",
+        whiteSpace: 'nowrap',
+      }}>
+        Depot
+      </span>
+    </div>
   </div>
 );
 
 export const NikeLogo = ({ height = 20 }: LogoProps) => (
-  <svg width={height * 3} height={height * 1.2} viewBox="0 0 100 40">
+  <svg width={Math.min(height * 2, 45)} height={Math.min(height * 0.8, 18)} viewBox="0 0 100 40">
     <path 
       d="M10 32 C6 32 2 30 2 28 C2 26 6 24 14 20 L78 4 C84 2 90 2 94 4 C98 6 98 10 94 12 L36 28 C28 30 20 32 14 32 L10 32 Z" 
       fill="#111111"
@@ -181,19 +194,20 @@ export const NikeLogo = ({ height = 20 }: LogoProps) => (
 );
 
 export const AdidasLogo = ({ height = 24 }: LogoProps) => (
-  <div style={{ display: 'flex', alignItems: 'flex-end', gap: `${height * 0.3}px` }}>
-    <svg width={height * 1.2} height={height} viewBox="0 0 36 32">
+  <div style={{ display: 'flex', alignItems: 'flex-end', gap: '4px' }}>
+    <svg width={Math.min(height, 20)} height={Math.min(height * 0.8, 16)} viewBox="0 0 36 32">
       <path d="M0 32 L10 10 L14 10 L4 32 Z" fill="#000000"/>
       <path d="M10 32 L20 10 L24 10 L14 32 Z" fill="#000000"/>
       <path d="M20 32 L30 10 L34 10 L24 32 Z" fill="#000000"/>
     </svg>
     <span style={{ 
-      fontSize: `${height * 0.75}px`, 
+      fontSize: `${Math.min(height * 0.55, 12)}px`, 
       fontWeight: 700, 
       color: '#000000',
       fontFamily: "'adineue', 'Helvetica Neue', Arial, sans-serif",
-      letterSpacing: '2px',
+      letterSpacing: '1px',
       textTransform: 'lowercase',
+      whiteSpace: 'nowrap',
     }}>
       adidas
     </span>
@@ -254,15 +268,16 @@ export const UltaLogo = ({ height = 22 }: LogoProps) => (
 );
 
 export const LululemonLogo = ({ height = 20 }: LogoProps) => (
-  <div style={{ display: 'flex', alignItems: 'center', gap: `${height * 0.25}px` }}>
-    <svg width={height} height={height} viewBox="0 0 24 24">
+  <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+    <svg width={Math.min(height, 16)} height={Math.min(height, 16)} viewBox="0 0 24 24">
       <path d="M12 2C8 2 5 5 5 9c0 6 7 13 7 13s7-7 7-13c0-4-3-7-7-7zm0 10c-2 0-3.5-1.5-3.5-3.5S10 5 12 5s3.5 1.5 3.5 3.5S14 12 12 12z" fill="#CC0000"/>
     </svg>
     <span style={{ 
-      fontSize: `${height * 0.9}px`, 
+      fontSize: `${Math.min(height * 0.55, 11)}px`, 
       fontWeight: 400, 
       color: '#000000',
       fontFamily: "Georgia, serif",
+      whiteSpace: 'nowrap',
     }}>
       lululemon
     </span>
@@ -271,11 +286,11 @@ export const LululemonLogo = ({ height = 20 }: LogoProps) => (
 
 export const NordstromLogo = ({ height = 20 }: LogoProps) => (
   <span style={{ 
-    fontSize: `${Math.min(height, 12)}px`, 
+    fontSize: `${Math.min(height * 0.5, 11)}px`, 
     fontWeight: 400, 
     color: '#000000',
     fontFamily: "'Times New Roman', Georgia, serif",
-    letterSpacing: '0.5px',
+    letterSpacing: '0px',
     textTransform: 'uppercase',
     whiteSpace: 'nowrap',
   }}>
@@ -407,11 +422,12 @@ export const CostcoLogo = ({ height = 22 }: LogoProps) => (
 
 export const WayfairLogo = ({ height = 22 }: LogoProps) => (
   <span style={{ 
-    fontSize: `${height}px`, 
+    fontSize: `${Math.min(height, 14)}px`, 
     fontWeight: 400, 
     color: '#7B189F',
     fontFamily: "'Helvetica Neue', Arial, sans-serif",
-    letterSpacing: '0.5px',
+    letterSpacing: '0px',
+    whiteSpace: 'nowrap',
   }}>
     Wayfair
   </span>

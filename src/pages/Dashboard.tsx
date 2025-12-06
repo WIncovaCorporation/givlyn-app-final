@@ -575,12 +575,12 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* STORES MODAL - FULL WIDTH LIKE GOWISH */}
+        {/* STORES MODAL - WORLD CLASS FULL SCREEN */}
         {showStoresModal && (
-          <div className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center overflow-y-auto pt-4 pb-4 sm:pt-8 sm:pb-8">
-            <div className="bg-white rounded-2xl w-full max-w-6xl mx-2 sm:mx-4 max-h-[95vh] overflow-hidden flex flex-col">
+          <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-2 sm:p-4">
+            <div className="bg-white rounded-2xl w-full max-w-[95vw] h-[90vh] overflow-hidden flex flex-col shadow-2xl">
               {/* Modal Header */}
-              <div className="px-4 sm:px-8 py-5 border-b border-gray-100 flex items-center justify-between">
+              <div className="px-6 sm:px-10 py-5 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
                 <h2 className="text-xl sm:text-2xl font-bold text-[#1A3E5C]">
                   {language === 'es' ? 'Todas las Tiendas' : 'All Stores'}
                 </h2>
@@ -593,27 +593,27 @@ const Dashboard = () => {
               </div>
 
               {/* Search Bar */}
-              <div className="px-4 sm:px-8 pt-5">
-                <div className="relative">
+              <div className="px-6 sm:px-10 pt-5 flex-shrink-0">
+                <div className="relative max-w-2xl">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="text"
                     placeholder={language === 'es' ? 'Buscar marca...' : 'Search brand...'}
                     value={storeSearch}
                     onChange={(e) => setStoreSearch(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-base focus:outline-none focus:border-[#1ABC9C] focus:ring-2 focus:ring-[#1ABC9C]/20 transition-all"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-base focus:outline-none focus:border-[#1ABC9C] focus:ring-2 focus:ring-[#1ABC9C]/20 transition-all"
                   />
                 </div>
               </div>
 
               {/* Category Filters */}
-              <div className="px-4 sm:px-8 py-4">
-                <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1" style={{ scrollbarWidth: 'none' }}>
+              <div className="px-6 sm:px-10 py-4 flex-shrink-0">
+                <div className="flex gap-2 flex-wrap">
                   {storeCategories.map((cat) => (
                     <button
                       key={cat.id}
                       onClick={() => setSelectedCategory(cat.id)}
-                      className={`flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
+                      className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
                         selectedCategory === cat.id
                           ? 'bg-[#1ABC9C] text-white'
                           : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -625,29 +625,29 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Stores Grid - LARGER CARDS LIKE GOWISH */}
-              <div className="px-4 sm:px-8 pb-6 overflow-y-auto flex-1">
-                <p className="text-sm text-gray-500 mb-4">
+              {/* Stores Grid - WORLD CLASS LAYOUT */}
+              <div className="px-6 sm:px-10 pb-8 overflow-y-auto flex-1">
+                <p className="text-sm text-gray-500 mb-5">
                   {language === 'es' ? 'Todo' : 'All'} ({filteredStores.length})
                 </p>
-                <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3 sm:gap-4">
+                <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-4">
                   {filteredStores.map((store, index) => (
                     <a
                       key={`modal-${store.name}-${index}`}
                       href={store.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex flex-col items-center justify-center gap-2 p-3 bg-white rounded-xl border border-gray-100 hover:shadow-lg hover:border-[#1ABC9C]/40 hover:-translate-y-0.5 transition-all cursor-pointer overflow-hidden"
+                      className="flex flex-col items-center justify-center gap-3 p-4 bg-white rounded-xl border border-gray-200 hover:shadow-xl hover:border-[#1ABC9C] hover:-translate-y-1 transition-all cursor-pointer min-h-[100px]"
                     >
-                      <div className="h-[36px] flex items-center justify-center w-full overflow-hidden">
-                        <store.Logo height={20} />
+                      <div className="h-[40px] flex items-center justify-center w-full">
+                        <store.Logo height={24} />
                       </div>
-                      <span className="text-[10px] sm:text-xs text-gray-500 text-center font-medium truncate w-full">{store.name}</span>
+                      <span className="text-xs text-gray-600 text-center font-medium">{store.name}</span>
                     </a>
                   ))}
                 </div>
                 {filteredStores.length === 0 && (
-                  <div className="text-center py-16 text-gray-500">
+                  <div className="text-center py-20 text-gray-500">
                     {language === 'es' ? 'No se encontraron tiendas' : 'No stores found'}
                   </div>
                 )}
