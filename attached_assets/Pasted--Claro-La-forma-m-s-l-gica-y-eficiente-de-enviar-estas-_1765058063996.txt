@@ -1,0 +1,52 @@
+¡Claro! La forma más lógica y eficiente de enviar estas instrucciones al equipo de Replit es en el orden en que se necesitan los componentes: **primero la herramienta de captura de enlaces (Iframe/Fallback)** y luego el **procesador de enlaces (Modal de Añadir Rápido)**.
+
+Aquí tienes la secuencia exacta y las instrucciones consolidadas, listas para copiar y pegar:
+
+---
+
+# 🚀 PROMPT MAESTRO FINAL: FLUJO DE CAPTURA Y CONVERSIÓN DE ENLACES
+
+**ROL:** Senior UX Architect & Frontend Engineer.
+**OBJETIVO:** Implementar el flujo de captura de enlaces de producto sin fricción, incluyendo la robustez del *fallback* y el modal de adición rápida.
+
+## 1. 🌐 FASE 1: NAVEGACIÓN Y CAPTURA DE ENLACES (IFRAME Y FALLBACK)
+
+El equipo debe crear el componente modal grande que se activa al hacer clic en cualquier logo de tienda.
+
+### A. Componente `StoreIframeModal`
+* **Diseño:** Crear un modal grande que ocupe **aprox. el 90% del *viewport***.
+* **Elemento Principal:** Debe contener el `<iframe>` que intentará cargar la tienda externa.
+* **Botón de Acción:** En el encabezado del modal (fuera del iframe), incluir el botón que activa la Fase 2:
+    * **Texto:** `✨ Añadir Producto a Lista`
+
+### B. Lógica de Fallback (Máxima Prioridad)
+Implementar la lógica de seguridad para manejar los errores de carga:
+
+* **Instrucción Clave:** Si el `<iframe>` no puede cargar la URL de la tienda (debido a `X-Frame-Options` o `CSP`, común en Amazon/Walmart), el sistema debe **automáticamente** cerrar el modal y abrir la URL de la tienda en una **nueva pestaña** (`target="_blank"`).
+* **Función del Botón:** El botón `✨ Añadir Producto a Lista` debe ser el punto de activación que **inicia la Fase 2**.
+
+## 2. ➕ FASE 2: EL MODAL DE ADICIÓN RÁPIDA (`QuickAddModal`)
+
+Este componente se activa al hacer clic en el botón de la Fase 1. Su objetivo es convertir la URL copiada en una acción de Givlyn.
+
+### A. Estructura del Modal
+* **Diseño:** Un modal más pequeño que se superpone a la pantalla o a la nueva pestaña.
+* **Campo de Entrada:** Debe haber un campo de texto visible para que el usuario **pegue la URL del producto** copiada de la tienda.
+
+### B. Funcionalidad de Adición (Un Solo Clic)
+El modal debe tener dos opciones mutuamente excluyentes para seleccionar el destino:
+
+1.  **Selector de Lista Existente:** Implementar un **dropdown/selector** que muestre todas las `listas_del_usuario` existentes para una selección rápida.
+2.  **Creación Rápida de Lista:** Incluir un botón o un campo que, al activarse, permita al usuario **nombrar y crear una nueva lista** al mismo tiempo que añade el producto.
+
+### C. Flujo de Datos (Integración Backend)
+Al confirmar la adición:
+1.  El sistema debe tomar la URL pegada.
+2.  Ejecutar la función **`itemService.convertToAffiliateLink(url)`** (utilizando el mock data por ahora, pero preparado para la API real).
+3.  Almacenar los datos del producto y la URL de afiliado en la lista elegida.
+4.  Mostrar una notificación de éxito.
+
+---
+
+**Resumen de la Secuencia:**
+**1.** Click en Logo de Tienda $\rightarrow$ **2.** Se abre el Iframe/Nueva Pestaña $\rightarrow$ **3.** Usuario copia el link $\rightarrow$ **4.** Click en `✨ Añadir Producto a Lista` $\rightarrow$ **5.** Se abre el **`QuickAddModal`** (Fase 2) $\rightarrow$ **6.** Producto añadido.
