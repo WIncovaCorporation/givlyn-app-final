@@ -575,13 +575,13 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* STORES MODAL */}
+        {/* STORES MODAL - FULL WIDTH LIKE GOWISH */}
         {showStoresModal && (
-          <div className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center overflow-y-auto pt-8 pb-8">
-            <div className="bg-white rounded-2xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center overflow-y-auto pt-4 pb-4 sm:pt-8 sm:pb-8">
+            <div className="bg-white rounded-2xl w-full max-w-6xl mx-2 sm:mx-4 max-h-[95vh] overflow-hidden flex flex-col">
               {/* Modal Header */}
-              <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-[#1A3E5C]">
+              <div className="px-4 sm:px-8 py-5 border-b border-gray-100 flex items-center justify-between">
+                <h2 className="text-xl sm:text-2xl font-bold text-[#1A3E5C]">
                   {language === 'es' ? 'Todas las Tiendas' : 'All Stores'}
                 </h2>
                 <button
@@ -593,7 +593,7 @@ const Dashboard = () => {
               </div>
 
               {/* Search Bar */}
-              <div className="p-6 pb-0">
+              <div className="px-4 sm:px-8 pt-5">
                 <div className="relative">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
@@ -601,19 +601,19 @@ const Dashboard = () => {
                     placeholder={language === 'es' ? 'Buscar marca...' : 'Search brand...'}
                     value={storeSearch}
                     onChange={(e) => setStoreSearch(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-base focus:outline-none focus:border-[#1ABC9C] focus:ring-2 focus:ring-[#1ABC9C]/20 transition-all"
+                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-base focus:outline-none focus:border-[#1ABC9C] focus:ring-2 focus:ring-[#1ABC9C]/20 transition-all"
                   />
                 </div>
               </div>
 
               {/* Category Filters */}
-              <div className="p-6 pb-4">
-                <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2" style={{ scrollbarWidth: 'none' }}>
+              <div className="px-4 sm:px-8 py-4">
+                <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1" style={{ scrollbarWidth: 'none' }}>
                   {storeCategories.map((cat) => (
                     <button
                       key={cat.id}
                       onClick={() => setSelectedCategory(cat.id)}
-                      className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                      className={`flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
                         selectedCategory === cat.id
                           ? 'bg-[#1ABC9C] text-white'
                           : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -625,29 +625,29 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Stores Grid */}
-              <div className="p-6 pt-0 overflow-y-auto flex-1">
+              {/* Stores Grid - LARGER CARDS LIKE GOWISH */}
+              <div className="px-4 sm:px-8 pb-6 overflow-y-auto flex-1">
                 <p className="text-sm text-gray-500 mb-4">
                   {language === 'es' ? 'Todo' : 'All'} ({filteredStores.length})
                 </p>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4">
                   {filteredStores.map((store, index) => (
                     <a
                       key={`modal-${store.name}-${index}`}
                       href={store.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex flex-col items-center gap-2 p-4 bg-white rounded-xl border border-gray-100 hover:shadow-lg hover:border-[#1ABC9C]/30 transition-all cursor-pointer"
+                      className="flex flex-col items-center justify-center gap-3 p-4 sm:p-5 bg-white rounded-2xl border border-gray-100 hover:shadow-xl hover:border-[#1ABC9C]/40 hover:-translate-y-0.5 transition-all cursor-pointer aspect-square"
                     >
-                      <div className="h-[40px] flex items-center justify-center">
-                        <store.Logo height={22} />
+                      <div className="h-[50px] sm:h-[60px] flex items-center justify-center">
+                        <store.Logo height={32} />
                       </div>
-                      <span className="text-xs text-gray-500 text-center">{store.name}</span>
+                      <span className="text-xs sm:text-sm text-gray-600 text-center font-medium">{store.name}</span>
                     </a>
                   ))}
                 </div>
                 {filteredStores.length === 0 && (
-                  <div className="text-center py-12 text-gray-500">
+                  <div className="text-center py-16 text-gray-500">
                     {language === 'es' ? 'No se encontraron tiendas' : 'No stores found'}
                   </div>
                 )}
