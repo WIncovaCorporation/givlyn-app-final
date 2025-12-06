@@ -1,0 +1,64 @@
+¡Excelente análisis! Estás afinando los detalles que transforman una aplicación funcional en una experiencia de talla mundial. En Google y Amazon, la **eficiencia del espacio** y la **eliminación de clics innecesarios** son prioridades máximas.
+
+Aquí está el Prompt Maestro Final, que incorpora tus observaciones y añade el valor estratégico de la UX:
+
+***
+
+# 🏆 MASTER PROMPT FINAL: DASHBOARD (REFINAMIENTO UX Y ESPACIAL)
+
+## 0. ROL Y MANDATO (TALLA MUNDIAL)
+
+**ROL:** Senior UX Architect & Frontend Engineer.
+**FOCO:** Máxima eficiencia espacial, usabilidad avanzada (filtros) y coherencia de los carruseles.
+
+---
+
+## 1. 🎯 SECCIÓN HERO Y CTA (POSICIÓN Y JERARQUÍA)
+
+**EVALUACIÓN DE CTAs:** La ubicación es óptima (centrada, debajo del saludo), pero su jerarquía es clave.
+
+| Elemento | Regla de Implementación | Razón Estratégica |
+| :--- | :--- | :--- |
+| **Ubicación** | Mantener los dos botones **alineados horizontalmente** en escritorio/tablet (Side-by-Side) y **apilados verticalmente** en móvil. | Minimizar la altura vertical en desktop para ganar espacio. |
+| **Tamaño (UX)** | El tamaño debe ser **uniforme** para ambos botones, pero el contraste del **CTA Primario** debe ser superior (Color Givlyn Sólido). | Se ven como servicios separados pero valiosos, sin que el Asistente AI parezca un elemento secundario. |
+
+---
+
+## 2. 📑 CARRUSEL 1: MIS LISTAS (EFICIENCIA ESPACIAL Y UX AVANZADA)
+
+Esta es la sección más crítica para el usuario que regresa.
+
+### A. Mejoras de Espacio y Tarjetas
+* **Tarjetas Más Grandes:** **Eliminar el padding lateral** excesivo (`padding-x` o `margin-x`) de la página principal para que las tarjetas de lista ocupen **más ancho** de la pantalla.
+* **Eliminación de Métrica:** **ELIMINAR** la información de estado redundante de las tarjetas individuales (el texto "15 listas, 0 grupos, 0 ahorrado"). Esto limpia visualmente y maximiza el espacio para el título de la lista.
+
+### B. Funcionalidad de Búsqueda
+* **Filtro/Búsqueda:** Añadir una **barra de búsqueda visible y prominente** con un icono de lupa (Lupa) justo **ENCIMA** del carrusel "Mis Listas".
+    * *Función:* Permite a los *power users* buscar sus listas rápidamente por nombre.
+* **Total de Listas:** Agregar la métrica **"Total: [X] listas creadas"** de forma pequeña y motivacional, justo al lado del título "Mis Listas".
+
+---
+
+## 3. 🗺️ CARRUSELES DE DESCUBRIMIENTO (DINÁMICA FINAL)
+
+### A. Carrusel 3: Marcas y Tiendas
+* **Función Dinámica (Especializada):** Confirmado: Cada logo debe ser **clicable**. Al hacer clic, el usuario debe ser llevado a la página principal de esa tienda a través del **enlace de afiliado (Deep Link)** generado por el *backend*.
+
+### B. Carrusel 4: Eventos y Festividades
+
+* **Comportamiento (UX Decisión Final):** Dejar el carrusel **ESTÁTICO** (el usuario desliza manualmente).
+    * *Razón:* Con solo 6-8 ítems, el auto-scroll es vibrante y molesto. Dejarlo estático ofrece una mejor experiencia de exploración controlada por el usuario.
+
+* **Estrategia de Contenido (Valor Agregado de Amazon):** Al hacer clic en una tarjeta de evento (ej. "Día de la Madre"), el usuario no debe ir a una página vacía.
+    * **Acción al Clic:** El sistema debe **redirigir al usuario a una página de plantilla o una búsqueda curada** ya cargada con ideas de regalos relevantes para ese evento.
+    * *Ejemplo:* Clic en "Navidad" → Lleva a la página "Crear Lista de Navidad" con el título "Lista de Regalos Navideños" y 10 productos de tendencia ya sugeridos. **(Cero fricción para empezar).**
+
+---
+
+## 4. INSTRUCCIÓN FINAL PARA EL CÓDIGO
+
+> **"Agente, implementa las siguientes optimizaciones de UX:**
+> 1.  **Máximo Ancho de Contenido:** Reducir el padding horizontal de la página para que las tarjetas de lista sean más grandes.
+> 2.  **UX Avanzada en Mis Listas:** Añadir la **barra de búsqueda** encima del carrusel y la métrica de **"Total de Listas"**.
+> 3.  **Carruseles:** El carrusel de 'Eventos' debe ser **ESTÁTICO** (sin auto-scroll). 'Tendencias' y 'Tiendas' deben ser **DINÁMICOS** (auto-scroll).
+> 4.  **Botones:** Mantener la jerarquía de los dos CTAs y asegurar una **sombra suave y profesional**."

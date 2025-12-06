@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Gift, Users, Plus, Sparkles, List, Home, ChevronRight, ChevronLeft, ShoppingBag, Calendar, TrendingUp } from "lucide-react";
+import { Gift, Users, Plus, Sparkles, List, Home, ChevronRight, ChevronLeft, Calendar, TrendingUp, Search } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { AmazonLogo, WalmartLogo, TargetLogo, EtsyLogo, EbayLogo, BestBuyLogo, HomeDepotLogo, NikeLogo, AdidasLogo } from "@/components/StoreLogos";
@@ -34,12 +34,24 @@ const trendingProducts = [
 ];
 
 const upcomingEvents = [
-  { id: 1, name: "Navidad", nameEn: "Christmas", date: "25 Dic", color: "from-red-500 to-green-600", icon: "🎄" },
-  { id: 2, name: "Dia de San Valentin", nameEn: "Valentine's Day", date: "14 Feb", color: "from-pink-500 to-red-500", icon: "💝" },
-  { id: 3, name: "Dia de la Madre", nameEn: "Mother's Day", date: "11 May", color: "from-purple-500 to-pink-500", icon: "💐" },
-  { id: 4, name: "Graduaciones", nameEn: "Graduations", date: "May-Jun", color: "from-blue-600 to-indigo-600", icon: "🎓" },
-  { id: 5, name: "Dia del Padre", nameEn: "Father's Day", date: "15 Jun", color: "from-blue-500 to-cyan-500", icon: "👔" },
-  { id: 6, name: "Bodas", nameEn: "Weddings", date: "Todo el ano", color: "from-amber-400 to-orange-500", icon: "💒" },
+  { id: 1, name: "Navidad", nameEn: "Christmas", date: "25 Dic", color: "from-red-500 to-green-600", template: "navidad" },
+  { id: 2, name: "Dia de San Valentin", nameEn: "Valentine's Day", date: "14 Feb", color: "from-pink-500 to-red-500", template: "san-valentin" },
+  { id: 3, name: "Dia de la Madre", nameEn: "Mother's Day", date: "11 May", color: "from-purple-500 to-pink-500", template: "dia-madre" },
+  { id: 4, name: "Graduaciones", nameEn: "Graduations", date: "May-Jun", color: "from-blue-600 to-indigo-600", template: "graduacion" },
+  { id: 5, name: "Dia del Padre", nameEn: "Father's Day", date: "15 Jun", color: "from-blue-500 to-cyan-500", template: "dia-padre" },
+  { id: 6, name: "Bodas", nameEn: "Weddings", date: "Todo el ano", color: "from-amber-400 to-orange-500", template: "boda" },
+];
+
+const affiliateStores = [
+  { name: "Amazon", url: "https://www.amazon.com/?tag=givlyn-20", Logo: AmazonLogo },
+  { name: "Walmart", url: "https://www.walmart.com/?affiliates_ad_id=givlyn", Logo: WalmartLogo },
+  { name: "Target", url: "https://www.target.com/?ref=givlyn", Logo: TargetLogo },
+  { name: "eBay", url: "https://www.ebay.com/?campid=givlyn", Logo: EbayLogo },
+  { name: "Best Buy", url: "https://www.bestbuy.com/?ref=givlyn", Logo: BestBuyLogo },
+  { name: "Etsy", url: "https://www.etsy.com/?ref=givlyn", Logo: EtsyLogo },
+  { name: "Home Depot", url: "https://www.homedepot.com/?ref=givlyn", Logo: HomeDepotLogo },
+  { name: "Nike", url: "https://www.nike.com/?ref=givlyn", Logo: NikeLogo },
+  { name: "Adidas", url: "https://www.adidas.com/?ref=givlyn", Logo: AdidasLogo },
 ];
 
 const Dashboard = () => {
@@ -48,6 +60,7 @@ const Dashboard = () => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [myLists, setMyLists] = useState<GiftList[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [stats, setStats] = useState({
     myLists: 0,
     myGroups: 0,
@@ -55,11 +68,15 @@ const Dashboard = () => {
   });
   const listsCarouselRef = useRef<HTMLDivElement>(null);
   const trendingCarouselRef = useRef<HTMLDivElement>(null);
-  const eventsCarouselRef = useRef<HTMLDivElement>(null);
+  const storesCarouselRef = useRef<HTMLDivElement>(null);
   const [canScrollListsLeft, setCanScrollListsLeft] = useState(false);
   const [canScrollListsRight, setCanScrollListsRight] = useState(false);
 
   const userName = user?.user_metadata?.display_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuario';
+
+  const filteredLists = myLists.filter(list => 
+    list.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const checkScrollButtons = () => {
     if (listsCarouselRef.current) {
@@ -81,7 +98,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const autoScrollCarousels = () => {
-      [trendingCarouselRef, eventsCarouselRef].forEach(ref => {
+      [trendingCarouselRef, storesCarouselRef].forEach(ref => {
         if (ref.current) {
           const { scrollLeft, scrollWidth, clientWidth } = ref.current;
           if (scrollLeft >= scrollWidth - clientWidth - 5) {
@@ -132,7 +149,7 @@ const Dashboard = () => {
             .select("id, name, created_at")
             .eq("user_id", userId)
             .order("created_at", { ascending: false })
-            .limit(10),
+            .limit(20),
           supabase
             .from("gift_lists")
             .select("id", { count: "exact", head: true })
@@ -187,6 +204,10 @@ const Dashboard = () => {
     }
   }, [myLists]);
 
+  const handleEventClick = (template: string, eventName: string) => {
+    navigate(`/create-list/step-1?template=${template}&name=${encodeURIComponent(eventName)}`);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#FAFBFC] flex items-center justify-center">
@@ -197,107 +218,77 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#FAFBFC] pb-24 md:pb-8">
-      <div className="max-w-6xl mx-auto px-4 md:px-6 py-6">
+      <div className="max-w-7xl mx-auto px-3 md:px-4 py-5">
         
         {/* HERO SECTION */}
-        <div className="mb-8">
+        <div className="mb-6">
           <h1 className="text-2xl md:text-3xl font-bold text-[#1A3E5C] mb-1">
             {language === 'es' ? `Hola, ${userName}` : `Hi, ${userName}`}
           </h1>
-          <p className="text-gray-500 text-lg">
+          <p className="text-gray-500 text-base md:text-lg">
             {language === 'es' ? '¿Que regalo o lista creamos hoy?' : 'What gift or list shall we create today?'}
           </p>
         </div>
 
-        {/* CTAs - Professional Clean Design */}
-        <div className="grid md:grid-cols-2 gap-4 mb-8">
+        {/* CTAs - Side by Side Desktop, Stacked Mobile */}
+        <div className="grid md:grid-cols-2 gap-3 mb-6">
           <button 
             onClick={() => navigate("/create-list/step-1")}
-            className="group p-6 rounded-2xl bg-[#FF9900] text-white text-left transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
+            className="group p-5 rounded-xl bg-[#FF9900] text-white text-left transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                  <Plus className="w-6 h-6" />
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 bg-white/20 rounded-lg flex items-center justify-center">
+                  <Plus className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold">
+                  <h3 className="text-base font-bold">
                     {language === 'es' ? 'CREAR NUEVA LISTA' : 'CREATE NEW LIST'}
                   </h3>
-                  <p className="text-white/80 text-sm">
+                  <p className="text-white/80 text-xs">
                     {language === 'es' ? 'Empieza a organizar tus regalos' : 'Start organizing your gifts'}
                   </p>
                 </div>
               </div>
-              <ChevronRight className="w-6 h-6 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+              <ChevronRight className="w-5 h-5 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
             </div>
           </button>
 
           <button 
             onClick={() => navigate("/search")}
-            className="group p-6 rounded-2xl bg-white border border-gray-200 text-left transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:border-[#1ABC9C]"
+            className="group p-5 rounded-xl bg-white border border-gray-200 text-left transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-[#1ABC9C]"
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#1ABC9C]/10 rounded-xl flex items-center justify-center">
-                  <Sparkles className="w-6 h-6 text-[#1ABC9C]" />
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 bg-[#1ABC9C]/10 rounded-lg flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-[#1ABC9C]" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-[#1A3E5C]">
+                  <h3 className="text-base font-bold text-[#1A3E5C]">
                     {language === 'es' ? 'ASISTENTE DE COMPRAS' : 'SHOPPING ASSISTANT'}
                   </h3>
-                  <p className="text-gray-500 text-sm">
+                  <p className="text-gray-500 text-xs">
                     {language === 'es' ? 'Encuentra el regalo perfecto con IA' : 'Find the perfect gift with AI'}
                   </p>
                 </div>
               </div>
-              <ChevronRight className="w-6 h-6 text-gray-300 group-hover:text-[#1ABC9C] group-hover:translate-x-1 transition-all" />
+              <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#1ABC9C] group-hover:translate-x-1 transition-all" />
             </div>
           </button>
         </div>
 
-        {/* Stats Row */}
-        <div className="grid grid-cols-3 gap-3 mb-8">
-          <div className="bg-white rounded-xl p-4 text-center border border-gray-100">
-            <div className="text-2xl font-bold text-[#1A3E5C]">{stats.myLists}</div>
-            <div className="text-xs text-gray-500 font-medium">
-              {language === 'es' ? 'Listas' : 'Lists'}
-            </div>
-          </div>
-          <div className="bg-white rounded-xl p-4 text-center border border-gray-100">
-            <div className="text-2xl font-bold text-[#1A3E5C]">{stats.myGroups}</div>
-            <div className="text-xs text-gray-500 font-medium">
-              {language === 'es' ? 'Grupos' : 'Groups'}
-            </div>
-          </div>
-          <div className="bg-white rounded-xl p-4 text-center border border-gray-100">
-            <div className="text-2xl font-bold text-[#1ABC9C]">${stats.totalSaved}</div>
-            <div className="text-xs text-gray-500 font-medium">
-              {language === 'es' ? 'Ahorrado' : 'Saved'}
-            </div>
-          </div>
-        </div>
-
-        {/* MIS LISTAS - STATIC CAROUSEL */}
-        <div className="relative mb-10">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <h2 className="text-lg font-bold text-[#1A3E5C] flex items-center gap-2">
-                <Gift className="w-5 h-5" />
+        {/* MIS LISTAS - STATIC CAROUSEL with Search */}
+        <div className="relative mb-8">
+          {/* Header with Title + Total */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Gift className="w-5 h-5 text-[#1A3E5C]" />
+              <h2 className="text-lg font-bold text-[#1A3E5C]">
                 {language === 'es' ? 'Mis Listas' : 'My Lists'}
               </h2>
-              <button 
-                onClick={() => navigate("/create-list/step-1")}
-                className="w-7 h-7 bg-[#1ABC9C] hover:bg-[#1ABC9C]/90 rounded-full flex items-center justify-center transition-colors"
-              >
-                <Plus className="w-4 h-4 text-white" />
-              </button>
-              <button 
-                onClick={() => navigate("/search")}
-                className="w-7 h-7 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors"
-              >
-                <ShoppingBag className="w-4 h-4 text-gray-600" />
-              </button>
+              <span className="text-xs text-gray-400 font-medium">
+                ({stats.myLists} {language === 'es' ? 'creadas' : 'created'})
+              </span>
             </div>
             {myLists.length > 0 && (
               <button 
@@ -310,24 +301,38 @@ const Dashboard = () => {
             )}
           </div>
 
+          {/* Search Bar */}
+          {myLists.length > 3 && (
+            <div className="relative mb-4">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder={language === 'es' ? 'Buscar lista...' : 'Search list...'}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#1ABC9C] focus:ring-1 focus:ring-[#1ABC9C]"
+              />
+            </div>
+          )}
+
           {myLists.length === 0 ? (
-            <div className="bg-white rounded-xl p-8 text-center border border-gray-100">
-              <div className="w-14 h-14 mx-auto mb-4 bg-[#1ABC9C]/10 rounded-xl flex items-center justify-center">
-                <Gift className="w-7 h-7 text-[#1ABC9C]" />
+            <div className="bg-white rounded-xl p-6 text-center border border-gray-100">
+              <div className="w-12 h-12 mx-auto mb-3 bg-[#1ABC9C]/10 rounded-lg flex items-center justify-center">
+                <Gift className="w-6 h-6 text-[#1ABC9C]" />
               </div>
-              <h3 className="text-lg font-bold text-[#1A3E5C] mb-2">
+              <h3 className="text-base font-bold text-[#1A3E5C] mb-1">
                 {language === 'es' ? 'Tu lista esta vacia' : 'Your list is empty'}
               </h3>
-              <p className="text-gray-500 mb-5 text-sm">
+              <p className="text-gray-500 mb-4 text-sm">
                 {language === 'es' 
                   ? 'Crea tu primera lista para empezar' 
                   : 'Create your first list to get started'}
               </p>
               <Button 
                 onClick={() => navigate("/create-list/step-1")} 
-                className="bg-[#FF9900] hover:bg-[#FF9900]/90 text-white font-semibold px-5 py-2.5 h-auto rounded-lg"
+                className="bg-[#FF9900] hover:bg-[#FF9900]/90 text-white font-semibold px-4 py-2 h-auto rounded-lg text-sm"
               >
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className="w-4 h-4 mr-1" />
                 {language === 'es' ? 'Crear mi primera lista' : 'Create my first list'}
               </Button>
             </div>
@@ -336,7 +341,7 @@ const Dashboard = () => {
               {canScrollListsLeft && (
                 <button
                   onClick={() => scrollCarousel(listsCarouselRef, 'left')}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-[#1A3E5C] hover:bg-[#1ABC9C] hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 z-10 w-9 h-9 bg-white rounded-full shadow-md flex items-center justify-center text-[#1A3E5C] hover:bg-[#1ABC9C] hover:text-white transition-all opacity-0 group-hover:opacity-100"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -344,14 +349,14 @@ const Dashboard = () => {
 
               <div 
                 ref={listsCarouselRef}
-                className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-4 px-4 snap-x snap-mandatory"
+                className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
-                {myLists.map((list, index) => (
+                {filteredLists.map((list, index) => (
                   <button
                     key={list.id}
                     onClick={() => navigate(`/lists?id=${list.id}`)}
-                    className="group/card flex-shrink-0 w-[200px] h-[140px] rounded-xl overflow-hidden relative transition-all duration-300 hover:-translate-y-1 hover:shadow-lg snap-start"
+                    className="group/card flex-shrink-0 w-[220px] h-[150px] rounded-xl overflow-hidden relative transition-all duration-300 hover:-translate-y-1 hover:shadow-lg snap-start"
                   >
                     <div 
                       className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover/card:scale-105"
@@ -374,9 +379,9 @@ const Dashboard = () => {
                 
                 <button
                   onClick={() => navigate("/create-list/step-1")}
-                  className="flex-shrink-0 w-[200px] h-[140px] rounded-xl border-2 border-dashed border-gray-200 hover:border-[#1ABC9C] bg-white flex flex-col items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-1 snap-start"
+                  className="flex-shrink-0 w-[220px] h-[150px] rounded-xl border-2 border-dashed border-gray-200 hover:border-[#1ABC9C] bg-white flex flex-col items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-1 snap-start"
                 >
-                  <div className="w-10 h-10 bg-[#1ABC9C]/10 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-[#1ABC9C]/10 rounded-lg flex items-center justify-center">
                     <Plus className="w-5 h-5 text-[#1ABC9C]" />
                   </div>
                   <span className="text-[#1A3E5C] font-semibold text-sm">
@@ -388,7 +393,7 @@ const Dashboard = () => {
               {canScrollListsRight && (
                 <button
                   onClick={() => scrollCarousel(listsCarouselRef, 'right')}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-[#1A3E5C] hover:bg-[#1ABC9C] hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 z-10 w-9 h-9 bg-white rounded-full shadow-md flex items-center justify-center text-[#1A3E5C] hover:bg-[#1ABC9C] hover:text-white transition-all opacity-0 group-hover:opacity-100"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -398,8 +403,8 @@ const Dashboard = () => {
         </div>
 
         {/* TENDENCIAS - DYNAMIC AUTO-SCROLL */}
-        <div className="mb-10">
-          <div className="flex items-center gap-2 mb-4">
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-3">
             <TrendingUp className="w-5 h-5 text-[#FF9900]" />
             <h2 className="text-lg font-bold text-[#1A3E5C]">
               {language === 'es' ? 'Tendencias del Momento' : 'Trending Now'}
@@ -408,28 +413,28 @@ const Dashboard = () => {
           
           <div 
             ref={trendingCarouselRef}
-            className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-4 px-4"
+            className="flex gap-3 overflow-x-auto scrollbar-hide pb-2"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {trendingProducts.map((product) => (
               <div
                 key={product.id}
-                className="flex-shrink-0 w-[160px] bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+                className="flex-shrink-0 w-[150px] bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
               >
-                <div className="relative h-[120px]">
+                <div className="relative h-[110px]">
                   <img 
                     src={product.image} 
                     alt={product.name}
                     className="w-full h-full object-cover"
                   />
                   {product.discount && (
-                    <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded">
+                    <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded">
                       {product.discount}
                     </span>
                   )}
                 </div>
-                <div className="p-3">
-                  <h4 className="text-sm font-medium text-[#1A3E5C] line-clamp-1">{product.name}</h4>
+                <div className="p-2.5">
+                  <h4 className="text-xs font-medium text-[#1A3E5C] line-clamp-1">{product.name}</h4>
                   <p className="text-[#1ABC9C] font-bold text-sm">{product.price}</p>
                 </div>
               </div>
@@ -437,55 +442,54 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* MARCAS - DYNAMIC MARQUEE */}
-        <div className="mb-10">
-          <h2 className="text-lg font-bold text-[#1A3E5C] mb-4">
+        {/* MARCAS - DYNAMIC MARQUEE with Clickable Links */}
+        <div className="mb-8">
+          <h2 className="text-lg font-bold text-[#1A3E5C] mb-3">
             {language === 'es' ? 'Compra en tus tiendas favoritas' : 'Shop at your favorite stores'}
           </h2>
           
-          <div className="bg-white rounded-xl border border-gray-100 py-4 overflow-hidden">
-            <div className="flex items-center gap-12 animate-marquee">
-              <AmazonLogo height={28} />
-              <WalmartLogo height={28} />
-              <TargetLogo height={28} />
-              <EbayLogo height={28} />
-              <BestBuyLogo height={28} />
-              <EtsyLogo height={28} />
-              <HomeDepotLogo height={28} />
-              <NikeLogo height={24} />
-              <AdidasLogo height={28} />
-              <AmazonLogo height={28} />
-              <WalmartLogo height={28} />
-              <TargetLogo height={28} />
-            </div>
+          <div 
+            ref={storesCarouselRef}
+            className="flex items-center gap-8 overflow-x-auto scrollbar-hide py-3 px-2"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {[...affiliateStores, ...affiliateStores].map((store, index) => (
+              <a
+                key={`${store.name}-${index}`}
+                href={store.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
+              >
+                <store.Logo height={26} />
+              </a>
+            ))}
           </div>
         </div>
 
-        {/* EVENTOS - DYNAMIC AUTO-SCROLL */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
+        {/* EVENTOS - STATIC CAROUSEL (User Controls) */}
+        <div className="mb-6">
+          <div className="flex items-center gap-2 mb-3">
             <Calendar className="w-5 h-5 text-purple-500" />
             <h2 className="text-lg font-bold text-[#1A3E5C]">
               {language === 'es' ? 'Proximos Eventos y Festividades' : 'Upcoming Events & Holidays'}
             </h2>
           </div>
           
-          <div 
-            ref={eventsCarouselRef}
-            className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 -mx-4 px-4"
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {upcomingEvents.map((event) => (
-              <div
+              <button
                 key={event.id}
-                className={`flex-shrink-0 w-[180px] h-[100px] rounded-xl bg-gradient-to-br ${event.color} p-4 text-white cursor-pointer hover:shadow-lg transition-shadow`}
+                onClick={() => handleEventClick(event.template, language === 'es' ? event.name : event.nameEn)}
+                className={`flex-shrink-0 w-[160px] h-[90px] rounded-xl bg-gradient-to-br ${event.color} p-3 text-white text-left hover:shadow-lg hover:-translate-y-0.5 transition-all`}
               >
-                <div className="text-2xl mb-1">{event.icon}</div>
-                <h4 className="font-bold text-sm line-clamp-1">
+                <h4 className="font-bold text-sm line-clamp-1 mb-0.5">
                   {language === 'es' ? event.name : event.nameEn}
                 </h4>
                 <p className="text-white/80 text-xs">{event.date}</p>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -493,34 +497,34 @@ const Dashboard = () => {
 
       {/* Mobile Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-gray-100 md:hidden z-50">
-        <div className="flex items-center justify-around py-3">
+        <div className="flex items-center justify-around py-2.5">
           <button 
             onClick={() => navigate("/dashboard")}
-            className="flex flex-col items-center p-2 text-[#1ABC9C]"
+            className="flex flex-col items-center p-1.5 text-[#1ABC9C]"
           >
-            <Home className="w-6 h-6" />
-            <span className="text-xs mt-1 font-medium">{language === 'es' ? 'Inicio' : 'Home'}</span>
+            <Home className="w-5 h-5" />
+            <span className="text-[10px] mt-0.5 font-medium">{language === 'es' ? 'Inicio' : 'Home'}</span>
           </button>
           <button 
             onClick={() => navigate("/lists")}
-            className="flex flex-col items-center p-2 text-gray-400 hover:text-[#1ABC9C] transition-colors"
+            className="flex flex-col items-center p-1.5 text-gray-400 hover:text-[#1ABC9C] transition-colors"
           >
-            <List className="w-6 h-6" />
-            <span className="text-xs mt-1">{language === 'es' ? 'Listas' : 'Lists'}</span>
+            <List className="w-5 h-5" />
+            <span className="text-[10px] mt-0.5">{language === 'es' ? 'Listas' : 'Lists'}</span>
           </button>
           <button 
             onClick={() => navigate("/groups")}
-            className="flex flex-col items-center p-2 text-gray-400 hover:text-[#1ABC9C] transition-colors"
+            className="flex flex-col items-center p-1.5 text-gray-400 hover:text-[#1ABC9C] transition-colors"
           >
-            <Users className="w-6 h-6" />
-            <span className="text-xs mt-1">{language === 'es' ? 'Amigos' : 'Friends'}</span>
+            <Users className="w-5 h-5" />
+            <span className="text-[10px] mt-0.5">{language === 'es' ? 'Amigos' : 'Friends'}</span>
           </button>
           <button 
             onClick={() => navigate("/search")}
-            className="flex flex-col items-center p-2 text-gray-400 hover:text-[#1ABC9C] transition-colors"
+            className="flex flex-col items-center p-1.5 text-gray-400 hover:text-[#1ABC9C] transition-colors"
           >
-            <Sparkles className="w-6 h-6" />
-            <span className="text-xs mt-1">{language === 'es' ? 'IA' : 'AI'}</span>
+            <Sparkles className="w-5 h-5" />
+            <span className="text-[10px] mt-0.5">{language === 'es' ? 'IA' : 'AI'}</span>
           </button>
         </div>
       </nav>
