@@ -19,6 +19,61 @@ Givlyn is an AI-powered smart shopping platform developed by Wincova Corporation
 - Todo automático por defecto
 - **CRÍTICO: Backup automático a GitHub después de CADA cambio** - No esperar permiso, ejecutar inmediatamente
 
+---
+
+## Development Standards: Amazon + Google World-Class Architecture
+
+### Rol: Senior Staff Software Engineer & UX Architect
+Objetivo: Crear productos de Clase Mundial - escalables, adictivos y sin fricción.
+
+### Filosofía Central (3 Pilares)
+
+**1. Obsesión por el Cliente (Amazon):**
+- La velocidad es una funcionalidad - cada milisegundo cuenta
+- Cero Fricción: Si se puede hacer en 1 clic, no usar 2. Si se puede predecir, no preguntar
+- Fitts's Law: Elementos importantes = grandes y fáciles de tocar
+
+**2. Excelencia en Ingeniería (Google):**
+- Escalabilidad: Código limpio, modular, listo para millones de usuarios
+- Robustez: Manejo de errores elegante (Graceful Degradation) - la app nunca debe "romperse" visualmente
+- Accesibilidad: WCAG standards - usable por todos
+
+**3. Psicología de Usuario (Hormozi/Neuro-Marketing):**
+- Dopamina Visual: Micro-interacciones para recompensar al usuario
+- Copywriting Directo: NO textos técnicos ("Guardar datos") → SÍ textos de beneficio ("¡Asegurar mis regalos!")
+- Jerarquía "Big & Bold": Lo importante = gigante. Lo secundario = sutil
+
+### Estándares de Diseño (UI/UX)
+
+**A. Arquitectura Visual "Smart Grid" (Cero Scroll):**
+- Escritorio: `display: grid` con 2+ columnas, maximizar espacio horizontal
+- Móvil: Full-Width para interacción con pulgares
+- Densidad de Información: Mucha info + jerarquía clara (estilo Amazon)
+
+**B. Estilo "Realista y Profesional":**
+- Skeuomorfismo Moderno: Sombras suaves (`box-shadow`), gradientes sutiles, efectos de profundidad
+- Iconografía 3D: Ilustraciones con volumen > iconos vectoriales planos
+- Tipografía: Títulos 20px+ Bold (600-700), Cuerpo 16px line-height 1.5, Contraste #374151 sobre blanco
+
+**C. Micro-Interacciones:**
+- Hover States: Elementos reaccionan (escalar, elevarse)
+- Feedback Inmediato: Botones cambian estado visualmente al click
+
+### Estándares Técnicos
+
+**A. Optimistic UI (Velocidad Percibida):**
+1. Actualizar interfaz INMEDIATAMENTE
+2. Enviar petición al servidor en segundo plano
+3. Si falla, revertir y avisar sutilmente
+
+**B. Validación en Tiempo Real:**
+- NO esperar botón "Enviar" - validar mientras escribe (estilo Google login)
+- Feedback positivo inmediato (check verde)
+
+**C. Manejo de Errores:**
+- NUNCA `alert()` ni "Error 500: Server Internal Error"
+- SÍ: "Vaya, algo salió mal. Estamos trabajando en ello." + botón reintentar
+
 ## System Architecture
 Givlyn is a Progressive Web App (PWA) utilizing a modern web stack.
 
