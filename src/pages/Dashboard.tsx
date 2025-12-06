@@ -74,10 +74,6 @@ const Dashboard = () => {
 
   const userName = user?.user_metadata?.display_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuario';
 
-  const filteredLists = myLists.filter(list => 
-    list.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   const suggestions = searchQuery.length > 0 
     ? myLists.filter(list => 
         list.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -388,7 +384,7 @@ const Dashboard = () => {
                 className="flex gap-4 overflow-x-auto scrollbar-hide pb-3 snap-x snap-mandatory"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
-                {filteredLists.map((list, index) => (
+                {myLists.map((list, index) => (
                   <button
                     key={list.id}
                     onClick={() => navigate(`/lists?id=${list.id}`)}

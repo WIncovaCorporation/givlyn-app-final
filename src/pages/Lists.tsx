@@ -97,6 +97,7 @@ const Lists = () => {
   const [selectedStore, setSelectedStore] = useState<string>("");
   const formScrollRef = useRef<HTMLDivElement>(null);
   const categoryRef = useRef<HTMLDivElement>(null);
+  const selectedListRef = useRef<HTMLDivElement>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<{ open: boolean; id: string; type: "list" | "item" }>({ 
     open: false, 
     id: "", 
@@ -114,13 +115,16 @@ const Lists = () => {
 
   useEffect(() => {
     const listId = searchParams.get('id');
-    if (listId && lists.length > 0 && !selectedList) {
+    if (listId && lists.length > 0) {
       const listExists = lists.find(l => l.id === listId);
       if (listExists) {
         setSelectedList(listId);
+        setTimeout(() => {
+          selectedListRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
       }
     }
-  }, [searchParams, lists, selectedList]);
+  }, [searchParams, lists]);
 
   // Mostrar tooltip solo la primera vez que carga la página de wishlists
   useEffect(() => {
@@ -761,7 +765,7 @@ const Lists = () => {
             </div>
 
             {selectedList && (
-              <div className="mt-8 bg-white rounded-2xl shadow-lg overflow-hidden">
+              <div ref={selectedListRef} className="mt-8 bg-white rounded-2xl shadow-lg overflow-hidden">
                 {(() => {
                   const list = lists.find(l => l.id === selectedList);
                   if (!list) return null;
