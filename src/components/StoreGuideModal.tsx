@@ -29,9 +29,10 @@ export function StoreGuideModal({ isOpen, onClose, storeName, storeUrl, lists, o
   const [error, setError] = useState('');
   const [step, setStep] = useState<'guide' | 'paste' | 'select'>('guide');
   const [hasVisitedStore, setHasVisitedStore] = useState(false);
+  const [wasOpen, setWasOpen] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !wasOpen) {
       setUrl('');
       setSelectedListId(lists[0]?.id || '');
       setIsCreatingNew(false);
@@ -46,7 +47,8 @@ export function StoreGuideModal({ isOpen, onClose, storeName, storeUrl, lists, o
         setStep('paste');
       }
     }
-  }, [isOpen, lists, storeUrl]);
+    setWasOpen(isOpen);
+  }, [isOpen]);
 
   const handleGoToStore = () => {
     window.open(storeUrl, '_blank', 'noopener,noreferrer');
