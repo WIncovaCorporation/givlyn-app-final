@@ -12,12 +12,13 @@ interface StoreGuideModalProps {
   isOpen: boolean;
   onClose: () => void;
   storeName: string;
+  storeUrl: string;
   lists: WishList[];
   onAddToList: (url: string, listId: string) => Promise<void>;
   onCreateList: (name: string, url: string) => Promise<void>;
 }
 
-export function StoreGuideModal({ isOpen, onClose, storeName, lists, onAddToList, onCreateList }: StoreGuideModalProps) {
+export function StoreGuideModal({ isOpen, onClose, storeName, storeUrl, lists, onAddToList, onCreateList }: StoreGuideModalProps) {
   const { language } = useLanguage();
   const [url, setUrl] = useState('');
   const [selectedListId, setSelectedListId] = useState<string>('');
@@ -26,7 +27,8 @@ export function StoreGuideModal({ isOpen, onClose, storeName, lists, onAddToList
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
-  const [step, setStep] = useState<1 | 2>(1);
+  const [step, setStep] = useState<'guide' | 'paste' | 'select'>('guide');
+  const [hasVisitedStore, setHasVisitedStore] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -37,9 +39,20 @@ export function StoreGuideModal({ isOpen, onClose, storeName, lists, onAddToList
       setIsLoading(false);
       setIsSuccess(false);
       setError('');
-      setStep(1);
+      setHasVisitedStore(false);
+      if (storeUrl) {
+        setStep('guide');
+      } else {
+        setStep('paste');
+      }
     }
-  }, [isOpen, lists]);
+  }, [isOpen, lists, storeUrl]);
+
+  const handleGoToStore = () => {
+    window.open(storeUrl, '_blank', 'noopener,noreferrer');
+    setHasVisitedStore(true);
+    setStep('paste');
+  };
 
   const isValidUrl = (str: string) => {
     try {
@@ -65,7 +78,7 @@ export function StoreGuideModal({ isOpen, onClose, storeName, lists, onAddToList
       return;
     }
     setError('');
-    setStep(2);
+    setStep('select');
   };
 
   const handleSubmit = async () => {
@@ -139,8 +152,8 @@ export function StoreGuideModal({ isOpen, onClose, storeName, lists, onAddToList
               {isCreatingNew ? newListName : selectedList?.name}
             </p>
           </div>
-        ) : step === 1 ? (
-          /* Step 1: Guide + Paste URL */
+        ) : step === 'guide' ? (
+          /* Step GUIDE: Show instructions + Go to Store button */
           <div className="p-5">
             {/* Visual Guide */}
             <div className="mb-5 p-4 bg-gray-50 rounded-xl">
@@ -148,8 +161,8 @@ export function StoreGuideModal({ isOpen, onClose, storeName, lists, onAddToList
                 <div className="w-6 h-6 bg-[#1ABC9C] rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">1</div>
                 <p className="text-sm text-gray-700">
                   {language === 'es' 
-                    ? 'Ve a la pestana de ' + storeName + ' que se abrio'
-                    : 'Go to the ' + storeName + ' tab that opened'
+                    ? 'Haz clic en "Ir a la Tienda" para abrir ' + storeName
+                    : 'Click "Go to Store" to open ' + storeName
                   }
                 </p>
               </div>
@@ -166,15 +179,47 @@ export function StoreGuideModal({ isOpen, onClose, storeName, lists, onAddToList
                 <div className="w-6 h-6 bg-[#1ABC9C] rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">3</div>
                 <p className="text-sm text-gray-700">
                   {language === 'es' 
-                    ? 'Pegala aqui abajo'
-                    : 'Paste it below'
+                    ? 'Regresa aqui y pegala'
+                    : 'Come back here and paste it'
                   }
                 </p>
               </div>
             </div>
 
+            {/* Go to Store Button */}
+            <button
+              onClick={handleGoToStore}
+              className="w-full flex items-center justify-center gap-3 px-5 py-4 bg-[#1ABC9C] text-white rounded-xl font-bold text-base hover:bg-[#16A085] transition-all shadow-lg hover:shadow-xl"
+            >
+              <ExternalLink className="w-5 h-5" />
+              {language === 'es' ? 'Ir a la Tienda' : 'Go to Store'}
+            </button>
+
+            <p className="text-xs text-gray-400 text-center mt-3">
+              {language === 'es' 
+                ? 'Se abrira en una nueva pestana'
+                : 'Opens in a new tab'
+              }
+            </p>
+          </div>
+        ) : step === 'paste' ? (
+          /* Step PASTE: Paste URL */
+          <div className="p-5">
+            <div className="mb-4 p-3 bg-green-50 rounded-xl flex items-center gap-2">
+              <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
+              <p className="text-sm text-green-700">
+                {language === 'es' 
+                  ? storeName + ' esta abierto en otra pestana'
+                  : storeName + ' is open in another tab'
+                }
+              </p>
+            </div>
+
             {/* URL Input */}
             <div className="mb-4">
+              <label className="block text-sm font-medium text-[#1A3E5C] mb-2">
+                {language === 'es' ? 'Pega la URL del producto:' : 'Paste the product URL:'}
+              </label>
               <div className="relative">
                 <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -184,7 +229,7 @@ export function StoreGuideModal({ isOpen, onClose, storeName, lists, onAddToList
                     setUrl(e.target.value);
                     setError('');
                   }}
-                  placeholder={language === 'es' ? 'Pega la URL del producto...' : 'Paste product URL...'}
+                  placeholder={language === 'es' ? 'https://...' : 'https://...'}
                   className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#1ABC9C] focus:ring-2 focus:ring-[#1ABC9C]/20 transition-all"
                   autoFocus
                 />
@@ -211,7 +256,7 @@ export function StoreGuideModal({ isOpen, onClose, storeName, lists, onAddToList
             </button>
           </div>
         ) : (
-          /* Step 2: Select List */
+          /* Step SELECT: Select List */
           <div className="p-5">
             <p className="text-sm text-gray-600 mb-4">
               {language === 'es' ? 'Selecciona donde guardar:' : 'Select where to save:'}

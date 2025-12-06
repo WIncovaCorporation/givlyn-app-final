@@ -100,10 +100,11 @@ const Dashboard = () => {
   const storesCarouselRef = useRef<HTMLDivElement>(null);
   const [showGuideModal, setShowGuideModal] = useState(false);
   const [activeStoreName, setActiveStoreName] = useState("");
+  const [activeStoreUrl, setActiveStoreUrl] = useState("");
 
   const handleStoreClick = (storeName: string, storeUrl: string) => {
-    window.open(storeUrl, '_blank', 'noopener,noreferrer');
     setActiveStoreName(storeName);
+    setActiveStoreUrl(storeUrl);
     setShowGuideModal(true);
   };
 
@@ -730,6 +731,7 @@ const Dashboard = () => {
       <button
         onClick={() => {
           setActiveStoreName(language === 'es' ? 'cualquier tienda' : 'any store');
+          setActiveStoreUrl('');
           setShowGuideModal(true);
         }}
         className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-40 flex items-center gap-2 px-5 py-4 bg-gradient-to-r from-[#1ABC9C] to-[#16A085] text-white rounded-full shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all group"
@@ -746,6 +748,7 @@ const Dashboard = () => {
         isOpen={showGuideModal}
         onClose={() => setShowGuideModal(false)}
         storeName={activeStoreName}
+        storeUrl={activeStoreUrl}
         lists={myLists.map(list => ({
           id: list.id,
           name: list.name,
