@@ -47,13 +47,13 @@ const Index = () => {
     es: {
       heroTitle1: 'LA UNICA LISTA DE REGALOS QUE',
       heroTitle2: 'GARANTIZA CERO DUPLICADOS.',
-      heroSub: 'Anade productos de cualquier tienda, o deja que nuestro Asistente IA encuentre el regalo perfecto por ti.',
+      heroSub: 'Añade productos de cualquier tienda, o deja que nuestro Asistente IA encuentre el regalo perfecto por ti.',
       ctaPrimary: 'CREAR LISTA GRATIS EN 2 MINUTOS',
       ctaSecondary: 'UTILIZA EL ASISTENTE DE COMPRAS INTELIGENTE',
-      trustText: 'Compra en Amazon, Walmart, Best Buy y +MILES DE TIENDAS ONLINE MAS',
+      trustText: 'Compra inteligente desde tus tiendas favoritas.',
       howItWorks: 'Como Funciona',
       step1: 'Crea tu lista',
-      step1Sub: 'Anade productos de cualquier tienda',
+      step1Sub: 'Añade productos de cualquier tienda',
       step2: 'Comparte el link',
       step2Sub: 'Un solo enlace para todos',
       step3: 'Tus invitados reservan',
@@ -71,7 +71,7 @@ const Index = () => {
       heroSub: 'Add products from any store, or let our AI Assistant find the perfect gift for you.',
       ctaPrimary: 'CREATE FREE LIST IN 2 MINUTES',
       ctaSecondary: 'USE THE SMART SHOPPING ASSISTANT',
-      trustText: 'Shop at Amazon, Walmart, Best Buy and +THOUSANDS OF ONLINE STORES',
+      trustText: 'Smart shopping from your favorite stores.',
       howItWorks: 'How It Works',
       step1: 'Create your list',
       step1Sub: 'Add products from any store',
@@ -103,24 +103,6 @@ const Index = () => {
     bgTrust: '#F3F4F6',
   };
 
-  const stores = [
-    { name: 'Amazon', color: '#FF9900' },
-    { name: 'Walmart', color: '#0071CE' },
-    { name: 'Target', color: '#CC0000' },
-    { name: 'Etsy', color: '#F56400' },
-    { name: 'Best Buy', color: '#0046BE' },
-    { name: 'eBay', color: '#E53238' },
-    { name: "Macy's", color: '#E21A2C' },
-    { name: 'Home Depot', color: '#F96302' },
-    { name: 'Nike', color: '#111111' },
-    { name: 'Adidas', color: '#000000' },
-    { name: 'Costco', color: '#E31837' },
-    { name: 'Nordstrom', color: '#000000' },
-    { name: 'Sephora', color: '#000000' },
-    { name: 'Apple', color: '#555555' },
-    { name: 'Samsung', color: '#1428A0' },
-  ];
-
   const steps = [
     { num: 1, title: t.step1, sub: t.step1Sub, Icon: Search },
     { num: 2, title: t.step2, sub: t.step2Sub, Icon: Tag },
@@ -132,6 +114,20 @@ const Index = () => {
   const cardShadowHover = '0 8px 24px rgba(0, 0, 0, 0.1)';
   const btnShadow = '0 2px 8px rgba(0, 0, 0, 0.12)';
   const btnShadowHover = '0 4px 16px rgba(0, 0, 0, 0.15)';
+
+  // Store logos as styled text (mimicking official typography)
+  const storeLogos = [
+    { name: 'amazon', style: { fontFamily: 'Arial, sans-serif', fontWeight: 700, fontStyle: 'italic', letterSpacing: '-0.5px' } },
+    { name: 'Walmart', style: { fontFamily: 'Arial, sans-serif', fontWeight: 400, letterSpacing: '1px' }, hasSpark: true },
+    { name: 'Etsy', style: { fontFamily: 'Georgia, serif', fontWeight: 400, fontStyle: 'normal', letterSpacing: '2px' } },
+    { name: 'ebay', style: { fontFamily: 'Arial, sans-serif', fontWeight: 700, fontStyle: 'normal' }, isMultiColor: true },
+    { name: 'BEST BUY', style: { fontFamily: 'Arial, sans-serif', fontWeight: 700, letterSpacing: '1px' } },
+    { name: "macy's", style: { fontFamily: 'Times New Roman, serif', fontWeight: 400, fontStyle: 'italic' }, hasStar: true },
+    { name: 'Target', style: { fontFamily: 'Helvetica, Arial, sans-serif', fontWeight: 700, letterSpacing: '0.5px' } },
+    { name: 'Nike', style: { fontFamily: 'Futura, Arial, sans-serif', fontWeight: 700, fontStyle: 'italic', letterSpacing: '2px', textTransform: 'uppercase' as const } },
+    { name: 'adidas', style: { fontFamily: 'Helvetica, Arial, sans-serif', fontWeight: 700, letterSpacing: '3px', textTransform: 'lowercase' as const } },
+    { name: 'HOME DEPOT', style: { fontFamily: 'Arial, sans-serif', fontWeight: 700, letterSpacing: '0px' } },
+  ];
 
   return (
     <div style={{
@@ -330,78 +326,76 @@ const Index = () => {
         </div>
       </section>
 
-      {/* TRUST BAR - Store Logos Marquee */}
+      {/* TRUST BAR - Official Store Logos (Text-based, Typography Style) */}
       <section style={{
         background: colors.bgTrust,
-        padding: '24px 0 20px',
+        padding: '20px 0',
         overflow: 'hidden',
         borderTop: '1px solid #E5E7EB',
         borderBottom: '1px solid #E5E7EB',
       }}>
-        <p style={{
-          textAlign: 'center',
-          fontSize: isMobile ? '13px' : '15px',
-          color: colors.textDark,
-          marginBottom: '18px',
-          fontWeight: 600,
-          padding: '0 20px',
-        }}>
-          {t.trustText}
-        </p>
-        
         {/* Marquee Container */}
         <div style={{
           display: 'flex',
           overflow: 'hidden',
           width: '100%',
-          maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
-          WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+          maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
         }}>
           <div 
             style={{
               display: 'flex',
-              gap: isMobile ? '32px' : '48px',
-              animation: 'marquee 40s linear infinite',
+              alignItems: 'center',
+              gap: isMobile ? '28px' : '48px',
+              animation: 'marquee 35s linear infinite',
               whiteSpace: 'nowrap',
             }}
           >
-            {[...stores, ...stores, ...stores].map((store, idx) => (
-              <div 
+            {[...storeLogos, ...storeLogos, ...storeLogos].map((store, idx) => (
+              <span 
                 key={idx}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
+                  fontSize: isMobile ? '16px' : '20px',
+                  color: '#374151',
+                  opacity: 0.75,
                   flexShrink: 0,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '2px',
+                  ...store.style,
                 }}
               >
-                {/* SVG Circle Logo Placeholder */}
-                <div style={{
-                  width: isMobile ? '24px' : '28px',
-                  height: isMobile ? '24px' : '28px',
-                  borderRadius: '6px',
-                  background: store.color,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'white',
-                  fontSize: isMobile ? '10px' : '11px',
-                  fontWeight: 700,
-                }}>
-                  {store.name.charAt(0)}
-                </div>
-                <span 
-                  style={{
-                    fontSize: isMobile ? '13px' : '15px',
-                    fontWeight: 600,
-                    color: colors.textDark,
-                    opacity: 0.7,
-                  }}
-                >
-                  {store.name}
-                </span>
-              </div>
+                {store.hasSpark && (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFC220" style={{ marginRight: '2px' }}>
+                    <path d="M12 2L9.5 9.5L2 12L9.5 14.5L12 22L14.5 14.5L22 12L14.5 9.5L12 2Z"/>
+                  </svg>
+                )}
+                {store.isMultiColor ? (
+                  <>
+                    <span style={{ color: '#E53238' }}>e</span>
+                    <span style={{ color: '#0064D2' }}>b</span>
+                    <span style={{ color: '#F5AF02' }}>a</span>
+                    <span style={{ color: '#86B817' }}>y</span>
+                  </>
+                ) : store.name}
+                {store.hasStar && (
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="#E21A2C" style={{ marginLeft: '1px' }}>
+                    <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+                  </svg>
+                )}
+              </span>
             ))}
+
+            {/* Trust Text in the middle of logos */}
+            <span style={{
+              fontSize: isMobile ? '12px' : '14px',
+              color: colors.textGrey,
+              fontStyle: 'italic',
+              flexShrink: 0,
+              padding: '0 16px',
+            }}>
+              "{t.trustText}"
+            </span>
           </div>
         </div>
 
@@ -416,7 +410,7 @@ const Index = () => {
       {/* HOW IT WORKS SECTION */}
       <section style={{
         background: colors.bgWhite,
-        padding: isMobile ? '40px 20px' : '64px 48px',
+        padding: isMobile ? '40px 20px 48px' : '64px 48px 72px',
         maxWidth: '1200px',
         margin: '0 auto',
         width: '100%',
@@ -516,41 +510,6 @@ const Index = () => {
               </span>
             </div>
           ))}
-        </div>
-
-        {/* Secondary CTA */}
-        <div style={{ textAlign: 'center', marginTop: isMobile ? '32px' : '48px' }}>
-          <button
-            onClick={handleCreateList}
-            style={{
-              background: colors.accentGreen,
-              color: 'white',
-              padding: isMobile ? '16px 32px' : '18px 48px',
-              borderRadius: '10px',
-              border: 'none',
-              fontSize: isMobile ? '15px' : '17px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              boxShadow: btnShadow,
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '10px',
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = btnShadowHover;
-              e.currentTarget.style.background = colors.accentGreenHover;
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = btnShadow;
-              e.currentTarget.style.background = colors.accentGreen;
-            }}
-          >
-            {t.ctaPrimary}
-            <ArrowRight size={18} />
-          </button>
         </div>
       </section>
 
