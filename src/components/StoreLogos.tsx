@@ -224,3 +224,186 @@ export const UberLogo = ({ height = 20 }: LogoProps) => (
     Uber
   </span>
 );
+
+export const SephoraLogo = ({ height = 22 }: LogoProps) => (
+  <span style={{ 
+    fontSize: `${height}px`, 
+    fontWeight: 700, 
+    color: '#000000',
+    fontFamily: "'Helvetica Neue', Arial, sans-serif",
+    letterSpacing: '3px',
+    textTransform: 'uppercase',
+  }}>
+    SEPHORA
+  </span>
+);
+
+export const UltaLogo = ({ height = 22 }: LogoProps) => (
+  <span style={{ 
+    fontSize: `${height}px`, 
+    fontWeight: 700, 
+    color: '#000000',
+    fontFamily: "'Helvetica Neue', Arial, sans-serif",
+    letterSpacing: '2px',
+  }}>
+    ULTA
+  </span>
+);
+
+export const LululemonLogo = ({ height = 20 }: LogoProps) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: `${height * 0.25}px` }}>
+    <svg width={height} height={height} viewBox="0 0 24 24">
+      <path d="M12 2C8 2 5 5 5 9c0 6 7 13 7 13s7-7 7-13c0-4-3-7-7-7zm0 10c-2 0-3.5-1.5-3.5-3.5S10 5 12 5s3.5 1.5 3.5 3.5S14 12 12 12z" fill="#CC0000"/>
+    </svg>
+    <span style={{ 
+      fontSize: `${height * 0.9}px`, 
+      fontWeight: 400, 
+      color: '#000000',
+      fontFamily: "Georgia, serif",
+    }}>
+      lululemon
+    </span>
+  </div>
+);
+
+export const NordstromLogo = ({ height = 20 }: LogoProps) => (
+  <span style={{ 
+    fontSize: `${height}px`, 
+    fontWeight: 400, 
+    color: '#000000',
+    fontFamily: "'Times New Roman', Georgia, serif",
+    letterSpacing: '2px',
+    textTransform: 'uppercase',
+  }}>
+    NORDSTROM
+  </span>
+);
+
+export const ZaraLogo = ({ height = 22 }: LogoProps) => (
+  <span style={{ 
+    fontSize: `${height}px`, 
+    fontWeight: 400, 
+    color: '#000000',
+    fontFamily: "'Times New Roman', Georgia, serif",
+    letterSpacing: '4px',
+    textTransform: 'uppercase',
+  }}>
+    ZARA
+  </span>
+);
+
+export const HMlogo = ({ height = 22 }: LogoProps) => (
+  <span style={{ 
+    fontSize: `${height}px`, 
+    fontWeight: 700, 
+    color: '#CC0000',
+    fontFamily: "'Helvetica Neue', Arial, sans-serif",
+    letterSpacing: '2px',
+  }}>
+    H&M
+  </span>
+);
+
+export const GapLogo = ({ height = 22 }: LogoProps) => (
+  <div style={{
+    background: '#000066',
+    padding: `${height * 0.2}px ${height * 0.4}px`,
+    borderRadius: '2px',
+  }}>
+    <span style={{ 
+      fontSize: `${height}px`, 
+      fontWeight: 400, 
+      color: '#FFFFFF',
+      fontFamily: "serif",
+      letterSpacing: '1px',
+    }}>
+      GAP
+    </span>
+  </div>
+);
+
+export const CoachLogo = ({ height = 20 }: LogoProps) => (
+  <span style={{ 
+    fontSize: `${height}px`, 
+    fontWeight: 700, 
+    color: '#000000',
+    fontFamily: "'Times New Roman', Georgia, serif",
+    letterSpacing: '3px',
+    textTransform: 'uppercase',
+  }}>
+    COACH
+  </span>
+);
+
+export const AppleLogo = ({ height = 24 }: LogoProps) => (
+  <svg width={height} height={height * 1.2} viewBox="0 0 24 30">
+    <path d="M18.7 15.2c0-3.2 2.6-4.7 2.7-4.8-1.5-2.2-3.8-2.5-4.6-2.5-2-.2-3.8 1.2-4.8 1.2s-2.5-1.2-4.2-1.1c-2.1 0-4.1 1.3-5.2 3.2-2.2 3.9-.6 9.6 1.6 12.8 1.1 1.5 2.3 3.3 4 3.2 1.6-.1 2.2-1 4.1-1s2.5 1 4.2 1c1.7 0 2.8-1.6 3.9-3.1 1.2-1.8 1.7-3.5 1.8-3.6 0-.1-3.4-1.3-3.5-5.3zM15.4 5.5c.9-1.1 1.5-2.6 1.3-4.1-1.3.1-2.8.9-3.7 1.9-.8.9-1.5 2.5-1.3 3.9 1.4.1 2.8-.7 3.7-1.7z" fill="#000000"/>
+  </svg>
+);
+
+export const SamsungLogo = ({ height = 22 }: LogoProps) => (
+  <span style={{ 
+    fontSize: `${height}px`, 
+    fontWeight: 700, 
+    color: '#1428A0',
+    fontFamily: "'Helvetica Neue', Arial, sans-serif",
+    letterSpacing: '2px',
+    textTransform: 'uppercase',
+  }}>
+    SAMSUNG
+  </span>
+);
+
+export const SonyLogo = ({ height = 22 }: LogoProps) => (
+  <span style={{ 
+    fontSize: `${height}px`, 
+    fontWeight: 700, 
+    color: '#000000',
+    fontFamily: "'Helvetica Neue', Arial, sans-serif",
+    letterSpacing: '3px',
+    textTransform: 'uppercase',
+  }}>
+    SONY
+  </span>
+);
+
+export const LowesLogo = ({ height = 22 }: LogoProps) => (
+  <div style={{
+    background: '#004990',
+    padding: `${height * 0.2}px ${height * 0.4}px`,
+    borderRadius: '2px',
+  }}>
+    <span style={{ 
+      fontSize: `${height}px`, 
+      fontWeight: 700, 
+      color: '#FFFFFF',
+      fontFamily: "'Helvetica Neue', Arial, sans-serif",
+    }}>
+      Lowe's
+    </span>
+  </div>
+);
+
+export const CostcoLogo = ({ height = 22 }: LogoProps) => (
+  <span style={{ 
+    fontSize: `${height}px`, 
+    fontWeight: 700, 
+    color: '#E31837',
+    fontFamily: "'Helvetica Neue', Arial, sans-serif",
+    letterSpacing: '1px',
+  }}>
+    COSTCO
+  </span>
+);
+
+export const WayfairLogo = ({ height = 22 }: LogoProps) => (
+  <span style={{ 
+    fontSize: `${height}px`, 
+    fontWeight: 400, 
+    color: '#7B189F',
+    fontFamily: "'Helvetica Neue', Arial, sans-serif",
+    letterSpacing: '0.5px',
+  }}>
+    Wayfair
+  </span>
+);

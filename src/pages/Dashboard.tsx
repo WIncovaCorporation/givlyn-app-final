@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Gift, Users, Plus, Sparkles, List, Home, ChevronRight, ChevronLeft, Calendar, TrendingUp, Search } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { AmazonLogo, WalmartLogo, TargetLogo, EtsyLogo, EbayLogo, BestBuyLogo, HomeDepotLogo, NikeLogo, AdidasLogo } from "@/components/StoreLogos";
+import { AmazonLogo, WalmartLogo, TargetLogo, EtsyLogo, EbayLogo, BestBuyLogo, HomeDepotLogo, NikeLogo, AdidasLogo, MacysLogo, KohlsLogo, SephoraLogo, UltaLogo, LululemonLogo, NordstromLogo, ZaraLogo, HMlogo, GapLogo, CoachLogo, AppleLogo, SamsungLogo, SonyLogo, LowesLogo, CostcoLogo, WayfairLogo } from "@/components/StoreLogos";
+import { X } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 interface GiftList {
@@ -42,16 +43,43 @@ const upcomingEvents = [
   { id: 6, name: "Bodas", nameEn: "Weddings", date: "Todo el ano", color: "from-amber-400 to-orange-500", template: "boda" },
 ];
 
+const storeCategories = [
+  { id: "all", name: "Todo", nameEn: "All" },
+  { id: "fashion", name: "Moda", nameEn: "Fashion" },
+  { id: "electronics", name: "Electronica", nameEn: "Electronics" },
+  { id: "beauty", name: "Belleza", nameEn: "Beauty" },
+  { id: "home", name: "Hogar", nameEn: "Home" },
+  { id: "sports", name: "Deportes", nameEn: "Sports" },
+  { id: "kids", name: "Ninos", nameEn: "Kids" },
+  { id: "luxury", name: "Lujo", nameEn: "Luxury" },
+];
+
 const affiliateStores = [
-  { name: "Amazon", url: "https://www.amazon.com/?tag=givlyn-20", Logo: AmazonLogo },
-  { name: "Walmart", url: "https://www.walmart.com/?affiliates_ad_id=givlyn", Logo: WalmartLogo },
-  { name: "Target", url: "https://www.target.com/?ref=givlyn", Logo: TargetLogo },
-  { name: "eBay", url: "https://www.ebay.com/?campid=givlyn", Logo: EbayLogo },
-  { name: "Best Buy", url: "https://www.bestbuy.com/?ref=givlyn", Logo: BestBuyLogo },
-  { name: "Etsy", url: "https://www.etsy.com/?ref=givlyn", Logo: EtsyLogo },
-  { name: "Home Depot", url: "https://www.homedepot.com/?ref=givlyn", Logo: HomeDepotLogo },
-  { name: "Nike", url: "https://www.nike.com/?ref=givlyn", Logo: NikeLogo },
-  { name: "Adidas", url: "https://www.adidas.com/?ref=givlyn", Logo: AdidasLogo },
+  { name: "Amazon", url: "https://www.amazon.com/?tag=givlyn-20", Logo: AmazonLogo, categories: ["all", "electronics", "home", "kids"] },
+  { name: "Walmart", url: "https://www.walmart.com/?affiliates_ad_id=givlyn", Logo: WalmartLogo, categories: ["all", "home", "kids", "electronics"] },
+  { name: "Target", url: "https://www.target.com/?ref=givlyn", Logo: TargetLogo, categories: ["all", "home", "fashion", "kids"] },
+  { name: "eBay", url: "https://www.ebay.com/?campid=givlyn", Logo: EbayLogo, categories: ["all", "electronics"] },
+  { name: "Best Buy", url: "https://www.bestbuy.com/?ref=givlyn", Logo: BestBuyLogo, categories: ["all", "electronics"] },
+  { name: "Etsy", url: "https://www.etsy.com/?ref=givlyn", Logo: EtsyLogo, categories: ["all", "home", "kids"] },
+  { name: "Home Depot", url: "https://www.homedepot.com/?ref=givlyn", Logo: HomeDepotLogo, categories: ["all", "home"] },
+  { name: "Nike", url: "https://www.nike.com/?ref=givlyn", Logo: NikeLogo, categories: ["all", "sports", "fashion"] },
+  { name: "Adidas", url: "https://www.adidas.com/?ref=givlyn", Logo: AdidasLogo, categories: ["all", "sports", "fashion"] },
+  { name: "Macy's", url: "https://www.macys.com/?ref=givlyn", Logo: MacysLogo, categories: ["all", "fashion", "beauty", "home"] },
+  { name: "Kohl's", url: "https://www.kohls.com/?ref=givlyn", Logo: KohlsLogo, categories: ["all", "fashion", "home"] },
+  { name: "Sephora", url: "https://www.sephora.com/?ref=givlyn", Logo: SephoraLogo, categories: ["all", "beauty"] },
+  { name: "Ulta", url: "https://www.ulta.com/?ref=givlyn", Logo: UltaLogo, categories: ["all", "beauty"] },
+  { name: "Lululemon", url: "https://www.lululemon.com/?ref=givlyn", Logo: LululemonLogo, categories: ["all", "sports", "fashion"] },
+  { name: "Nordstrom", url: "https://www.nordstrom.com/?ref=givlyn", Logo: NordstromLogo, categories: ["all", "fashion", "luxury"] },
+  { name: "Zara", url: "https://www.zara.com/?ref=givlyn", Logo: ZaraLogo, categories: ["all", "fashion"] },
+  { name: "H&M", url: "https://www.hm.com/?ref=givlyn", Logo: HMlogo, categories: ["all", "fashion", "kids"] },
+  { name: "Gap", url: "https://www.gap.com/?ref=givlyn", Logo: GapLogo, categories: ["all", "fashion", "kids"] },
+  { name: "Coach", url: "https://www.coach.com/?ref=givlyn", Logo: CoachLogo, categories: ["all", "fashion", "luxury"] },
+  { name: "Apple", url: "https://www.apple.com/?ref=givlyn", Logo: AppleLogo, categories: ["all", "electronics"] },
+  { name: "Samsung", url: "https://www.samsung.com/?ref=givlyn", Logo: SamsungLogo, categories: ["all", "electronics"] },
+  { name: "Sony", url: "https://www.sony.com/?ref=givlyn", Logo: SonyLogo, categories: ["all", "electronics"] },
+  { name: "Lowe's", url: "https://www.lowes.com/?ref=givlyn", Logo: LowesLogo, categories: ["all", "home"] },
+  { name: "Costco", url: "https://www.costco.com/?ref=givlyn", Logo: CostcoLogo, categories: ["all", "home", "electronics"] },
+  { name: "Wayfair", url: "https://www.wayfair.com/?ref=givlyn", Logo: WayfairLogo, categories: ["all", "home"] },
 ];
 
 const Dashboard = () => {
@@ -71,8 +99,28 @@ const Dashboard = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [canScrollListsLeft, setCanScrollListsLeft] = useState(false);
   const [canScrollListsRight, setCanScrollListsRight] = useState(false);
+  const [showStoresModal, setShowStoresModal] = useState(false);
+  const [storeSearch, setStoreSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const storesCarouselRef = useRef<HTMLDivElement>(null);
 
   const userName = user?.user_metadata?.display_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuario';
+
+  const filteredStores = affiliateStores.filter(store => {
+    const matchesSearch = store.name.toLowerCase().includes(storeSearch.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || store.categories.includes(selectedCategory);
+    return matchesSearch && matchesCategory;
+  });
+
+  const scrollStoresCarousel = (direction: 'left' | 'right') => {
+    if (storesCarouselRef.current) {
+      const scrollAmount = 200;
+      const newScrollLeft = direction === 'left' 
+        ? storesCarouselRef.current.scrollLeft - scrollAmount 
+        : storesCarouselRef.current.scrollLeft + scrollAmount;
+      storesCarouselRef.current.scrollTo({ left: newScrollLeft, behavior: 'smooth' });
+    }
+  };
 
   const suggestions = searchQuery.length > 0 
     ? myLists.filter(list => 
@@ -476,28 +524,135 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* MARCAS - CSS MARQUEE (Smooth, no JS) */}
+        {/* MARCAS - CAROUSEL WITH NAVIGATION */}
         <div className="mb-14">
-          <h2 className="text-xl font-bold text-[#1A3E5C] mb-5">
-            {language === 'es' ? 'Compra en tus tiendas favoritas' : 'Shop at your favorite stores'}
-          </h2>
-          
-          <div className="overflow-hidden py-4">
-            <div className="flex items-center gap-12 animate-marquee-smooth">
-              {[...affiliateStores, ...affiliateStores].map((store, index) => (
-                <a
-                  key={`${store.name}-${index}`}
-                  href={store.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-shrink-0 hover:opacity-70 transition-opacity cursor-pointer"
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-xl font-bold text-[#1A3E5C]">
+              {language === 'es' ? 'Compra en tus tiendas favoritas' : 'Shop at your favorite stores'}
+            </h2>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => setShowStoresModal(true)}
+                className="text-sm text-[#1ABC9C] hover:text-[#1ABC9C]/80 font-semibold"
+              >
+                {language === 'es' ? 'Ver todo' : 'View all'}
+              </button>
+              <div className="flex gap-1 ml-2">
+                <button
+                  onClick={() => scrollStoresCarousel('left')}
+                  className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:border-[#1ABC9C] hover:text-[#1ABC9C] transition-colors"
                 >
-                  <store.Logo height={28} />
-                </a>
-              ))}
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => scrollStoresCarousel('right')}
+                  className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:border-[#1ABC9C] hover:text-[#1ABC9C] transition-colors"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
+          
+          <div 
+            ref={storesCarouselRef}
+            className="flex gap-6 overflow-x-auto scrollbar-hide py-4"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {affiliateStores.slice(0, 12).map((store, index) => (
+              <a
+                key={`${store.name}-${index}`}
+                href={store.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-shrink-0 w-[100px] h-[80px] bg-white rounded-xl border border-gray-100 flex items-center justify-center hover:shadow-lg hover:border-[#1ABC9C]/30 transition-all cursor-pointer"
+              >
+                <store.Logo height={24} />
+              </a>
+            ))}
+          </div>
         </div>
+
+        {/* STORES MODAL */}
+        {showStoresModal && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center overflow-y-auto pt-8 pb-8">
+            <div className="bg-white rounded-2xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden flex flex-col">
+              {/* Modal Header */}
+              <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-[#1A3E5C]">
+                  {language === 'es' ? 'Todas las Tiendas' : 'All Stores'}
+                </h2>
+                <button
+                  onClick={() => setShowStoresModal(false)}
+                  className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+
+              {/* Search Bar */}
+              <div className="p-6 pb-0">
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder={language === 'es' ? 'Buscar marca...' : 'Search brand...'}
+                    value={storeSearch}
+                    onChange={(e) => setStoreSearch(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-base focus:outline-none focus:border-[#1ABC9C] focus:ring-2 focus:ring-[#1ABC9C]/20 transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Category Filters */}
+              <div className="p-6 pb-4">
+                <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2" style={{ scrollbarWidth: 'none' }}>
+                  {storeCategories.map((cat) => (
+                    <button
+                      key={cat.id}
+                      onClick={() => setSelectedCategory(cat.id)}
+                      className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                        selectedCategory === cat.id
+                          ? 'bg-[#1ABC9C] text-white'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      {language === 'es' ? cat.name : cat.nameEn}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Stores Grid */}
+              <div className="p-6 pt-0 overflow-y-auto flex-1">
+                <p className="text-sm text-gray-500 mb-4">
+                  {language === 'es' ? 'Todo' : 'All'} ({filteredStores.length})
+                </p>
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                  {filteredStores.map((store, index) => (
+                    <a
+                      key={`modal-${store.name}-${index}`}
+                      href={store.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex flex-col items-center gap-2 p-4 bg-white rounded-xl border border-gray-100 hover:shadow-lg hover:border-[#1ABC9C]/30 transition-all cursor-pointer"
+                    >
+                      <div className="h-[40px] flex items-center justify-center">
+                        <store.Logo height={22} />
+                      </div>
+                      <span className="text-xs text-gray-500 text-center">{store.name}</span>
+                    </a>
+                  ))}
+                </div>
+                {filteredStores.length === 0 && (
+                  <div className="text-center py-12 text-gray-500">
+                    {language === 'es' ? 'No se encontraron tiendas' : 'No stores found'}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* EVENTOS - STATIC CAROUSEL (User Controls) */}
         <div className="mb-10">
