@@ -202,12 +202,13 @@ export const AdidasLogo = ({ height = 24 }: LogoProps) => (
 
 export const KohlsLogo = ({ height = 22 }: LogoProps) => (
   <span style={{ 
-    fontSize: `${height}px`, 
+    fontSize: `${Math.min(height, 18)}px`, 
     fontWeight: 700, 
     color: '#000000',
     fontFamily: "'Helvetica Neue', Arial, sans-serif",
-    letterSpacing: '1px',
+    letterSpacing: '0.5px',
     textTransform: 'uppercase',
+    whiteSpace: 'nowrap',
   }}>
     KOHL'S
   </span>
@@ -227,12 +228,13 @@ export const UberLogo = ({ height = 20 }: LogoProps) => (
 
 export const SephoraLogo = ({ height = 22 }: LogoProps) => (
   <span style={{ 
-    fontSize: `${height}px`, 
+    fontSize: `${Math.min(height, 14)}px`, 
     fontWeight: 700, 
     color: '#000000',
     fontFamily: "'Helvetica Neue', Arial, sans-serif",
-    letterSpacing: '3px',
+    letterSpacing: '1px',
     textTransform: 'uppercase',
+    whiteSpace: 'nowrap',
   }}>
     SEPHORA
   </span>
@@ -240,11 +242,12 @@ export const SephoraLogo = ({ height = 22 }: LogoProps) => (
 
 export const UltaLogo = ({ height = 22 }: LogoProps) => (
   <span style={{ 
-    fontSize: `${height}px`, 
+    fontSize: `${Math.min(height, 18)}px`, 
     fontWeight: 700, 
     color: '#000000',
     fontFamily: "'Helvetica Neue', Arial, sans-serif",
-    letterSpacing: '2px',
+    letterSpacing: '1px',
+    whiteSpace: 'nowrap',
   }}>
     ULTA
   </span>
@@ -268,12 +271,13 @@ export const LululemonLogo = ({ height = 20 }: LogoProps) => (
 
 export const NordstromLogo = ({ height = 20 }: LogoProps) => (
   <span style={{ 
-    fontSize: `${height}px`, 
+    fontSize: `${Math.min(height, 12)}px`, 
     fontWeight: 400, 
     color: '#000000',
     fontFamily: "'Times New Roman', Georgia, serif",
-    letterSpacing: '2px',
+    letterSpacing: '0.5px',
     textTransform: 'uppercase',
+    whiteSpace: 'nowrap',
   }}>
     NORDSTROM
   </span>
@@ -281,12 +285,13 @@ export const NordstromLogo = ({ height = 20 }: LogoProps) => (
 
 export const ZaraLogo = ({ height = 22 }: LogoProps) => (
   <span style={{ 
-    fontSize: `${height}px`, 
+    fontSize: `${Math.min(height, 18)}px`, 
     fontWeight: 400, 
     color: '#000000',
     fontFamily: "'Times New Roman', Georgia, serif",
-    letterSpacing: '4px',
+    letterSpacing: '2px',
     textTransform: 'uppercase',
+    whiteSpace: 'nowrap',
   }}>
     ZARA
   </span>
@@ -324,12 +329,13 @@ export const GapLogo = ({ height = 22 }: LogoProps) => (
 
 export const CoachLogo = ({ height = 20 }: LogoProps) => (
   <span style={{ 
-    fontSize: `${height}px`, 
+    fontSize: `${Math.min(height, 16)}px`, 
     fontWeight: 700, 
     color: '#000000',
     fontFamily: "'Times New Roman', Georgia, serif",
-    letterSpacing: '3px',
+    letterSpacing: '1px',
     textTransform: 'uppercase',
+    whiteSpace: 'nowrap',
   }}>
     COACH
   </span>
@@ -343,12 +349,13 @@ export const AppleLogo = ({ height = 24 }: LogoProps) => (
 
 export const SamsungLogo = ({ height = 22 }: LogoProps) => (
   <span style={{ 
-    fontSize: `${height}px`, 
+    fontSize: `${Math.min(height, 14)}px`, 
     fontWeight: 700, 
     color: '#1428A0',
     fontFamily: "'Helvetica Neue', Arial, sans-serif",
-    letterSpacing: '2px',
+    letterSpacing: '0.5px',
     textTransform: 'uppercase',
+    whiteSpace: 'nowrap',
   }}>
     SAMSUNG
   </span>
@@ -356,12 +363,13 @@ export const SamsungLogo = ({ height = 22 }: LogoProps) => (
 
 export const SonyLogo = ({ height = 22 }: LogoProps) => (
   <span style={{ 
-    fontSize: `${height}px`, 
+    fontSize: `${Math.min(height, 18)}px`, 
     fontWeight: 700, 
     color: '#000000',
     fontFamily: "'Helvetica Neue', Arial, sans-serif",
-    letterSpacing: '3px',
+    letterSpacing: '1px',
     textTransform: 'uppercase',
+    whiteSpace: 'nowrap',
   }}>
     SONY
   </span>
@@ -386,11 +394,12 @@ export const LowesLogo = ({ height = 22 }: LogoProps) => (
 
 export const CostcoLogo = ({ height = 22 }: LogoProps) => (
   <span style={{ 
-    fontSize: `${height}px`, 
+    fontSize: `${Math.min(height, 16)}px`, 
     fontWeight: 700, 
     color: '#E31837',
     fontFamily: "'Helvetica Neue', Arial, sans-serif",
-    letterSpacing: '1px',
+    letterSpacing: '0.5px',
+    whiteSpace: 'nowrap',
   }}>
     COSTCO
   </span>

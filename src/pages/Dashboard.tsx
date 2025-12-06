@@ -630,19 +630,19 @@ const Dashboard = () => {
                 <p className="text-sm text-gray-500 mb-4">
                   {language === 'es' ? 'Todo' : 'All'} ({filteredStores.length})
                 </p>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4">
+                <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3 sm:gap-4">
                   {filteredStores.map((store, index) => (
                     <a
                       key={`modal-${store.name}-${index}`}
                       href={store.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex flex-col items-center justify-center gap-3 p-4 sm:p-5 bg-white rounded-2xl border border-gray-100 hover:shadow-xl hover:border-[#1ABC9C]/40 hover:-translate-y-0.5 transition-all cursor-pointer aspect-square"
+                      className="flex flex-col items-center justify-center gap-2 p-3 bg-white rounded-xl border border-gray-100 hover:shadow-lg hover:border-[#1ABC9C]/40 hover:-translate-y-0.5 transition-all cursor-pointer overflow-hidden"
                     >
-                      <div className="h-[50px] sm:h-[60px] flex items-center justify-center">
-                        <store.Logo height={32} />
+                      <div className="h-[36px] flex items-center justify-center w-full overflow-hidden">
+                        <store.Logo height={20} />
                       </div>
-                      <span className="text-xs sm:text-sm text-gray-600 text-center font-medium">{store.name}</span>
+                      <span className="text-[10px] sm:text-xs text-gray-500 text-center font-medium truncate w-full">{store.name}</span>
                     </a>
                   ))}
                 </div>
