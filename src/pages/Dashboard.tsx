@@ -9,7 +9,6 @@ import { AmazonLogo, WalmartLogo, TargetLogo, EtsyLogo, EbayLogo, BestBuyLogo, H
 import { X } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { getTrendingProductsSync, type TrendingProduct } from "@/services/trendingService";
-import { StoreIframeModal } from "@/components/StoreIframeModal";
 import { QuickAddModal } from "@/components/QuickAddModal";
 
 interface GiftList {
@@ -99,8 +98,6 @@ const Dashboard = () => {
   const [storeSearch, setStoreSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const storesCarouselRef = useRef<HTMLDivElement>(null);
-  const [selectedStore, setSelectedStore] = useState<{name: string; url: string} | null>(null);
-  const [showIframeModal, setShowIframeModal] = useState(false);
   const [showQuickAddModal, setShowQuickAddModal] = useState(false);
 
   const userName = user?.user_metadata?.display_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuario';
@@ -567,16 +564,15 @@ const Dashboard = () => {
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {affiliateStores.slice(0, 12).map((store, index) => (
-              <button
+              <a
                 key={`${store.name}-${index}`}
-                onClick={() => {
-                  setSelectedStore({ name: store.name, url: store.url });
-                  setShowIframeModal(true);
-                }}
+                href={store.url}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex-shrink-0 w-[100px] h-[80px] bg-white rounded-xl border border-gray-100 flex items-center justify-center hover:shadow-lg hover:border-[#1ABC9C]/30 transition-all cursor-pointer"
               >
                 <store.Logo height={24} />
-              </button>
+              </a>
             ))}
           </div>
         </div>
@@ -638,20 +634,18 @@ const Dashboard = () => {
                 </p>
                 <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-4">
                   {filteredStores.map((store, index) => (
-                    <button
+                    <a
                       key={`modal-${store.name}-${index}`}
-                      onClick={() => {
-                        setShowStoresModal(false);
-                        setSelectedStore({ name: store.name, url: store.url });
-                        setShowIframeModal(true);
-                      }}
+                      href={store.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex flex-col items-center justify-center gap-3 p-4 bg-white rounded-xl border border-gray-200 hover:shadow-xl hover:border-[#1ABC9C] hover:-translate-y-1 transition-all cursor-pointer min-h-[100px]"
                     >
                       <div className="h-[40px] flex items-center justify-center w-full">
                         <store.Logo height={24} />
                       </div>
                       <span className="text-xs text-gray-600 text-center font-medium">{store.name}</span>
-                    </button>
+                    </a>
                   ))}
                 </div>
                 {filteredStores.length === 0 && (
@@ -726,16 +720,17 @@ const Dashboard = () => {
         </div>
       </nav>
 
-      {/* STORE IFRAME MODAL */}
-      <StoreIframeModal
-        isOpen={showIframeModal}
-        onClose={() => {
-          setShowIframeModal(false);
-          setSelectedStore(null);
-        }}
-        store={selectedStore}
-        onAddProduct={() => setShowQuickAddModal(true)}
-      />
+      {/* FLOATING ACTION BUTTON - ADD PRODUCT */}
+      <button
+        onClick={() => setShowQuickAddModal(true)}
+        className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-40 flex items-center gap-2 px-5 py-4 bg-gradient-to-r from-[#1ABC9C] to-[#16A085] text-white rounded-full shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all group"
+        title={language === 'es' ? 'Agregar producto desde cualquier tienda' : 'Add product from any store'}
+      >
+        <Plus className="w-6 h-6" />
+        <span className="hidden sm:inline font-semibold">
+          {language === 'es' ? 'Agregar Producto' : 'Add Product'}
+        </span>
+      </button>
 
       {/* QUICK ADD MODAL */}
       <QuickAddModal
