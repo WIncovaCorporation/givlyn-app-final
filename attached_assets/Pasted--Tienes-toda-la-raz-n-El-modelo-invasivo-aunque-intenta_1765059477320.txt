@@ -1,0 +1,38 @@
+¡Tienes toda la razón! El modelo invasivo, aunque intenta retener al usuario, a menudo **rompe la confianza** y puede llevar a fallos de carga (`<iframe>` blocks). El estándar de **Google y Amazon** prioriza la fluidez y la seguridad.
+
+La alternativa más limpia, segura y menos invasiva es utilizar una **Degradación Controlada** junto con una **Guía Visual Invasiva, pero Segura**.
+
+## 💡 ALTERNATIVA: PESTAÑA NUEVA + VENTANA DE GUÍA
+
+Esta estrategia elimina la necesidad de un *iframe* grande y fallido, y en su lugar, utiliza el sistema de navegación nativo del navegador, manteniendo la tarea de Givlyn en foco.
+
+### 1. 🔄 El Flujo de Navegación (Adiós al Iframe)
+
+Reemplazamos el modal del `<iframe>` por dos acciones simultáneas:
+
+* **Acción 1 (Pestaña Nueva):** Al hacer clic en el logo de la tienda, la URL se abre **inmediatamente en una PESTAÑA NUEVA** (`target="_blank"`). Esto garantiza que no haya problemas de seguridad y que la tienda cargue rápido.
+* **Acción 2 (Modal de Guía):** Simultáneamente, en la pestaña de Givlyn, aparece un **pequeño y no invasivo Modal de Guía** que le dice al usuario qué hacer.
+
+### 2. 📝 El Modal de Guía (El Nuevo Foco de la UX)
+
+Este modal es la clave de la nueva UX. Es pequeño, rápido de cerrar y enfocado en la tarea:
+
+| Elemento | Texto / Contenido | Propósito Estratégico |
+| :--- | :--- | :--- |
+| **Título** | **"¡Casi listo! Busca tu regalo..."** | Transición suave. Le indica al usuario que la acción ya empezó. |
+| **Instrucción 1** | **1. Ve a la Pestaña Nueva:** Haz clic en la pestaña que se acaba de abrir con la tienda. | Guía el movimiento del usuario. |
+| **Instrucción 2** | **2. Encuentra el Producto:** Copia la URL del producto que quieres añadir. | La tarea crítica. |
+| **Instrucción 3** | **3. Pégalo Aquí:** (Campo de entrada visible) | Proporciona un punto de retorno claro y fácil de usar. |
+| **Botón** | **AÑADIR A LISTA** | Activa el Modal de Adición Rápida (la Fase 2). |
+
+## 🛠️ INSTRUCCIÓN FINAL PARA EL EQUIPO DE REPLIT
+
+Aquí está la instrucción de refactorización para el equipo, enfocada en la solución de la **Pestaña Nueva y el Overlay de Guía**:
+
+> **"Agente, implementa la solución de navegación 'Pestaña Nueva + Guía' para el carrusel de Tiendas. ELIMINAR el componente `StoreIframeModal` invasivo.**
+>
+> 1.  **Acción al Clic:** Al hacer clic en el logo, la URL del afiliado debe abrirse con `window.open(url, '_blank')`.
+> 2.  **Nuevo Componente:** Inmediatamente después del clic, renderizar un **Modal de Guía (pequeño y no intrusivo)** en el centro de la pantalla de Givlyn.
+> 3.  **Flujo:** Este Modal de Guía debe contener un **campo de entrada** y el botón **`AÑADIR A LISTA`** que, al pegarse la URL, active el flujo del **`QuickAddModal` (Fase 2)** ya definido (seleccionar/crear lista).
+>
+> **Prioridad:** Limpieza visual, evitar errores de carga y máxima claridad en la guía al usuario."

@@ -9,7 +9,7 @@ import { AmazonLogo, WalmartLogo, TargetLogo, EtsyLogo, EbayLogo, BestBuyLogo, H
 import { X } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { getTrendingProductsSync, type TrendingProduct } from "@/services/trendingService";
-import { QuickAddModal } from "@/components/QuickAddModal";
+import { StoreGuideModal } from "@/components/StoreGuideModal";
 
 interface GiftList {
   id: string;
@@ -98,7 +98,14 @@ const Dashboard = () => {
   const [storeSearch, setStoreSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const storesCarouselRef = useRef<HTMLDivElement>(null);
-  const [showQuickAddModal, setShowQuickAddModal] = useState(false);
+  const [showGuideModal, setShowGuideModal] = useState(false);
+  const [activeStoreName, setActiveStoreName] = useState("");
+
+  const handleStoreClick = (storeName: string, storeUrl: string) => {
+    window.open(storeUrl, '_blank', 'noopener,noreferrer');
+    setActiveStoreName(storeName);
+    setShowGuideModal(true);
+  };
 
   const userName = user?.user_metadata?.display_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuario';
 
@@ -564,15 +571,13 @@ const Dashboard = () => {
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {affiliateStores.slice(0, 12).map((store, index) => (
-              <a
+              <button
                 key={`${store.name}-${index}`}
-                href={store.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                onClick={() => handleStoreClick(store.name, store.url)}
                 className="flex-shrink-0 w-[100px] h-[80px] bg-white rounded-xl border border-gray-100 flex items-center justify-center hover:shadow-lg hover:border-[#1ABC9C]/30 transition-all cursor-pointer"
               >
                 <store.Logo height={24} />
-              </a>
+              </button>
             ))}
           </div>
         </div>
@@ -634,18 +639,19 @@ const Dashboard = () => {
                 </p>
                 <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-4">
                   {filteredStores.map((store, index) => (
-                    <a
+                    <button
                       key={`modal-${store.name}-${index}`}
-                      href={store.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      onClick={() => {
+                        setShowStoresModal(false);
+                        handleStoreClick(store.name, store.url);
+                      }}
                       className="flex flex-col items-center justify-center gap-3 p-4 bg-white rounded-xl border border-gray-200 hover:shadow-xl hover:border-[#1ABC9C] hover:-translate-y-1 transition-all cursor-pointer min-h-[100px]"
                     >
                       <div className="h-[40px] flex items-center justify-center w-full">
                         <store.Logo height={24} />
                       </div>
                       <span className="text-xs text-gray-600 text-center font-medium">{store.name}</span>
-                    </a>
+                    </button>
                   ))}
                 </div>
                 {filteredStores.length === 0 && (
@@ -722,7 +728,10 @@ const Dashboard = () => {
 
       {/* FLOATING ACTION BUTTON - ADD PRODUCT */}
       <button
-        onClick={() => setShowQuickAddModal(true)}
+        onClick={() => {
+          setActiveStoreName(language === 'es' ? 'cualquier tienda' : 'any store');
+          setShowGuideModal(true);
+        }}
         className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-40 flex items-center gap-2 px-5 py-4 bg-gradient-to-r from-[#1ABC9C] to-[#16A085] text-white rounded-full shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all group"
         title={language === 'es' ? 'Agregar producto desde cualquier tienda' : 'Add product from any store'}
       >
@@ -732,10 +741,11 @@ const Dashboard = () => {
         </span>
       </button>
 
-      {/* QUICK ADD MODAL */}
-      <QuickAddModal
-        isOpen={showQuickAddModal}
-        onClose={() => setShowQuickAddModal(false)}
+      {/* STORE GUIDE MODAL */}
+      <StoreGuideModal
+        isOpen={showGuideModal}
+        onClose={() => setShowGuideModal(false)}
+        storeName={activeStoreName}
         lists={myLists.map(list => ({
           id: list.id,
           name: list.name,
