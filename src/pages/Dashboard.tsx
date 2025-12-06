@@ -325,6 +325,9 @@ const Dashboard = () => {
                   setShowSuggestions(true);
                 }}
                 onFocus={() => setShowSuggestions(true)}
+                onBlur={() => {
+                  setTimeout(() => setShowSuggestions(false), 200);
+                }}
                 onKeyDown={handleSearchKeyDown}
                 className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-base focus:outline-none focus:border-[#1ABC9C] focus:ring-2 focus:ring-[#1ABC9C]/20 transition-all"
               />
@@ -388,7 +391,7 @@ const Dashboard = () => {
                   <button
                     key={list.id}
                     onClick={() => navigate(`/lists?id=${list.id}`)}
-                    className="group/card flex-shrink-0 w-[240px] h-[170px] rounded-2xl overflow-hidden relative transition-all duration-300 hover:-translate-y-1 hover:shadow-xl snap-start"
+                    className="group/card flex-shrink-0 w-[280px] sm:w-[320px] h-[200px] sm:h-[220px] rounded-2xl overflow-hidden relative transition-all duration-300 hover:-translate-y-1 hover:shadow-xl snap-start"
                   >
                     <div 
                       className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover/card:scale-105"
@@ -411,7 +414,7 @@ const Dashboard = () => {
                 
                 <button
                   onClick={() => navigate("/create-list/step-1")}
-                  className="flex-shrink-0 w-[240px] h-[170px] rounded-2xl border-2 border-dashed border-gray-200 hover:border-[#1ABC9C] bg-white flex flex-col items-center justify-center gap-3 transition-all duration-300 hover:-translate-y-1 snap-start"
+                  className="flex-shrink-0 w-[280px] sm:w-[320px] h-[200px] sm:h-[220px] rounded-2xl border-2 border-dashed border-gray-200 hover:border-[#1ABC9C] bg-white flex flex-col items-center justify-center gap-3 transition-all duration-300 hover:-translate-y-1 snap-start"
                 >
                   <div className="w-12 h-12 bg-[#1ABC9C]/10 rounded-xl flex items-center justify-center">
                     <Plus className="w-6 h-6 text-[#1ABC9C]" />
@@ -450,9 +453,9 @@ const Dashboard = () => {
             {trendingProducts.map((product) => (
               <div
                 key={product.id}
-                className="flex-shrink-0 w-[170px] bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all cursor-pointer hover:-translate-y-0.5"
+                className="flex-shrink-0 w-[140px] sm:w-[160px] bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all cursor-pointer hover:-translate-y-0.5"
               >
-                <div className="relative h-[130px]">
+                <div className="relative h-[100px] sm:h-[110px]">
                   <img 
                     src={product.image} 
                     alt={product.name}
@@ -512,7 +515,7 @@ const Dashboard = () => {
               <button
                 key={event.id}
                 onClick={() => handleEventClick(event.template, language === 'es' ? event.name : event.nameEn)}
-                className={`flex-shrink-0 w-[180px] h-[110px] rounded-2xl bg-gradient-to-br ${event.color} p-4 text-white text-left hover:shadow-xl hover:-translate-y-1 transition-all`}
+                className={`flex-shrink-0 w-[150px] sm:w-[160px] h-[90px] sm:h-[100px] rounded-2xl bg-gradient-to-br ${event.color} p-3 sm:p-4 text-white text-left hover:shadow-xl hover:-translate-y-1 transition-all`}
               >
                 <h4 className="font-bold text-base line-clamp-1 mb-1">
                   {language === 'es' ? event.name : event.nameEn}
