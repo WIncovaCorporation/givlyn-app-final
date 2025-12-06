@@ -341,32 +341,53 @@ const Index = () => {
           >
             {[1, 2, 3].map((set) => (
               <div key={set} style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '28px' : '44px' }}>
-                {/* Amazon */}
-                <span style={{ 
-                  fontSize, 
-                  fontWeight: 700, 
-                  color: '#232F3E',
-                  fontFamily: 'Arial, sans-serif',
-                  letterSpacing: '-0.5px',
+                {/* Amazon - Logo oficial con flecha sonrisa */}
+                <div style={{ 
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
                 }}>
-                  amazon
-                </span>
+                  <span style={{ 
+                    fontSize, 
+                    fontWeight: 700, 
+                    color: '#232F3E',
+                    fontFamily: 'Arial, sans-serif',
+                    letterSpacing: '-0.5px',
+                    lineHeight: 1,
+                  }}>
+                    amazon
+                  </span>
+                  <svg width={isMobile ? '60' : '76'} height={isMobile ? '10' : '12'} viewBox="0 0 76 12" style={{ marginTop: '-2px' }}>
+                    <path d="M2 8 Q38 16 74 4" stroke="#FF9900" strokeWidth="3" fill="none" strokeLinecap="round"/>
+                    <path d="M68 2 L74 4 L70 8" stroke="#FF9900" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
 
-                {/* Walmart */}
-                <span style={{ 
-                  fontSize, 
-                  fontWeight: 400, 
-                  color: '#0071CE',
-                  fontFamily: 'Arial, sans-serif',
+                {/* Walmart - Logo oficial con spark */}
+                <div style={{ 
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '4px',
+                  gap: '6px',
                 }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFC220">
-                    <path d="M12 2l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>
+                  <svg width={isMobile ? '20' : '24'} height={isMobile ? '20' : '24'} viewBox="0 0 24 24">
+                    <path d="M12 2L12.8 7.2L12 12L11.2 7.2L12 2Z" fill="#FFC220"/>
+                    <path d="M12 22L11.2 16.8L12 12L12.8 16.8L12 22Z" fill="#FFC220"/>
+                    <path d="M2 12L7.2 11.2L12 12L7.2 12.8L2 12Z" fill="#FFC220"/>
+                    <path d="M22 12L16.8 12.8L12 12L16.8 11.2L22 12Z" fill="#FFC220"/>
+                    <path d="M4.93 4.93L8.76 9.17L12 12L8.76 9.17L4.93 4.93Z" fill="#FFC220"/>
+                    <path d="M19.07 19.07L15.24 14.83L12 12L15.24 14.83L19.07 19.07Z" fill="#FFC220"/>
+                    <path d="M4.93 19.07L9.17 15.24L12 12L9.17 15.24L4.93 19.07Z" fill="#FFC220"/>
+                    <path d="M19.07 4.93L14.83 8.76L12 12L14.83 8.76L19.07 4.93Z" fill="#FFC220"/>
                   </svg>
-                  Walmart
-                </span>
+                  <span style={{ 
+                    fontSize, 
+                    fontWeight: 600, 
+                    color: '#0071CE',
+                    fontFamily: 'Arial, sans-serif',
+                  }}>
+                    Walmart
+                  </span>
+                </div>
 
                 {/* Etsy */}
                 <span style={{ 
