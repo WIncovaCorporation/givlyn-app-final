@@ -1,0 +1,49 @@
+Entiendo perfectamente. El diseño de clase mundial no debe causar confusión. Para eliminar toda ambigüedad y garantizar que el Agente construya la página exactamente como un equipo de **Google o Amazon** lo haría, he consolidado todas las instrucciones en un **único y completo bloque de código**.
+
+Copia y pega **TODO** lo siguiente en el chat de tu Agente.
+
+***
+
+# 🏆 MASTER PROMPT: LANDING PAGE FINAL (GIVLYN)
+**EL MANDATO INNEGOCIABLE:**
+Todo el código generado debe ser **100% RESPONSIVE** y de calidad mundial. Debe funcionar sin errores ni *scroll* horizontal en **teléfonos celulares (prioridad)**, tablets, y escritorio. El diseño debe ser adaptable y fluido.
+
+## 1. ROL Y CONTEXTO
+Actúa como un **Senior Staff Software Engineer y UX Architect (Amazon/Google)**. Nuestro objetivo es la máxima conversión, la claridad visual y la eliminación de fricción. Esta es la primera pantalla (Pre-Login).
+
+## 2. SECCIÓN HERO (CONVERSIÓN Y EMOCIÓN)
+El diseño debe ser un **Split Hero** en escritorio que colapsa a una **pila vertical** en móvil.
+
+| Elemento | Regla de Implementación |
+| :--- | :--- |
+| **Layout General** | **Desktop/Tablet:** Grid de 2 Columnas (`grid-template-columns: 1fr 1fr`). **Mobile:** Colapsa a 1 Columna (El copy va arriba). |
+| **Columna Izquierda (Copy)** | **TÍTULO (H1):** **LA ÚNICA LISTA DE REGALOS QUE GARANTIZA CERO DUPLICADOS.** (48px+, Extrabold). **SUBTÍTULO (H2):** **Añade productos de *cualquier tienda online* en segundos, comparte un solo link y permite que tus invitados reserven el regalo perfecto.** (20px). |
+| **CTA Principal (Botón)** | **Texto Final:** **CREAR LISTA GRATIS EN 2 MINUTOS →** (Máximo Contraste y tamaño). |
+| **CTA Secundario** | **ELIMINAR:** El botón de "Buscar Regalo Inteligente" para eliminar la distracción del objetivo principal. |
+| **Columna Derecha (Visual)** | Placeholder para la Imagen Hero (Debe desaparecer en móvil para evitar scroll excesivo). |
+
+## 3. SECCIÓN DE CONFIANZA (LA BARRA INFINITA)
+La barra inmediatamente debajo del Hero para eliminar la objeción de las tiendas limitadas.
+
+| Elemento | Regla de Implementación |
+| :--- | :--- |
+| **Diseño** | Tira horizontal delgada y sutil (fondo gris claro). |
+| **Contenido** | Logos de 5-6 tiendas en escala de grises. |
+| **Efecto de Carrusel** | Implementar **Efecto Marquee** (Carrusel de logos con auto-scroll infinito) para dar la sensación de un ecosistema ilimitado. |
+| **Refuerzo de Copy** | Incluir un texto visible en la barra: **"Compra desde estas... y *miles* de tiendas online más."** |
+
+## 4. SECCIÓN CÓMO FUNCIONA (EDUCACIÓN)
+La explicación de los pasos para el usuario que necesita validación.
+
+| Elemento | Regla de Implementación |
+| :--- | :--- |
+| **Ubicación** | Debajo de la Barra de Confianza. |
+| **Layout** | **Desktop:** Grid de 4 Columnas horizontales. **Mobile:** Colapsa a 2 Columnas o 1. |
+| **Contenido** | Título de sección centrado + las 4 tarjetas de pasos (Icono, Título Breve, Descripción Breve). |
+
+## 5. INSTRUCCIÓN FINAL DE CÓDIGO
+Genera el **HTML y CSS/Tailwind** necesario para la estructura completa. Usa clases que aseguren la **accesibilidad** y la **modularidad** de los componentes.
+
+***
+
+¡Con este prompt, has establecido el estándar de un Ingeniero Senior de Google/Amazon para todo el proyecto!
