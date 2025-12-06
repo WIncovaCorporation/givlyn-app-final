@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { Globe, ArrowRight, Sparkles, Search, Tag, CheckCircle, ShoppingBag } from "lucide-react";
+import { AmazonLogo, WalmartLogo, TargetLogo, EtsyLogo, EbayLogo, BestBuyLogo, MacysLogo, HomeDepotLogo, NikeLogo, AdidasLogo } from "@/components/StoreLogos";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -114,8 +115,6 @@ const Index = () => {
   const cardShadowHover = '0 8px 24px rgba(0, 0, 0, 0.1)';
   const btnShadow = '0 2px 8px rgba(0, 0, 0, 0.12)';
   const btnShadowHover = '0 4px 16px rgba(0, 0, 0, 0.15)';
-
-  const fontSize = isMobile ? '16px' : '20px';
 
   return (
     <div style={{
@@ -314,10 +313,10 @@ const Index = () => {
         </div>
       </section>
 
-      {/* TRUST BAR - Store Logos as Styled Text */}
+      {/* TRUST BAR - Professional SVG Store Logos */}
       <section style={{
         background: colors.bgTrust,
-        padding: '20px 0',
+        padding: '24px 0',
         overflow: 'hidden',
         borderTop: '1px solid #E5E7EB',
         borderBottom: '1px solid #E5E7EB',
@@ -327,180 +326,29 @@ const Index = () => {
           display: 'flex',
           overflow: 'hidden',
           width: '100%',
-          maskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
-          WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
+          maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
         }}>
           <div 
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: isMobile ? '28px' : '44px',
-              animation: 'marquee 30s linear infinite',
+              gap: isMobile ? '40px' : '56px',
+              animation: 'marquee 40s linear infinite',
               whiteSpace: 'nowrap',
             }}
           >
             {[1, 2, 3].map((set) => (
-              <div key={set} style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '28px' : '44px' }}>
-                {/* Amazon - Logo oficial con flecha sonrisa */}
-                <div style={{ 
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                }}>
-                  <span style={{ 
-                    fontSize, 
-                    fontWeight: 700, 
-                    color: '#232F3E',
-                    fontFamily: 'Arial, sans-serif',
-                    letterSpacing: '-0.5px',
-                    lineHeight: 1,
-                  }}>
-                    amazon
-                  </span>
-                  <svg width={isMobile ? '60' : '76'} height={isMobile ? '10' : '12'} viewBox="0 0 76 12" style={{ marginTop: '-2px' }}>
-                    <path d="M2 8 Q38 16 74 4" stroke="#FF9900" strokeWidth="3" fill="none" strokeLinecap="round"/>
-                    <path d="M68 2 L74 4 L70 8" stroke="#FF9900" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-
-                {/* Walmart - Logo oficial con spark */}
-                <div style={{ 
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                }}>
-                  <svg width={isMobile ? '20' : '24'} height={isMobile ? '20' : '24'} viewBox="0 0 24 24">
-                    <path d="M12 2L12.8 7.2L12 12L11.2 7.2L12 2Z" fill="#FFC220"/>
-                    <path d="M12 22L11.2 16.8L12 12L12.8 16.8L12 22Z" fill="#FFC220"/>
-                    <path d="M2 12L7.2 11.2L12 12L7.2 12.8L2 12Z" fill="#FFC220"/>
-                    <path d="M22 12L16.8 12.8L12 12L16.8 11.2L22 12Z" fill="#FFC220"/>
-                    <path d="M4.93 4.93L8.76 9.17L12 12L8.76 9.17L4.93 4.93Z" fill="#FFC220"/>
-                    <path d="M19.07 19.07L15.24 14.83L12 12L15.24 14.83L19.07 19.07Z" fill="#FFC220"/>
-                    <path d="M4.93 19.07L9.17 15.24L12 12L9.17 15.24L4.93 19.07Z" fill="#FFC220"/>
-                    <path d="M19.07 4.93L14.83 8.76L12 12L14.83 8.76L19.07 4.93Z" fill="#FFC220"/>
-                  </svg>
-                  <span style={{ 
-                    fontSize, 
-                    fontWeight: 600, 
-                    color: '#0071CE',
-                    fontFamily: 'Arial, sans-serif',
-                  }}>
-                    Walmart
-                  </span>
-                </div>
-
-                {/* Etsy */}
-                <span style={{ 
-                  fontSize, 
-                  fontWeight: 600, 
-                  color: '#F56400',
-                  fontFamily: 'Georgia, serif',
-                  letterSpacing: '1px',
-                }}>
-                  Etsy
-                </span>
-
-                {/* eBay - multicolor */}
-                <span style={{ 
-                  fontSize, 
-                  fontWeight: 700, 
-                  fontFamily: 'Arial, sans-serif',
-                }}>
-                  <span style={{ color: '#E53238' }}>e</span>
-                  <span style={{ color: '#0064D2' }}>b</span>
-                  <span style={{ color: '#F5AF02' }}>a</span>
-                  <span style={{ color: '#86B817' }}>y</span>
-                </span>
-
-                {/* Best Buy */}
-                <span style={{ 
-                  fontSize, 
-                  fontWeight: 700, 
-                  color: '#0046BE',
-                  fontFamily: 'Arial, sans-serif',
-                  letterSpacing: '0.5px',
-                }}>
-                  BEST BUY
-                </span>
-
-                {/* Macy's */}
-                <span style={{ 
-                  fontSize, 
-                  fontWeight: 400, 
-                  color: '#E21A2C',
-                  fontFamily: 'Times New Roman, serif',
-                  fontStyle: 'italic',
-                  display: 'flex',
-                  alignItems: 'center',
-                }}>
-                  macy's
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="#E21A2C" style={{ marginLeft: '2px' }}>
-                    <path d="M12 2l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>
-                  </svg>
-                </span>
-
-                {/* Target */}
-                <span style={{ 
-                  fontSize, 
-                  fontWeight: 700, 
-                  color: '#CC0000',
-                  fontFamily: 'Helvetica, Arial, sans-serif',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" fill="#CC0000"/>
-                    <circle cx="12" cy="12" r="6.5" fill="white"/>
-                    <circle cx="12" cy="12" r="3" fill="#CC0000"/>
-                  </svg>
-                  Target
-                </span>
-
-                {/* Nike */}
-                <span style={{ 
-                  fontSize, 
-                  fontWeight: 700, 
-                  color: '#111111',
-                  fontFamily: 'Futura, Arial, sans-serif',
-                  fontStyle: 'italic',
-                  textTransform: 'uppercase',
-                  letterSpacing: '2px',
-                }}>
-                  NIKE
-                </span>
-
-                {/* Adidas */}
-                <span style={{ 
-                  fontSize, 
-                  fontWeight: 700, 
-                  color: '#000000',
-                  fontFamily: 'Helvetica, Arial, sans-serif',
-                  letterSpacing: '3px',
-                  textTransform: 'lowercase',
-                }}>
-                  adidas
-                </span>
-
-                {/* Home Depot */}
-                <span style={{ 
-                  fontSize, 
-                  fontWeight: 700, 
-                  color: '#F96302',
-                  fontFamily: 'Arial, sans-serif',
-                }}>
-                  HOME DEPOT
-                </span>
-
-                {/* Trust Text */}
-                <span style={{
-                  fontSize: isMobile ? '12px' : '14px',
-                  color: colors.textGrey,
-                  fontStyle: 'italic',
-                  padding: '0 8px',
-                }}>
-                  "{t.trustText}"
-                </span>
+              <div key={set} style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '40px' : '56px' }}>
+                <AmazonLogo height={isMobile ? 22 : 28} />
+                <WalmartLogo height={isMobile ? 22 : 28} />
+                <TargetLogo height={isMobile ? 24 : 30} />
+                <EbayLogo height={isMobile ? 20 : 26} />
+                <BestBuyLogo height={isMobile ? 20 : 26} />
+                <EtsyLogo height={isMobile ? 18 : 24} />
+                <HomeDepotLogo height={isMobile ? 20 : 26} />
+                <NikeLogo height={isMobile ? 16 : 22} />
+                <AdidasLogo height={isMobile ? 20 : 26} />
               </div>
             ))}
           </div>
