@@ -1,0 +1,67 @@
+¡Excelente! Esta página es el corazón de la retención de usuarios (Retention Hub). Un Dashboard de talla mundial (estilo **Amazon Prime** o **Google Discover**) debe ser personalizado, funcional y guiar al usuario a la acción o al descubrimiento.
+
+Aquí tienes el **Prompt Maestro Final** para que el equipo de desarrollo de Replit refactorice la página después del login/registro, cumpliendo con la jerarquía y la estética de **Givlyn (World-Class)**.
+
+***
+
+# 🏆 MASTER PROMPT: DASHBOARD (OVERVIEW) POST-REGISTRO
+
+## 0. MANDATO DE ESTILO Y CALIDAD (GIVLYN WORLD-CLASS)
+
+**ROL:** Senior UX Architect & Frontend Engineer.
+**PÁGINA:** Dashboard Principal (Primer contenido después del login).
+
+**ESTÉTICA (PROFESIONALISMO):**
+* **Consistencia Visual:** Los botones de CTA y todos los iconos deben tener el mismo lenguaje visual limpio y **vectorizado (SVG)** que las tarjetas de lista (como la imagen de referencia).
+* **Sombra y Contraste:** **Eliminar la sombra dura/efecto "cheap"** de los CTAs. Utilizar sombras suaves (`box-shadow` modernos) y colores planos que se integren con la paleta de Givlyn.
+* **Responsividad:** 100% Mobile-First.
+
+---
+
+## 1. 🎯 SECCIÓN HERO Y CTA (PERSONALIZACIÓN Y ACCIÓN)
+
+El foco está en reconocer al usuario y presentar la acción principal.
+
+| Elemento | Regla de Implementación | Razón Estratégica |
+| :--- | :--- | :--- |
+| **Saludo (H1)** | Texto de bienvenida alineado a la izquierda. | **"Hola, [Nombre del Usuario]"** | Personalización de alta prioridad (Amazon). |
+| **Subtítulo (H2)** | Pregunta clara que invita a la acción. | **"¿Qué regalo o lista creamos hoy?"** | Lidera directamente a los dos CTAs. |
+| **CTA Primario** | **Botón Sólido (Color Principal Givlyn).** | **CREAR NUEVA LISTA →** | Acción de más alta prioridad para la retención. |
+| **CTA Secundario** | **Botón de Contorno o Texto con Icono.** Debe estar visible al lado del primario. | **🛒 ASISTENTE DE COMPRAS INTELIGENTE** | Destaca la función IA como propuesta de valor única. |
+
+---
+
+## 2. 📑 CARRUSEL 1: MIS LISTAS (CONTENIDO DEL USUARIO)
+
+Esta es la sección más importante para la usabilidad.
+
+* **Título:** "Mis Listas"
+* **Acciones en el Encabezado:** Implementar dos botones/iconos pequeños visibles en el encabezado de esta sección (al lado del título "Mis Listas") para funcionalidad rápida:
+    1.  **Icono `+`:** Enlaza a la página de creación de nueva lista.
+    2.  **Icono Regalo/Producto:** Enlaza a la función de **"Añadir Producto Rápido"**.
+* **Comportamiento del Carrusel:** Debe ser **ESTÁTICO** (el usuario debe deslizar manualmente). *Razón:* El usuario espera que su propio contenido no se mueva sin su control.
+
+---
+
+## 3. 🗺️ CARRUSELES DE DESCUBRIMIENTO (DINÁMICOS)
+
+Estas secciones están diseñadas para la exploración y el upselling (clics de afiliados). **Todos deben ser DINÁMICOS (auto-scroll suave).**
+
+### A. CARRUSEL 2: TENDENCIAS
+* **Título:** "🔥 Tendencias del Momento"
+* **Contenido:** Artículos populares, regalos virales o productos con alta conversión. **(Dinámico: Auto-Scroll)**
+
+### B. CARRUSEL 3: MARCAS Y TIENDAS
+* **Título:** "Compra en tus tiendas favoritas"
+* **Contenido:** Logos vectorizados de las 10 principales tiendas afiliadas (Amazon, Walmart, Etsy, etc.). **(Dinámico: Auto-Scroll suave, tipo Marquee).**
+
+### C. CARRUSEL 4: EVENTOS
+* **Título:** "🗓️ Próximos Eventos y Festividades"
+* **Contenido:** Tarjetas temáticas con eventos próximos (ej. Día de la Madre, Regalos para Graduación, Verano).
+* **Lógica Dinámica Requerida:** El backend debe mostrar los eventos relevantes basándose en el calendario (por ejemplo, si el Día del Padre está a 6 semanas, aparece; si está a 6 meses, no). **(Dinámico: Auto-Scroll)**
+
+---
+
+## 4. INSTRUCCIÓN FINAL PARA EL CÓDIGO
+
+> **"Genera el código para el Dashboard con la jerarquía Centrada (Hero). Asegura que los botones y las tarjetas de lista tengan el mismo nivel de profesionalismo estético (sombra limpia y vectorización). El Carrusel 'Mis Listas' es estático, mientras que las secciones 'Tendencias', 'Marcas' y 'Eventos' deben usar auto-scroll suave."**
