@@ -103,34 +103,22 @@ export const EbayLogo = ({ height = 24 }: LogoProps) => (
 );
 
 export const BestBuyLogo = ({ height = 24 }: LogoProps) => (
-  <div style={{ display: 'flex', alignItems: 'center', gap: `${height * 0.15}px` }}>
-    <div style={{
-      width: `${height * 1.1}px`,
-      height: `${height * 1.1}px`,
-      background: '#0046BE',
-      borderRadius: '2px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}>
-      <span style={{
-        color: '#FFF200',
-        fontSize: `${height * 0.55}px`,
-        fontWeight: 800,
+  <div style={{ display: 'flex', alignItems: 'center', gap: `${height * 0.25}px` }}>
+    <svg width={height * 1.4} height={height * 1.4} viewBox="0 0 48 48">
+      <rect x="2" y="2" width="44" height="44" rx="4" fill="#0046BE"/>
+      <path d="M12 14h12c4 0 7 2 7 6 0 2-1 3.5-2.5 4.5 2.5 1 4 3 4 5.5 0 4-3 6-8 6H12V14zm6 8h5c2 0 3-1 3-2.5s-1-2.5-3-2.5h-5v5zm0 9h6c2.5 0 4-1 4-3s-1.5-3-4-3h-6v6z" fill="#FFF200"/>
+    </svg>
+    <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1 }}>
+      <span style={{ 
+        fontSize: `${height * 0.65}px`, 
+        fontWeight: 800, 
+        color: '#0046BE',
         fontFamily: "Arial, sans-serif",
+        letterSpacing: '-0.5px',
       }}>
-        BBY
+        Best Buy
       </span>
     </div>
-    <span style={{ 
-      fontSize: `${height * 0.7}px`, 
-      fontWeight: 700, 
-      color: '#0046BE',
-      fontFamily: "Arial, sans-serif",
-      letterSpacing: '0.5px',
-    }}>
-      Best Buy
-    </span>
   </div>
 );
 
@@ -184,9 +172,9 @@ export const HomeDepotLogo = ({ height = 24 }: LogoProps) => (
 );
 
 export const NikeLogo = ({ height = 20 }: LogoProps) => (
-  <svg width={height * 2.5} height={height} viewBox="0 0 70 28">
+  <svg width={height * 3} height={height * 1.2} viewBox="0 0 100 40">
     <path 
-      d="M5 21 C8 21 45 8 65 3 C67 2 68 4 67 6 L25 21 C20 23 15 24 10 24 L5 21 Z" 
+      d="M10 32 C6 32 2 30 2 28 C2 26 6 24 14 20 L78 4 C84 2 90 2 94 4 C98 6 98 10 94 12 L36 28 C28 30 20 32 14 32 L10 32 Z" 
       fill="#111111"
     />
   </svg>
