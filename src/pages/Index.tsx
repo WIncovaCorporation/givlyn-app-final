@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
-import { Search, Gift, Globe } from "lucide-react";
+import { Search, Gift, Globe, ShoppingBag, Tag, Shield, CheckCircle } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -41,41 +41,31 @@ const Index = () => {
 
   const content = {
     es: {
-      heroLine1: 'Organiza Regalos. Consigue',
+      heroLine1: 'Organiza Regalos.',
       heroHighlight: 'Mejor Precio',
-      heroLine2: 'Garantía de Tienda Oficial.',
-      heroSub: 'Crea tu lista en 3 min. Compra en más de 500 tiendas.',
+      heroLine2: 'Garantia de Tienda Oficial.',
+      heroSub: 'Crea tu lista en 3 min. Compra en mas de 500 tiendas.',
       heroStrong: 'Nosotros solo te ayudamos a ahorrar.',
       ctaPrimary: 'CREAR LISTA GRATIS',
       ctaSecondary: 'Buscar Regalo Inteligente',
-      microcopy: 'Sin tarjeta de crédito. 100% Seguro.',
-      val1Title: 'Compra Directa',
-      val1Sub: '+500 tiendas líderes',
-      val2Title: 'Mejor Precio',
-      val2Sub: 'Comparamos por ti',
-      val3Title: 'Protección Total',
-      val3Sub: 'Garantía de la tienda',
-      val4Title: 'Datos Seguros',
-      val4Sub: 'SSL | GDPR | CCPA',
-      howItWorks: '¿Cómo Funciona?',
-      step1: 'Dinos qué buscas',
-      step1Sub: 'Regalo, ocasión o presupuesto',
+      microcopy: 'Sin tarjeta de credito. 100% Seguro.',
+      howItWorks: 'Como Funciona',
+      step1: 'Dinos que buscas',
+      step1Sub: 'Regalo, ocasion o presupuesto',
       step2: 'Comparamos precios',
       step2Sub: 'En +500 tiendas al instante',
       step3: 'Elige tu favorito',
-      step3Sub: 'Con el mejor precio garantizado',
+      step3Sub: 'Mejor precio garantizado',
       step4: 'Compra directo',
       step4Sub: 'En la tienda oficial',
       tryNow: 'Probar Ahora',
-      trustedBy: 'Compara precios en tiendas líderes',
-      securityBadge: 'Seguridad Certificada',
+      login: 'Iniciar sesion',
+      register: 'Registrarse',
       footerProduct: 'Givlyn es un producto de',
       footerRights: 'Todos los derechos reservados.',
-      login: 'Iniciar sesión',
-      register: 'Registrarse',
     },
     en: {
-      heroLine1: 'Organize Gifts. Get',
+      heroLine1: 'Organize Gifts.',
       heroHighlight: 'Best Price',
       heroLine2: 'Official Store Guarantee.',
       heroSub: 'Create your list in 3 min. Shop at 500+ stores.',
@@ -83,14 +73,6 @@ const Index = () => {
       ctaPrimary: 'CREATE FREE LIST',
       ctaSecondary: 'Smart Gift Search',
       microcopy: 'No credit card. 100% Secure.',
-      val1Title: 'Direct Purchase',
-      val1Sub: '500+ leading stores',
-      val2Title: 'Best Price',
-      val2Sub: 'We compare for you',
-      val3Title: 'Full Protection',
-      val3Sub: 'Store guarantee',
-      val4Title: 'Secure Data',
-      val4Sub: 'SSL | GDPR | CCPA',
       howItWorks: 'How It Works',
       step1: 'Tell us what you need',
       step1Sub: 'Gift, occasion or budget',
@@ -101,12 +83,10 @@ const Index = () => {
       step4: 'Buy direct',
       step4Sub: 'From the official store',
       tryNow: 'Try Now',
-      trustedBy: 'Compare prices across leading stores',
-      securityBadge: 'Certified Security',
-      footerProduct: 'Givlyn is a product of',
-      footerRights: 'All rights reserved.',
       login: 'Sign In',
       register: 'Sign Up',
+      footerProduct: 'Givlyn is a product of',
+      footerRights: 'All rights reserved.',
     }
   };
 
@@ -117,17 +97,17 @@ const Index = () => {
     actionOrange: '#FF9900',
     actionOrangeHover: '#E07C00',
     accentGreen: '#1ABC9C',
-    textDark: '#333333',
-    textGrey: '#666666',
+    textDark: '#1F2937',
+    textGrey: '#6B7280',
     bgWhite: '#FFFFFF',
-    bgLight: '#F7F9FB',
+    bgLight: '#F8FAFC',
     border: '#E5E7EB',
   };
 
   const StoreLogo = ({ name }: { name: string }) => {
     const logoStyle = {
-      height: isMobile ? '16px' : '20px',
-      opacity: 0.55,
+      height: isMobile ? '14px' : '18px',
+      opacity: 0.5,
       filter: 'grayscale(100%)',
     };
     
@@ -147,7 +127,7 @@ const Index = () => {
     
     return (
       <span style={{
-        fontSize: isMobile ? '13px' : '15px',
+        fontSize: isMobile ? '12px' : '14px',
         fontWeight: 700,
         color: colors.primaryBlue,
         opacity: 0.5,
@@ -159,443 +139,426 @@ const Index = () => {
   };
 
   const steps = [
-    { num: 1, title: t.step1, sub: t.step1Sub, icon: '🎯' },
-    { num: 2, title: t.step2, sub: t.step2Sub, icon: '⚡' },
-    { num: 3, title: t.step3, sub: t.step3Sub, icon: '✓' },
-    { num: 4, title: t.step4, sub: t.step4Sub, icon: '🛒' },
+    { num: 1, title: t.step1, sub: t.step1Sub, Icon: Search },
+    { num: 2, title: t.step2, sub: t.step2Sub, Icon: Tag },
+    { num: 3, title: t.step3, sub: t.step3Sub, Icon: CheckCircle },
+    { num: 4, title: t.step4, sub: t.step4Sub, Icon: ShoppingBag },
   ];
+
+  const cardShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+  const cardShadowHover = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
 
   return (
     <div style={{
-      fontFamily: "'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+      fontFamily: "'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
       color: colors.textDark,
-      lineHeight: 1.4,
+      lineHeight: 1.5,
       minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
       background: colors.bgLight,
     }}>
-      {/* HEADER */}
+      {/* HEADER - Compact */}
       <header style={{
         background: colors.bgWhite,
-        borderBottom: `1px solid ${colors.border}`,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        height: '60px',
+        height: '56px',
       }}>
         <div style={{
-          maxWidth: '1200px',
+          maxWidth: '1400px',
           margin: '0 auto',
-          padding: '0 20px',
+          padding: '0 24px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           height: '100%',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <img src="/logo-icon-only.png" alt="Givlyn" style={{ height: '40px', width: 'auto' }} />
-            <span style={{ fontSize: '24px', fontWeight: 700, color: colors.primaryBlue, letterSpacing: '-0.5px' }}>
+            <img src="/logo-icon-only.png" alt="Givlyn" style={{ height: '36px', width: 'auto' }} />
+            <span style={{ fontSize: '22px', fontWeight: 700, color: colors.primaryBlue, letterSpacing: '-0.5px' }}>
               Givlyn
             </span>
           </div>
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '16px', height: '100%' }}>
+          <nav style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             {!isMobile && !user && (
-              <a href="/auth?tab=login" style={{ color: colors.textGrey, textDecoration: 'none', fontSize: '14px', display: 'flex', alignItems: 'center', height: '100%' }}>
+              <a href="/auth?tab=login" style={{ color: colors.textGrey, textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
                 {t.login}
               </a>
             )}
             {!user && (
-              <a href="/auth?tab=signup" style={{ background: colors.primaryBlue, color: 'white', padding: '10px 18px', borderRadius: '6px', fontSize: '14px', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+              <a href="/auth?tab=signup" style={{ 
+                background: colors.primaryBlue, 
+                color: 'white', 
+                padding: '8px 16px', 
+                borderRadius: '6px', 
+                fontSize: '14px', 
+                fontWeight: 600, 
+                textDecoration: 'none',
+                transition: 'all 0.2s ease',
+              }}>
                 {t.register}
               </a>
             )}
             {user && (
-              <button onClick={() => navigate('/dashboard')} style={{ background: colors.actionOrange, color: 'white', border: 'none', padding: '10px 18px', borderRadius: '6px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+              <button onClick={() => navigate('/dashboard')} style={{ 
+                background: colors.actionOrange, 
+                color: 'white', 
+                border: 'none', 
+                padding: '8px 16px', 
+                borderRadius: '6px', 
+                fontSize: '14px', 
+                fontWeight: 600, 
+                cursor: 'pointer',
+              }}>
                 Dashboard
               </button>
             )}
-            <button onClick={toggleLanguage} style={{ background: 'none', border: 'none', fontSize: '14px', cursor: 'pointer', color: colors.textGrey, display: 'flex', alignItems: 'center', gap: '4px', padding: '8px' }}>
-              <Globe size={16} />
-              {language.toUpperCase()} ▾
+            <button onClick={toggleLanguage} style={{ 
+              background: 'none', 
+              border: 'none', 
+              fontSize: '13px', 
+              cursor: 'pointer', 
+              color: colors.textGrey, 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '4px', 
+              padding: '6px',
+            }}>
+              <Globe size={14} />
+              {language.toUpperCase()}
             </button>
           </nav>
         </div>
       </header>
 
-      {/* HERO COMPACT */}
-      <section style={{
+      {/* MAIN CONTENT - Smart Grid Layout */}
+      <main style={{
+        flex: 1,
         display: 'flex',
-        alignItems: 'flex-start',
+        flexDirection: 'column',
         justifyContent: 'center',
-        padding: isMobile ? '16px 16px' : '24px 20px',
-        background: colors.bgLight,
+        padding: isMobile ? '20px 16px' : '24px 32px',
+        maxWidth: '1400px',
+        margin: '0 auto',
+        width: '100%',
       }}>
-        <div style={{ maxWidth: '700px', textAlign: 'center', width: '100%' }}>
-          <h1 style={{
-            fontSize: isMobile ? '22px' : '32px',
-            lineHeight: 1.3,
-            marginBottom: '10px',
-            color: colors.primaryBlue,
-            fontWeight: 700,
-          }}>
-            {t.heroLine1} <span style={{ color: colors.actionOrange }}>{t.heroHighlight}</span>.<br />
-            <span style={{ color: colors.primaryBlue }}>{t.heroLine2}</span>
-          </h1>
+        {/* SMART GRID: 2 Columns on Desktop */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+          gap: isMobile ? '24px' : '48px',
+          alignItems: 'center',
+        }}>
+          {/* LEFT COLUMN: Hero Content */}
+          <div style={{ textAlign: isMobile ? 'center' : 'left' }}>
+            <h1 style={{
+              fontSize: isMobile ? '28px' : '40px',
+              lineHeight: 1.2,
+              marginBottom: '12px',
+              color: colors.primaryBlue,
+              fontWeight: 700,
+            }}>
+              {t.heroLine1} <span style={{ color: colors.actionOrange }}>{t.heroHighlight}</span>.<br />
+              <span style={{ fontSize: isMobile ? '24px' : '32px', color: colors.textDark }}>{t.heroLine2}</span>
+            </h1>
 
-          <p style={{
-            fontSize: isMobile ? '14px' : '16px',
-            color: colors.textGrey,
-            marginBottom: '12px',
-            lineHeight: 1.5,
-          }}>
-            {t.heroSub}<br />
-            <strong style={{ color: colors.textDark }}>{t.heroStrong}</strong>
-          </p>
+            <p style={{
+              fontSize: isMobile ? '15px' : '17px',
+              color: colors.textGrey,
+              marginBottom: '20px',
+              lineHeight: 1.6,
+            }}>
+              {t.heroSub}<br />
+              <strong style={{ color: colors.textDark }}>{t.heroStrong}</strong>
+            </p>
 
-          {/* STORE LOGOS STRIP - Grayscale */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: isMobile ? '16px' : '28px',
-            marginBottom: '16px',
-            flexWrap: 'wrap',
-          }}>
-            {['amazon', 'Walmart', 'Target', 'eBay', 'Etsy'].map((store, idx) => (
-              <StoreLogo key={idx} name={store} />
-            ))}
-          </div>
+            {/* Store Logos Strip */}
+            <div style={{
+              display: 'flex',
+              justifyContent: isMobile ? 'center' : 'flex-start',
+              alignItems: 'center',
+              gap: isMobile ? '16px' : '24px',
+              marginBottom: '24px',
+              flexWrap: 'wrap',
+            }}>
+              {['amazon', 'Walmart', 'Target', 'eBay', 'Etsy'].map((store, idx) => (
+                <span key={idx}><StoreLogo name={store} /></span>
+              ))}
+            </div>
 
-          {/* CTAs */}
-          <div style={{
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            justifyContent: 'center',
-            gap: '12px',
-            marginBottom: '8px',
-          }}>
-            <button
-              onClick={handleCreateList}
-              style={{
-                background: colors.actionOrange,
-                color: 'white',
-                padding: isMobile ? '16px 28px' : '14px 28px',
-                borderRadius: '8px',
-                border: 'none',
-                fontSize: '15px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                transition: 'all 200ms ease',
-                width: isMobile ? '100%' : 'auto',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                minHeight: isMobile ? '52px' : 'auto',
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.background = colors.actionOrangeHover;
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.background = colors.actionOrange;
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-            >
-              <Gift size={18} />
-              {t.ctaPrimary}
-            </button>
-            <button
-              onClick={handleSmartSearch}
-              style={{
-                background: colors.bgWhite,
-                color: colors.primaryBlue,
-                padding: isMobile ? '16px 28px' : '14px 28px',
-                borderRadius: '8px',
-                border: `2px solid ${colors.primaryBlue}`,
-                fontSize: '15px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                transition: 'all 200ms ease',
-                width: isMobile ? '100%' : 'auto',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                minHeight: isMobile ? '52px' : 'auto',
-              }}
-              onMouseOver={(e) => { e.currentTarget.style.background = '#EBF4FF'; }}
-              onMouseOut={(e) => { e.currentTarget.style.background = colors.bgWhite; }}
-            >
-              <Search size={18} />
-              {t.ctaSecondary}
-            </button>
-          </div>
-
-          <p style={{ fontSize: '12px', color: colors.textGrey, marginBottom: isMobile ? '16px' : '24px' }}>
-            {t.microcopy}
-          </p>
-
-          {/* VALUE BAR PRO - Ultra compact list on mobile */}
-          <div style={{
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            justifyContent: 'space-between',
-            background: isMobile ? 'transparent' : '#ffffff',
-            padding: isMobile ? '0' : '20px 24px',
-            borderRadius: isMobile ? '0' : '12px',
-            border: isMobile ? 'none' : '1px solid #e5e7eb',
-            boxShadow: isMobile ? 'none' : '0 2px 4px rgba(0, 0, 0, 0.04)',
-            maxWidth: '900px',
-            margin: '0 auto',
-            gap: '0',
-          }}>
-            {[
-              { icon: 'check', title: t.val1Title, sub: t.val1Sub },
-              { icon: 'dollar', title: t.val2Title, sub: t.val2Sub },
-              { icon: 'shield', title: t.val3Title, sub: t.val3Sub },
-              { icon: 'lock', title: t.val4Title, sub: t.val4Sub },
-            ].map((item, idx) => (
-              <div key={idx} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: isMobile ? '10px' : '12px',
-                flex: '1 1 200px',
-                padding: isMobile ? '10px 0' : '4px',
-                borderBottom: isMobile && idx < 3 ? '1px solid #e8e8e8' : 'none',
-              }}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1ABC9C" width={isMobile ? "22" : "26"} height={isMobile ? "22" : "26"} style={{ flexShrink: 0 }}>
-                  {item.icon === 'check' && <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>}
-                  {item.icon === 'dollar' && <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>}
-                  {item.icon === 'shield' && <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>}
-                  {item.icon === 'lock' && <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>}
-                </svg>
-                <div style={{ flex: 1 }}>
-                  <strong style={{ display: 'block', fontSize: isMobile ? '13px' : '14px', fontWeight: 700, color: '#1A3E5C', marginBottom: '1px' }}>
-                    {item.title}
-                  </strong>
-                  <span style={{ fontSize: isMobile ? '11px' : '12px', color: '#666666', lineHeight: 1.3, display: 'block' }}>
-                    {item.sub}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* HOW IT WORKS SECTION */}
-      <section style={{
-        background: colors.bgWhite,
-        padding: isMobile ? '24px 16px' : '32px 20px',
-        borderTop: `1px solid ${colors.border}`,
-      }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{
-            fontSize: isMobile ? '18px' : '22px',
-            fontWeight: 700,
-            color: colors.primaryBlue,
-            marginBottom: isMobile ? '16px' : '24px',
-          }}>
-            {t.howItWorks}
-          </h2>
-          
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)',
-            gap: isMobile ? '12px' : '20px',
-            marginBottom: isMobile ? '20px' : '28px',
-          }}>
-            {steps.map((step) => (
-              <div key={step.num} style={{
-                display: 'flex',
-                flexDirection: isMobile ? 'row' : 'column',
-                alignItems: isMobile ? 'center' : 'center',
-                gap: isMobile ? '12px' : '8px',
-                padding: isMobile ? '12px 0' : '16px 12px',
-                borderBottom: isMobile ? '1px solid #eee' : 'none',
-                textAlign: isMobile ? 'left' : 'center',
-              }}>
-                <div style={{
-                  width: isMobile ? '32px' : '40px',
-                  height: isMobile ? '32px' : '40px',
-                  borderRadius: '50%',
-                  background: colors.accentGreen,
+            {/* CTAs - Big & Bold */}
+            <div style={{
+              display: 'flex',
+              flexDirection: isMobile ? 'column' : 'row',
+              gap: '12px',
+              marginBottom: '12px',
+            }}>
+              <button
+                onClick={handleCreateList}
+                style={{
+                  background: `linear-gradient(135deg, ${colors.actionOrange} 0%, ${colors.actionOrangeHover} 100%)`,
                   color: 'white',
+                  padding: '16px 32px',
+                  borderRadius: '10px',
+                  border: 'none',
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: cardShadow,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  gap: '10px',
+                  minHeight: '56px',
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = cardShadowHover;
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = cardShadow;
+                }}
+              >
+                <Gift size={20} />
+                {t.ctaPrimary}
+              </button>
+              <button
+                onClick={handleSmartSearch}
+                style={{
+                  background: colors.bgWhite,
+                  color: colors.primaryBlue,
+                  padding: '16px 32px',
+                  borderRadius: '10px',
+                  border: 'none',
+                  fontSize: '16px',
                   fontWeight: 700,
-                  fontSize: isMobile ? '14px' : '16px',
-                  flexShrink: 0,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: cardShadow,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  minHeight: '56px',
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = cardShadowHover;
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = cardShadow;
+                }}
+              >
+                <Search size={20} />
+                {t.ctaSecondary}
+              </button>
+            </div>
+
+            <p style={{ fontSize: '13px', color: colors.textGrey }}>
+              {t.microcopy}
+            </p>
+
+            {/* Trust Badges - Inline */}
+            <div style={{
+              display: 'flex',
+              gap: '16px',
+              marginTop: '20px',
+              justifyContent: isMobile ? 'center' : 'flex-start',
+              flexWrap: 'wrap',
+            }}>
+              {[
+                { icon: Shield, label: 'SSL' },
+                { icon: CheckCircle, label: 'GDPR' },
+                { icon: CheckCircle, label: 'CCPA' },
+              ].map((badge, idx) => (
+                <div key={idx} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '6px 12px',
+                  background: colors.bgWhite,
+                  borderRadius: '20px',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
                 }}>
-                  {step.num}
+                  <badge.icon size={14} color={colors.accentGreen} />
+                  <span style={{ fontSize: '12px', fontWeight: 600, color: colors.textDark }}>
+                    {badge.label}
+                  </span>
                 </div>
-                <div style={{ flex: 1 }}>
+              ))}
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN: How It Works - Smart Grid 2x2 */}
+          <div>
+            <h2 style={{
+              fontSize: isMobile ? '20px' : '24px',
+              fontWeight: 700,
+              color: colors.primaryBlue,
+              marginBottom: '20px',
+              textAlign: isMobile ? 'center' : 'left',
+            }}>
+              {t.howItWorks}
+            </h2>
+            
+            {/* 2x2 Grid for Steps */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '16px',
+            }}>
+              {steps.map((step, idx) => (
+                <div
+                  key={step.num}
+                  style={{
+                    background: colors.bgWhite,
+                    borderRadius: '16px',
+                    padding: '20px',
+                    minHeight: '180px',
+                    boxShadow: cardShadow,
+                    transition: 'all 0.2s ease',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = cardShadowHover;
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = cardShadow;
+                  }}
+                  onClick={handleSmartSearch}
+                >
+                  {/* Large Icon - 80px */}
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '20px',
+                    background: `linear-gradient(135deg, ${colors.accentGreen}15 0%, ${colors.accentGreen}25 100%)`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: '12px',
+                  }}>
+                    <step.Icon size={40} color={colors.accentGreen} strokeWidth={1.5} />
+                  </div>
+                  
+                  {/* Step Number Badge */}
+                  <div style={{
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    background: colors.accentGreen,
+                    color: 'white',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: '8px',
+                  }}>
+                    {step.num}
+                  </div>
+
+                  {/* Title - Big & Bold */}
                   <strong style={{
                     display: 'block',
-                    fontSize: isMobile ? '14px' : '15px',
+                    fontSize: '18px',
                     fontWeight: 700,
-                    color: colors.primaryBlue,
-                    marginBottom: '2px',
+                    color: colors.textDark,
+                    marginBottom: '4px',
+                    lineHeight: 1.3,
                   }}>
                     {step.title}
                   </strong>
+                  
+                  {/* Description */}
                   <span style={{
-                    fontSize: isMobile ? '12px' : '13px',
+                    fontSize: '14px',
                     color: colors.textGrey,
+                    lineHeight: 1.5,
                   }}>
                     {step.sub}
                   </span>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          {/* Secondary CTA after steps */}
-          <button
-            onClick={handleSmartSearch}
-            style={{
-              background: colors.accentGreen,
-              color: 'white',
-              padding: isMobile ? '14px 32px' : '12px 28px',
-              borderRadius: '8px',
-              border: 'none',
-              fontSize: '15px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              transition: 'all 200ms ease',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              width: isMobile ? '100%' : 'auto',
-              justifyContent: 'center',
-            }}
-            onMouseOver={(e) => { e.currentTarget.style.opacity = '0.9'; }}
-            onMouseOut={(e) => { e.currentTarget.style.opacity = '1'; }}
-          >
-            <Search size={18} />
-            {t.tryNow}
-          </button>
-        </div>
-      </section>
-
-      {/* TRUST REINFORCEMENT - Store Logos */}
-      <section style={{
-        background: colors.bgLight,
-        padding: isMobile ? '16px 16px 8px' : '20px 20px 10px',
-        textAlign: 'center',
-      }}>
-        <p style={{
-          fontSize: isMobile ? '11px' : '12px',
-          color: colors.textGrey,
-          marginBottom: '10px',
-        }}>
-          {t.trustedBy}
-        </p>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: isMobile ? '20px' : '32px',
-          flexWrap: 'wrap',
-          opacity: 0.4,
-        }}>
-          {['amazon', 'Walmart', 'Target', 'eBay', 'Etsy'].map((store, idx) => (
-            <StoreLogo key={idx} name={store} />
-          ))}
-        </div>
-      </section>
-
-      {/* SECURITY BADGE - Separated from store logos */}
-      <section style={{
-        background: colors.bgLight,
-        padding: isMobile ? '8px 16px 16px' : '10px 20px 20px',
-        textAlign: 'center',
-        borderBottom: `1px solid ${colors.border}`,
-      }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: '16px',
-        }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '6px 12px',
-            background: colors.bgWhite,
-            borderRadius: '20px',
-            border: `1px solid ${colors.border}`,
-          }}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={colors.accentGreen} width="16" height="16">
-              <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
-            </svg>
-            <span style={{ fontSize: '11px', fontWeight: 600, color: colors.textDark }}>
-              SSL
-            </span>
-          </div>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '6px 12px',
-            background: colors.bgWhite,
-            borderRadius: '20px',
-            border: `1px solid ${colors.border}`,
-          }}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={colors.accentGreen} width="16" height="16">
-              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-            </svg>
-            <span style={{ fontSize: '11px', fontWeight: 600, color: colors.textDark }}>
-              GDPR
-            </span>
-          </div>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '6px 12px',
-            background: colors.bgWhite,
-            borderRadius: '20px',
-            border: `1px solid ${colors.border}`,
-          }}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={colors.accentGreen} width="16" height="16">
-              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-            </svg>
-            <span style={{ fontSize: '11px', fontWeight: 600, color: colors.textDark }}>
-              CCPA
-            </span>
+            {/* Secondary CTA */}
+            <button
+              onClick={handleSmartSearch}
+              style={{
+                width: '100%',
+                marginTop: '20px',
+                background: `linear-gradient(135deg, ${colors.accentGreen} 0%, #16A085 100%)`,
+                color: 'white',
+                padding: '14px 28px',
+                borderRadius: '10px',
+                border: 'none',
+                fontSize: '16px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: cardShadow,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = cardShadowHover;
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = cardShadow;
+              }}
+            >
+              <Search size={18} />
+              {t.tryNow}
+            </button>
           </div>
         </div>
-      </section>
+      </main>
 
-      {/* FOOTER */}
+      {/* FOOTER - Minimal */}
       <footer style={{
         background: colors.primaryBlue,
         color: 'white',
-        padding: isMobile ? '16px' : '20px',
+        padding: '16px 24px',
         textAlign: 'center',
       }}>
-        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '8px', flexWrap: 'wrap' }}>
-            <a href="/privacy" style={{ color: 'white', textDecoration: 'none', fontSize: '12px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            gap: '24px', 
+            marginBottom: '8px', 
+            flexWrap: 'wrap',
+          }}>
+            <a href="/privacy" style={{ color: 'rgba(255,255,255,0.9)', textDecoration: 'none', fontSize: '12px' }}>
               {language === 'es' ? 'Privacidad' : 'Privacy'}
             </a>
-            <a href="/terms" style={{ color: 'white', textDecoration: 'none', fontSize: '12px' }}>
-              {language === 'es' ? 'Términos' : 'Terms'}
+            <a href="/terms" style={{ color: 'rgba(255,255,255,0.9)', textDecoration: 'none', fontSize: '12px' }}>
+              {language === 'es' ? 'Terminos' : 'Terms'}
             </a>
-            <a href="mailto:support@givlyn.com" style={{ color: 'white', textDecoration: 'none', fontSize: '12px' }}>
+            <a href="mailto:support@givlyn.com" style={{ color: 'rgba(255,255,255,0.9)', textDecoration: 'none', fontSize: '12px' }}>
               {language === 'es' ? 'Soporte' : 'Support'}
             </a>
           </div>
-          <p style={{ fontSize: '11px', margin: '4px 0', opacity: 0.9 }}>
-            {t.footerProduct} <strong>WINCOVA CORPORATION</strong>.
-          </p>
-          <p style={{ fontSize: '10px', margin: '4px 0', opacity: 0.7 }}>
-            © 2025 {t.footerRights}
+          <p style={{ fontSize: '11px', margin: '4px 0', opacity: 0.8 }}>
+            {t.footerProduct} <strong>WINCOVA CORPORATION</strong>. {t.footerRights}
           </p>
         </div>
       </footer>
